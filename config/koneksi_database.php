@@ -1,8 +1,9 @@
 <?php
 // Konfigurasi Database
+define('BASE_URL', 'http://localhost:8000/');
 $host     = "localhost";
 $username = "putra";
-$password = "pass";
+$password = "password123";
 $database = "db_siacad_smk_2";
 
 // Membuat Koneksi

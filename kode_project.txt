@@ -1,0 +1,2021 @@
+===============================
+FILE: ./index.php
+===============================
+<?php
+session_start();
+require_once __DIR__ . '/config/koneksi_database.php';
+
+// Jika pengguna SUDAH login, langsung lempar ke dashboard masing-masing
+if (isset($_SESSION['role'])) {
+    switch ($_SESSION['role']) {
+        case 'admin':
+            header("Location: " . BASE_URL . "admin/dashboard_admin.php");
+            exit;
+        case 'guru':
+            header("Location: " . BASE_URL . "guru/dashboard_guru.php");
+            exit;
+        case 'siswa':
+            header("Location: " . BASE_URL . "siswa/dashboard_siswa.php");
+            exit;
+    }
+}
+
+// Jika BELUM login, tampilkan form login
+require_once __DIR__ . '/auth/form_login.php';
+?>
+
+
+===============================
+FILE: ./auth/form_login.php
+===============================
+<?php
+session_start();
+require_once __DIR__ . '/../config/koneksi_database.php';
+require_once __DIR__ . '/../includes/helper_fungsi.php';
+
+// Jika sudah login, langsung alihkan ke dashboard masing-masing
+if (isset($_SESSION['user_id'])) {
+    $role = $_SESSION['role'];
+    header("Location: " . BASE_URL . $role . "/dashboard_" . $role . ".php");
+    exit();
+}
+
+$error = '';
+
+// Memproses saat form dikirim (POST)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+
+    if (empty($username) || empty($password)) {
+        $error = 'Username dan Password wajib diisi!';
+    } else {
+        // Menggunakan Prepared Statement untuk keamanan dari SQL Injection
+        $stmt = mysqli_prepare($conn, "SELECT id, username, password, role FROM users WHERE username = ?");
+        mysqli_stmt_bind_param($stmt, "s", $username);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($user = mysqli_fetch_assoc($result)) {
+            // Verifikasi Password Hash
+            if (password_verify($password, $user['password'])) {
+                // Set Session Pengguna
+                $_SESSION['user_id']  = $user['id'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['role']     = $user['role'];
+
+                set_flash_message('success', 'Selamat datang kembali, ' . htmlspecialchars($user['username']) . '!');
+
+                // Redirect sesuai role
+                header("Location: " . BASE_URL . $user['role'] . "/dashboard_" . $user['role'] . ".php");
+                exit();
+            } else {
+                $error = 'Password yang Anda masukkan salah!';
+            }
+        } else {
+            $error = 'Username tidak ditemukan!';
+        }
+        mysqli_stmt_close($stmt);
+    }
+}
+
+require_once __DIR__ . '/../includes/template_header.php';
+?>
+
+<div class="row justify-content-center my-5">
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-circle text-primary display-4"></i>
+                    <h4 class="fw-bold mt-2">Login SIPN</h4>
+                    <p class="text-muted small">Sistem Informasi Pengelolaan Nilai</p>
+                </div>
+
+                <?php if (!empty($error)): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i><?= $error; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+
+                <form action="" method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label font-weight-bold">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan username" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password" required>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Masuk
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-3">
+                    <small class="text-muted">Siswa baru? <a href="form_register_siswa.php" class="text-decoration-none">Daftar Akun Siswa</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
+
+
+===============================
+FILE: ./auth/proses_logout.php
+===============================
+<?php
+session_start();
+require_once __DIR__ . '/../config/koneksi_database.php';
+require_once __DIR__ . '/../includes/helper_fungsi.php';
+
+// Hapus semua variabel session
+$_SESSION = array();
+
+// Hapus cookie session jika ada
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
+
+// Hancurkan session
+session_destroy();
+
+// Mulai session baru untuk pesan notifikasi logout
+session_start();
+set_flash_message('info', 'Anda telah berhasil logout.');
+
+header("Location: " . BASE_URL . "auth/form_login.php");
+exit();
+?>
+
+
+===============================
+FILE: ./auth/form_register_siswa.php
+===============================
+<?php
+require_once __DIR__ . '/../config/koneksi_database.php';
+require_once __DIR__ . '/../includes/helper_fungsi.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = sanitize($_POST['username']);
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $nis      = sanitize($_POST['nis']);
+    $nama     = sanitize($_POST['nama']);
+    $kelas    = sanitize($_POST['kelas']);
+    $jk       = sanitize($_POST['jenis_kelamin']);
+
+    mysqli_begin_transaction($conn);
+    try {
+        // 1. Insert ke tabel users
+        $stmt1 = mysqli_prepare($conn, "INSERT INTO users (username, password, role) VALUES (?, ?, 'siswa')");
+        mysqli_stmt_bind_param($stmt1, "ss", $username, $password);
+        mysqli_stmt_execute($stmt1);
+        $user_id = mysqli_insert_id($conn);
+
+        // 2. Insert ke tabel siswa
+        $stmt2 = mysqli_prepare($conn, "INSERT INTO siswa (nis, nama, kelas, jenis_kelamin, user_id) VALUES (?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt2, "ssssi", $nis, $nama, $kelas, $jk, $user_id);
+        mysqli_stmt_execute($stmt2);
+
+        mysqli_commit($conn);
+        set_flash_message('success', 'Registrasi berhasil! Silakan login.');
+        header('Location: form_login.php');
+        exit();
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        set_flash_message('danger', 'Gagal registrasi NIS/Username mungkin sudah ada.');
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Siswa - SIPN</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex align-items-center py-5">
+<div class="container" style="max-width: 500px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            <h3 class="card-title text-center mb-4">Registrasi Siswa</h3>
+            <?php display_flash_message(); ?>
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">NIS</label>
+                    <input type="text" name="nis" class="form-control" maxlength="10" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nama Lengkap</label>
+                    <input type="text" name="nama" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Kelas</label>
+                    <input type="text" name="kelas" class="form-control" placeholder="Contoh: XII RPL 1" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Jenis Kelamin</label>
+                    <select name="jenis_kelamin" class="form-select" required>
+                        <option value="L">Laki-Laki</option>
+                        <option value="P">Perempuan</option>
+                    </select>
+                </div>
+                <hr>
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Daftar Sekarang</button>
+            </form>
+            <div class="text-center mt-3">
+                <a href="form_login.php" class="text-decoration-none">Sudah punya akun? Login di sini</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+===============================
+FILE: ./guru/data_nilai_siswa.php
+===============================
+<?php
+require_once __DIR__ . '/../includes/helper_cek_login.php';
+check_role(['guru']);
+
+$user_id = $_SESSION['user_id'];
+// Cari data guru berdasarkan user_id login
+$q_guru = mysqli_query($conn, "SELECT id FROM guru WHERE user_id = $user_id");
+$guru = mysqli_fetch_assoc($q_guru);
+$guru_id = $guru['id'];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
+    $aksi = $_POST['aksi'];
+    
+    if ($aksi === 'simpan_nilai') {
+        $siswa_id   = (int)$_POST['siswa_id'];
+        $mapel_id   = (int)$_POST['mapel_id'];
+        $kkm        = (int)$_POST['nilai_kkm'];
+        $np         = (int)$_POST['nilai_pengetahuan'];
+        $nk         = (int)$_POST['nilai_keterampilan'];
+        
+        $rata = ($np + $nk) / 2;
+        $ket  = ($rata >= $kkm) ? 'Tuntas' : 'Belum Tuntas';
+
+        // Cek apakah sudah ada nilai
+        $check = mysqli_query($conn, "SELECT id FROM nilai_rapor WHERE siswa_id=$siswa_id AND mapel_id=$mapel_id");
+        if (mysqli_num_rows($check) > 0) {
+            $stmt = mysqli_prepare($conn, "UPDATE nilai_rapor SET nilai_kkm=?, nilai_pengetahuan=?, nilai_keterampilan=?, Keterangan=? WHERE siswa_id=? AND mapel_id=?");
+            mysqli_stmt_bind_param($stmt, "iiisii", $kkm, $np, $nk, $ket, $siswa_id, $mapel_id);
+        } else {
+            $stmt = mysqli_prepare($conn, "INSERT INTO nilai_rapor (siswa_id, mapel_id, nilai_kkm, nilai_pengetahuan, nilai_keterampilan, Keterangan) VALUES (?, ?, ?, ?, ?, ?)");
+            mysqli_stmt_bind_param($stmt, "iiiiis", $siswa_id, $mapel_id, $kkm, $np, $nk, $ket);
+        }
+        
+        mysqli_stmt_execute($stmt) ? set_flash_message('success', 'Nilai berhasil disimpan!') : set_flash_message('danger', 'Gagal menyimpan nilai.');
+        header('Location: data_nilai_siswa.php');
+        exit();
+    }
+}
+
+require_once __DIR__ . '/../includes/template_header.php';
+
+// Ambil daftar siswa yang berada di mapel binaan guru login
+$query = "
+    SELECT s.id as siswa_id, s.nis, s.nama as nama_siswa, s.kelas, m.id as mapel_id, m.nama_mapel,
+           nr.nilai_kkm, nr.nilai_pengetahuan, nr.nilai_keterampilan, nr.Keterangan
+    FROM mengajar mg
+    JOIN mapel m ON mg.mapel_id = m.id
+    JOIN siswa s ON mg.siswa_id = s.id
+    LEFT JOIN nilai_rapor nr ON (nr.siswa_id = s.id AND nr.mapel_id = m.id)
+    WHERE m.guru_id = $guru_id
+    ORDER BY m.nama_mapel ASC, s.kelas ASC, s.nama ASC
+";
+$result = mysqli_query($conn, $query);
+?>
+
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+    <h2><i class="bi bi-pencil-square text-success me-2"></i>Kelola Nilai Rapor Siswa</h2>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>No</th>
+                    <th>Mapel</th>
+                    <th>Nama Siswa</th>
+                    <th>Kelas</th>
+                    <th>KKM</th>
+                    <th>Pengetahuan</th>
+                    <th>Keterampilan</th>
+                    <th>Status</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $no = 1; while ($row = mysqli_fetch_assoc($result)): ?>
+                <tr>
+                    <td><?= $no++; ?></td>
+                    <td><?= htmlspecialchars($row['nama_mapel']); ?></td>
+                    <td><?= htmlspecialchars($row['nama_siswa']); ?> <br><small class="text-muted">NIS: <?= $row['nis']; ?></small></td>
+                    <td><span class="badge bg-secondary"><?= $row['kelas']; ?></span></td>
+                    <td><?= $row['nilai_kkm'] ?? '-'; ?></td>
+                    <td><?= $row['nilai_pengetahuan'] ?? '-'; ?></td>
+                    <td><?= $row['nilai_keterampilan'] ?? '-'; ?></td>
+                    <td>
+                        <?php if (isset($row['Keterangan'])): ?>
+                            <span class="badge bg-<?= $row['Keterangan'] === 'Belum Tuntas' ? 'danger' : 'success'; ?>"><?= $row['Keterangan']; ?></span>
+                        <?php else: ?>
+                            <span class="badge bg-warning text-dark">Belum Diisi</span>
+                        <?php endif; ?>
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalNilai<?= $row['siswa_id'] . '_' . $row['mapel_id']; ?>">
+                            <i class="bi bi-pencil"></i> Input/Edit
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Modal Input Nilai -->
+                <div class="modal fade" id="modalNilai<?= $row['siswa_id'] . '_' . $row['mapel_id']; ?>" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="POST">
+                                <div class="modal-header bg-primary text-white">
+                                    <h5 class="modal-title">Form Nilai - <?= htmlspecialchars($row['nama_siswa']); ?></h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" name="aksi" value="simpan_nilai">
+                                    <input type="hidden" name="siswa_id" value="<?= $row['siswa_id']; ?>">
+                                    <input type="hidden" name="mapel_id" value="<?= $row['mapel_id']; ?>">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nilai KKM</label>
+                                        <input type="number" name="nilai_kkm" class="form-control" value="<?= $row['nilai_kkm'] ?? 75; ?>" min="0" max="100" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nilai Pengetahuan (0-100)</label>
+                                        <input type="number" name="nilai_pengetahuan" class="form-control" value="<?= $row['nilai_pengetahuan'] ?? ''; ?>" min="0" max="100" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nilai Keterampilan (0-100)</label>
+                                        <input type="number" name="nilai_keterampilan" class="form-control" value="<?= $row['nilai_keterampilan'] ?? ''; ?>" min="0" max="100" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary">Simpan Nilai</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
+
+
+===============================
+FILE: ./guru/dashboard_guru.php
+===============================
+<?php
+require_once __DIR__ . '/../includes/helper_cek_login.php';
+check_role(['guru']); // Hanya Guru yang bisa mengakses
+
+require_once __DIR__ . '/../includes/template_header.php';
+?>
+
+<div class="p-4 bg-white rounded shadow-sm">
+    <h2><i class="bi bi-speedometer2 text-success me-2"></i>Dashboard Guru</h2>
+    <p class="text-muted">Selamat datang di Panel Pengelolaan Nilai.</p>
+    <div class="alert alert-info">
+        Fitur input dan edit nilai siswa akan diimplementasikan pada Phase 4.
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
+
+
+
+===============================
+FILE: ./siswa/lihat_nilai_rapor.php
+===============================
+<?php
+// 1. Panggil file koneksi database TERLEBIH DAHULU
+require_once __DIR__ . '/../config/koneksi_database.php';
+// 2. Panggil helper untuk cek login dan hak akses
+require_once __DIR__ . '/../includes/helper_cek_login.php';
+
+check_role(['siswa']);
+
+$user_id = $_SESSION['user_id'];
+
+// Ambil data detail siswa berdasarkan user_id yang sedang login
+$q_siswa = mysqli_query($conn, "SELECT * FROM siswa WHERE user_id = $user_id");
+
+// Proteksi jika data profil siswa belum terhubung ke user ini
+if (!$q_siswa || mysqli_num_rows($q_siswa) === 0) {
+    die("<div style='padding: 20px; text-align: center; font-family: sans-serif;'>
+            <h3>Error: Profil Siswa Tidak Ditemukan!</h3>
+            <p>Akun ini belum memiliki data profil siswa yang valid di database.</p>
+            <a href='../auth/logout.php'>Kembali ke Login</a>
+         </div>");
+}
+
+$siswa = mysqli_fetch_assoc($q_siswa);
+$siswa_id = $siswa['id'];
+
+// Ambil daftar nilai milik siswa ini
+$query = "
+    SELECT m.kode_mapel, m.nama_mapel, g.nama as nama_guru, 
+           nr.nilai_kkm, nr.nilai_pengetahuan, nr.nilai_keterampilan, nr.Keterangan
+    FROM mengajar mg
+    JOIN mapel m ON mg.mapel_id = m.id
+    JOIN guru g ON m.guru_id = g.id
+    LEFT JOIN nilai_rapor nr ON (nr.siswa_id = mg.siswa_id AND nr.mapel_id = m.id)
+    WHERE mg.siswa_id = $siswa_id
+";
+$result = mysqli_query($conn, $query);
+
+require_once __DIR__ . '/../includes/template_header.php';
+?>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <h4><i class="bi bi-person-badge text-primary me-2"></i>Rapor Digital Siswa</h4>
+        <div class="row mt-3">
+            <div class="col-md-4"><strong>Nama:</strong> <?= htmlspecialchars($siswa['nama']); ?></div>
+            <div class="col-md-4"><strong>NIS:</strong> <?= htmlspecialchars($siswa['nis']); ?></div>
+            <div class="col-md-4"><strong>Kelas:</strong> <?= htmlspecialchars($siswa['kelas']); ?></div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body table-responsive">
+        <table class="table table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="10%">Kode</th>
+                    <th width="25%">Mata Pelajaran</th>
+                    <th width="20%">Guru Pengampu</th>
+                    <th width="8%">KKM</th>
+                    <th width="10%">Pengetahuan</th>
+                    <th width="10%">Keterampilan</th>
+                    <th width="12%">Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (mysqli_num_rows($result) > 0): ?>
+                    <?php $no = 1; while ($row = mysqli_fetch_assoc($result)): ?>
+                    <tr>
+                        <td><?= $no++; ?></td>
+                        <td><?= htmlspecialchars($row['kode_mapel']); ?></td>
+                        <td><strong><?= htmlspecialchars($row['nama_mapel']); ?></strong></td>
+                        <td><?= htmlspecialchars($row['nama_guru']); ?></td>
+                        <td class="text-center"><?= $row['nilai_kkm'] ?? '-'; ?></td>
+                        <td class="text-center"><?= $row['nilai_pengetahuan'] ?? '-'; ?></td>
+                        <td class="text-center"><?= $row['nilai_keterampilan'] ?? '-'; ?></td>
+                        <td>
+                            <?php if (isset($row['Keterangan'])): ?>
+                                <span class="badge bg-<?= $row['Keterangan'] === 'Belum Tuntas' ? 'danger' : 'success'; ?>">
+                                    <?= htmlspecialchars($row['Keterangan']); ?>
+                                </span>
+                            <?php else: ?>
+                                <span class="badge bg-secondary">Belum Diisi</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-3">Belum ada data mata pelajaran yang diikuti.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
+
+
+===============================
+FILE: ./siswa/dashboard_siswa.php
+===============================
+<?php
+require_once __DIR__ . '/../includes/helper_cek_login.php';
+check_role(['siswa']);
+
+require_once __DIR__ . '/../includes/template_header.php';
+?>
+
+<div class="p-4 bg-white rounded shadow-sm">
+    <h2><i class="bi bi-speedometer2 text-success me-2"></i>Dashboard Siswa</h2>
+    <p class="text-muted">Selamat datang di Panel Siswa SIPN.</p>
+    <div class="alert alert-info">
+        Fitur untuk melihat nilai rapor Anda akan tersedia pada menu "Lihat Nilai".
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
+
+
+===============================
+FILE: ./profile.php
+===============================
+<?php
+require_once __DIR__ . '/includes/helper_cek_login.php';
+
+$user_id = $_SESSION['user_id'];
+$role    = $_SESSION['role'];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nama = sanitize($_POST['nama']);
+    
+    // Update nama sesuai role
+    if ($role === 'guru') {
+        $stmt = mysqli_prepare($conn, "UPDATE guru SET nama=? WHERE user_id=?");
+        mysqli_stmt_bind_param($stmt, "si", $nama, $user_id);
+        mysqli_stmt_execute($stmt);
+    } elseif ($role === 'siswa') {
+        $stmt = mysqli_prepare($conn, "UPDATE siswa SET nama=? WHERE user_id=?");
+        mysqli_stmt_bind_param($stmt, "si", $nama, $user_id);
+        mysqli_stmt_execute($stmt);
+    }
+
+    // Update password jika diisi
+    if (!empty($_POST['password_baru'])) {
+        $pass_hash = password_hash($_POST['password_baru'], PASSWORD_DEFAULT);
+        $stmt_p = mysqli_prepare($conn, "UPDATE users SET password=? WHERE id=?");
+        mysqli_stmt_bind_param($stmt_p, "si", $pass_hash, $user_id);
+        mysqli_stmt_execute($stmt_p);
+    }
+
+    set_flash_message('success', 'Profil berhasil diperbarui!');
+    header('Location: profile.php');
+    exit();
+}
+
+require_once __DIR__ . '/includes/template_header.php';
+
+// Ambil info detail
+$username = $_SESSION['username'];
+$nama_lengkap = $username;
+
+if ($role === 'guru') {
+    $q = mysqli_query($conn, "SELECT nama FROM guru WHERE user_id=$user_id");
+    if ($d = mysqli_fetch_assoc($q)) $nama_lengkap = $d['nama'];
+} elseif ($role === 'siswa') {
+    $q = mysqli_query($conn, "SELECT nama FROM siswa WHERE user_id=$user_id");
+    if ($d = mysqli_fetch_assoc($q)) $nama_lengkap = $d['nama'];
+}
+?>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0"><i class="bi bi-person-circle me-2"></i>Kelola Profil</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" value="<?= htmlspecialchars($username); ?>" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <input type="text" class="form-control text-uppercase" value="<?= htmlspecialchars($role); ?>" disabled>
+                    </div>
+                    <?php if ($role !== 'admin'): ?>
+                    <div class="mb-3">
+                        <label class="form-label">Nama Lengkap</label>
+                        <input type="text" name="nama" class="form-control" value="<?= htmlspecialchars($nama_lengkap); ?>" required>
+                    </div>
+                    <?php endif; ?>
+                    <hr>
+                    <div class="mb-3">
+                        <label class="form-label">Password Baru (Kosongkan jika tidak diganti)</label>
+                        <input type="password" name="password_baru" class="form-control" minlength="4">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Simpan Perubahan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/includes/template_footer.php'; ?>
+
+
+===============================
+FILE: ./test_koneksi.php
+===============================
+<?php
+require_once __DIR__ . '/config/koneksi_database.php';
+require_once __DIR__ . '/includes/helper_fungsi.php';
+
+echo "<h3 style='color:green;'>✓ Koneksi Database Berhasil!</h3>";
+echo "Base URL: " . BASE_URL . "<br>";
+echo "Status Session: " . (session_status() === PHP_SESSION_ACTIVE ? "Aktif" : "Tidak Aktif") . "<br>";
+
+// Test Sanitasi Input
+$input_kotor = "<script>alert('test')</script>";
+$input_bersih = sanitize($input_kotor);
+echo "Pengujian Sanitasi Input Anti-XSS: " . htmlspecialchars($input_bersih);
+?>
+
+
+===============================
+FILE: ./config/koneksi_database.php
+===============================
+<?php
+// Konfigurasi Database
+define('BASE_URL', 'http://localhost:8000/');
+$host     = "localhost";
+$username = "putra";
+$password = "password123";
+$database = "db_siacad_smk_2";
+
+// Membuat Koneksi
+$conn = mysqli_connect($host, $username, $password, $database);
+
+// Cek Koneksi
+if (!$conn) {
+    die("Koneksi Database Gagal: " . mysqli_connect_error());
+}
+?>
+
+
+===============================
+FILE: ./admin/data_mengajar.php
+===============================
+<?php
+require_once __DIR__ . '/../includes/helper_cek_login.php';
+check_role(['admin']);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
+    $aksi = $_POST['aksi'];
+
+    if ($aksi === 'tambah') {
+        $mapel = (int)$_POST['mapel_id'];
+        $siswa = (int)$_POST['siswa_id'];
+
+        $stmt = mysqli_prepare($conn, "INSERT INTO mengajar (mapel_id, siswa_id) VALUES (?, ?)");
+        mysqli_stmt_bind_param($stmt, "ii", $mapel, $siswa);
+        mysqli_stmt_execute($stmt) ? set_flash_message('success', 'Penugasan mengajar ditambahkan!') : set_flash_message('danger', 'Gagal menyimpan data.');
+    } 
+    elseif ($aksi === 'hapus') {
+        $id_mengajar = (int)$_POST['id_mengajar'];
+        $stmt = mysqli_prepare($conn, "DELETE FROM mengajar WHERE id=?");
+        mysqli_stmt_bind_param($stmt, "i", $id_mengajar);
+        mysqli_stmt_execute($stmt) ? set_flash_message('success', 'Penugasan dihapus!') : set_flash_message('danger', 'Gagal menghapus.');
+    }
+    header("Location: data_mengajar.php");
+    exit();
+}
+
+require_once __DIR__ . '/../includes/template_header.php';
+
+// Ambil data mengajar beserta nama mapel, guru, dan siswa
+$query = "
+    SELECT mg.id, m.nama_mapel, m.kode_mapel, g.nama as nama_guru, s.nama as nama_siswa, s.kelas 
+    FROM mengajar mg
+    JOIN mapel m ON mg.mapel_id = m.id
+    JOIN guru g ON m.guru_id = g.id
+    JOIN siswa s ON mg.siswa_id = s.id
+    ORDER BY m.nama_mapel ASC, s.kelas ASC, s.nama ASC
+";
+$result = mysqli_query($conn, $query);
+
+// Data Dropdown
+$opt_mapel = "";
+$q_mapel = mysqli_query($conn, "SELECT id, nama_mapel, kode_mapel FROM mapel ORDER BY nama_mapel ASC");
+while ($m = mysqli_fetch_assoc($q_mapel)) { 
+    $opt_mapel .= "<option value='{$m['id']}'>[{$m['kode_mapel']}] {$m['nama_mapel']}</option>"; 
+}
+
+$opt_siswa = "";
+$q_siswa = mysqli_query($conn, "SELECT id, nama, kelas FROM siswa ORDER BY kelas ASC, nama ASC");
+while ($s = mysqli_fetch_assoc($q_siswa)) { 
+    $opt_siswa .= "<option value='{$s['id']}'>{$s['nama']} - Kelas {$s['kelas']}</option>"; 
+}
+?>
+
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+    <h2><i class="bi bi-card-checklist text-primary me-2"></i>Data Penugasan Kelas (Mengajar)</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah">
+        <i class="bi bi-plus-circle me-1"></i> Tugaskan Siswa
+    </button>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="25%">Mata Pelajaran</th>
+                    <th width="25%">Guru Pengampu</th>
+                    <th width="25%">Nama Siswa</th>
+                    <th width="10%">Kelas</th>
+                    <th width="10%" class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (mysqli_num_rows($result) > 0): ?>
+                    <?php $no = 1; while ($row = mysqli_fetch_assoc($result)): ?>
+                    <tr>
+                        <td><?= $no++; ?></td>
+                        <td><strong><?= htmlspecialchars($row['nama_mapel']); ?></strong> <br><small class="text-muted"><?= htmlspecialchars($row['kode_mapel']); ?></small></td>
+                        <td><?= htmlspecialchars($row['nama_guru']); ?></td>
+                        <td><?= htmlspecialchars($row['nama_siswa']); ?></td>
+                        <td><span class="badge bg-info text-dark"><?= htmlspecialchars($row['kelas']); ?></span></td>
+                        <td class="text-center">
+                            <form method="POST" onsubmit="return confirm('Hapus penugasan ini?');" class="d-inline">
+                                <input type="hidden" name="aksi" value="hapus">
+                                <input type="hidden" name="id_mengajar" value="<?= $row['id']; ?>">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-3">Belum ada data penugasan.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Tambah Penugasan -->
+<div class="modal fade" id="modalTambah" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Tugaskan Siswa ke Mapel</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="aksi" value="tambah">
+                    <div class="mb-3">
+                        <label class="form-label">Mata Pelajaran</label>
+                        <select class="form-select" name="mapel_id" required>
+                            <option value="" disabled selected>-- Pilih Mapel --</option>
+                            <?= $opt_mapel; ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Siswa</label>
+                        <select class="form-select" name="siswa_id" required>
+                            <option value="" disabled selected>-- Pilih Siswa --</option>
+                            <?= $opt_siswa; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
+
+
+===============================
+FILE: ./admin/data_siswa.php
+===============================
+<?php
+require_once __DIR__ . '/../config/koneksi_database.php';
+require_once __DIR__ . '/../includes/helper_cek_login.php';
+check_role(['admin']);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
+    $aksi = $_POST['aksi'];
+
+    // --- PROSES TAMBAH SISWA & AKUN ---
+    if ($aksi === 'tambah') {
+        $nis      = sanitize($_POST['nis']);
+        $nama     = sanitize($_POST['nama']);
+        $kelas    = sanitize($_POST['kelas']);
+        $jk       = sanitize($_POST['jenis_kelamin']);
+        $username = sanitize($_POST['username']);
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $role     = 'siswa';
+
+        $cek = mysqli_query($conn, "SELECT id FROM users WHERE username='$username' UNION SELECT id FROM siswa WHERE nis='$nis'");
+        if (mysqli_num_rows($cek) > 0) {
+            set_flash_message('danger', 'Gagal! Username atau NIS sudah terdaftar.');
+        } else {
+            mysqli_begin_transaction($conn);
+            try {
+                $stmt1 = mysqli_prepare($conn, "INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
+                mysqli_stmt_bind_param($stmt1, "sss", $username, $password, $role);
+                mysqli_stmt_execute($stmt1);
+                $user_id = mysqli_insert_id($conn);
+
+                $stmt2 = mysqli_prepare($conn, "INSERT INTO siswa (nis, nama, kelas, jenis_kelamin, user_id) VALUES (?, ?, ?, ?, ?)");
+                mysqli_stmt_bind_param($stmt2, "ssssi", $nis, $nama, $kelas, $jk, $user_id);
+                mysqli_stmt_execute($stmt2);
+
+                mysqli_commit($conn);
+                set_flash_message('success', 'Data Siswa dan Akun berhasil ditambahkan!');
+            } catch (Exception $e) {
+                mysqli_rollback($conn);
+                set_flash_message('danger', 'Terjadi kesalahan sistem: ' . $e->getMessage());
+            }
+        }
+    } 
+    // --- PROSES EDIT SISWA ---
+    elseif ($aksi === 'edit') {
+        $id_siswa = (int)$_POST['id_siswa'];
+        $nis      = sanitize($_POST['nis']);
+        $nama     = sanitize($_POST['nama']);
+        $kelas    = sanitize($_POST['kelas']);
+        $jk       = sanitize($_POST['jenis_kelamin']);
+
+        $stmt = mysqli_prepare($conn, "UPDATE siswa SET nis=?, nama=?, kelas=?, jenis_kelamin=? WHERE id=?");
+        mysqli_stmt_bind_param($stmt, "ssssi", $nis, $nama, $kelas, $jk, $id_siswa);
+        
+        if (mysqli_stmt_execute($stmt)) {
+            set_flash_message('success', 'Data Siswa berhasil diperbarui!');
+        } else {
+            set_flash_message('danger', 'Gagal memperbarui data Siswa.');
+        }
+    }
+    // --- PROSES HAPUS SISWA ---
+    elseif ($aksi === 'hapus') {
+        $user_id = (int)$_POST['user_id'];
+        
+        $stmt = mysqli_prepare($conn, "DELETE FROM users WHERE id=?");
+        mysqli_stmt_bind_param($stmt, "i", $user_id);
+        
+        if (mysqli_stmt_execute($stmt)) {
+            set_flash_message('success', 'Data Siswa beserta akun berhasil dihapus!');
+        } else {
+            set_flash_message('danger', 'Gagal menghapus data.');
+        }
+    }
+    header("Location: data_siswa.php");
+    exit();
+}
+
+require_once __DIR__ . '/../includes/template_header.php';
+
+$query = "SELECT s.*, u.username FROM siswa s JOIN users u ON s.user_id = u.id ORDER BY s.kelas ASC, s.nama ASC";
+$result = mysqli_query($conn, $query);
+?>
+
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+    <h2><i class="bi bi-person-badge text-success me-2"></i>Data Siswa</h2>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTambah">
+        <i class="bi bi-plus-circle me-1"></i> Tambah Siswa
+    </button>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>No</th>
+                    <th>NIS</th>
+                    <th>Nama Siswa</th>
+                    <th>Kelas</th>
+                    <th>L/P</th>
+                    <th>Username Akun</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $no = 1; while ($row = mysqli_fetch_assoc($result)): ?>
+                <tr>
+                    <td><?= $no++; ?></td>
+                    <td><?= htmlspecialchars($row['nis']); ?></td>
+                    <td><?= htmlspecialchars($row['nama']); ?></td>
+                    <td><span class="badge bg-info text-dark"><?= htmlspecialchars($row['kelas']); ?></span></td>
+                    <td><?= $row['jenis_kelamin']; ?></td>
+                    <td><span class="badge bg-secondary"><?= htmlspecialchars($row['username']); ?></span></td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEdit<?= $row['id']; ?>"><i class="bi bi-pencil-square"></i> Edit</button>
+                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapus<?= $row['id']; ?>"><i class="bi bi-trash"></i> Hapus</button>
+                    </td>
+                </tr>
+
+                <!-- Modal Edit Siswa -->
+                <div class="modal fade" id="modalEdit<?= $row['id']; ?>" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="POST">
+                                <div class="modal-header bg-warning">
+                                    <h5 class="modal-title">Edit Data Siswa</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" name="aksi" value="edit">
+                                    <input type="hidden" name="id_siswa" value="<?= $row['id']; ?>">
+                                    <div class="mb-3">
+                                        <label>NIS</label>
+                                        <input type="text" class="form-control" name="nis" value="<?= htmlspecialchars($row['nis']); ?>" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Nama Lengkap</label>
+                                        <input type="text" class="form-control" name="nama" value="<?= htmlspecialchars($row['nama']); ?>" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Kelas</label>
+                                        <input type="text" class="form-control" name="kelas" value="<?= htmlspecialchars($row['kelas']); ?>" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Jenis Kelamin</label>
+                                        <select class="form-select" name="jenis_kelamin" required>
+                                            <option value="L" <?= $row['jenis_kelamin'] == 'L' ? 'selected' : ''; ?>>Laki-laki</option>
+                                            <option value="P" <?= $row['jenis_kelamin'] == 'P' ? 'selected' : ''; ?>>Perempuan</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-warning">Simpan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Hapus Siswa -->
+                <div class="modal fade" id="modalHapus<?= $row['id']; ?>" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="POST">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title">Konfirmasi Hapus</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" name="aksi" value="hapus">
+                                    <input type="hidden" name="user_id" value="<?= $row['user_id']; ?>">
+                                    <p>Hapus siswa <strong><?= htmlspecialchars($row['nama']); ?></strong> secara permanen?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-danger">Hapus</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Tambah Siswa -->
+<div class="modal fade" id="modalTambah" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Tambah Siswa & Akun Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="aksi" value="tambah">
+                    <div class="row">
+                        <div class="col-md-6 border-end">
+                            <h6>Data Siswa</h6>
+                            <div class="mb-3"><label>NIS</label><input type="text" class="form-control" name="nis" required></div>
+                            <div class="mb-3"><label>Nama Lengkap</label><input type="text" class="form-control" name="nama" required></div>
+                            <div class="mb-3"><label>Kelas</label><input type="text" class="form-control" name="kelas" placeholder="Cth: XII RPL 1" required></div>
+                            <div class="mb-3">
+                                <label>Jenis Kelamin</label>
+                                <select class="form-select" name="jenis_kelamin" required>
+                                    <option value="L">Laki-laki</option>
+                                    <option value="P">Perempuan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Data Akun Login</h6>
+                            <div class="mb-3"><label>Username</label><input type="text" class="form-control" name="username" required></div>
+                            <div class="mb-3"><label>Password</label><input type="password" class="form-control" name="password" required></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
+
+
+===============================
+FILE: ./admin/profile_admin.php
+===============================
+<?php
+require_once __DIR__ . '/../includes/helper_cek_login.php';
+check_role(['admin']);
+require_once __DIR__ . '/../config/koneksi_database.php';
+require_once __DIR__ . '/../includes/helper_fungsi.php';
+
+$id_user = $_SESSION['id_user']; // Sesuaikan dengan session ID login Anda
+
+// Proses Update Password
+if (isset($_POST['update_password'])) {
+    $password_baru = $_POST['password_baru'];
+    $konfirmasi    = $_POST['konfirmasi_password'];
+
+    if ($password_baru === $konfirmasi) {
+        // Menggunakan prepared statement untuk keamanan (Phase 3)
+        $hashed_password = password_hash($password_baru, PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+        $stmt->bind_param("si", $hashed_password, $id_user);
+        
+        if ($stmt->execute()) {
+            set_flash_message('success', 'Password berhasil diperbarui!');
+        } else {
+            set_flash_message('error', 'Gagal memperbarui password.');
+        }
+        $stmt->close();
+    } else {
+        set_flash_message('error', 'Password baru dan konfirmasi tidak cocok!');
+    }
+    header("Location: " . BASE_URL . "admin/profile_admin.php");
+    exit;
+}
+
+require_once __DIR__ . '/../includes/template_header.php';
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Profil Admin</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Nama:</strong> <?= htmlspecialchars($_SESSION['nama_user'] ?? 'Admin'); ?></p>
+                <p><strong>Username:</strong> <?= htmlspecialchars($_SESSION['username'] ?? '-'); ?></p>
+                <p><strong>Role:</strong> Administrator</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Ubah Password</h5>
+            </div>
+            <div class="card-body">
+                <form action="" method="POST">
+                    <div class="mb-3">
+                        <label>Password Baru</label>
+                        <input type="password" name="password_baru" class="form-control" required minlength="6">
+                    </div>
+                    <div class="mb-3">
+                        <label>Konfirmasi Password Baru</label>
+                        <input type="password" name="konfirmasi_password" class="form-control" required minlength="6">
+                    </div>
+                    <button type="submit" name="update_password" class="btn btn-warning w-100">Simpan Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
+
+
+===============================
+FILE: ./admin/dashboard_admin.php
+===============================
+<?php
+// 1. Panggil koneksi database dan helper cek login di baris paling atas
+require_once __DIR__ . '/../config/koneksi_database.php';
+require_once __DIR__ . '/../includes/helper_cek_login.php';
+
+// Pastikan hanya role admin yang bisa mengakses
+check_role(['admin']);
+
+// 2. Baris 6 (atau query pertama): Pastikan variabel $conn sesuai dengan yang ada di koneksi_database.php
+$total_siswa = 0;
+$q_siswa = mysqli_query($conn, "SELECT COUNT(*) as total FROM siswa");
+if ($q_siswa) {
+    $row_siswa = mysqli_fetch_assoc($q_siswa);
+    $total_siswa = $row_siswa['total'];
+}
+
+$total_guru = 0;
+$q_guru = mysqli_query($conn, "SELECT COUNT(*) as total FROM guru");
+if ($q_guru) {
+    $row_guru = mysqli_fetch_assoc($q_guru);
+    $total_guru = $row_guru['total'];
+}
+
+$total_mapel = 0;
+$q_mapel = mysqli_query($conn, "SELECT COUNT(*) as total FROM mapel");
+if ($q_mapel) {
+    $row_mapel = mysqli_fetch_assoc($q_mapel);
+    $total_mapel = $row_mapel['total'];
+}
+
+require_once __DIR__ . '/../includes/template_header.php';
+?>
+
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+    <h2><i class="bi bi-speedometer2 text-primary me-2"></i>Dashboard Admin</h2>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white shadow-sm border-0">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="card-title mb-1">Total Siswa</h6>
+                    <h2 class="mb-0 fw-bold"><?= $total_siswa; ?></h2>
+                </div>
+                <i class="bi bi-people-fill display-5 opacity-50"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow-sm border-0">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="card-title mb-1">Total Guru</h6>
+                    <h2 class="mb-0 fw-bold"><?= $total_guru; ?></h2>
+                </div>
+                <i class="bi bi-person-badge-fill display-5 opacity-50"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-info text-white shadow-sm border-0">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="card-title mb-1">Total Mata Pelajaran</h6>
+                    <h2 class="mb-0 fw-bold"><?= $total_mapel; ?></h2>
+                </div>
+                <i class="bi bi-book-fill display-5 opacity-50"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
+
+
+===============================
+FILE: ./admin/data_guru.php
+===============================
+<?php
+require_once __DIR__ . '/../config/koneksi_database.php';
+require_once __DIR__ . '/../includes/helper_cek_login.php';
+check_role(['admin']);
+
+// ==========================================
+// PROSES FORM (CREATE, UPDATE, DELETE)
+// ==========================================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
+    $aksi = $_POST['aksi'];
+
+    // --- PROSES TAMBAH GURU & AKUN ---
+    if ($aksi === 'tambah') {
+        $nip      = sanitize($_POST['nip']);
+        $nama     = sanitize($_POST['nama']);
+        $jk       = sanitize($_POST['jenis_kelamin']);
+        $username = sanitize($_POST['username']);
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $role     = 'guru';
+
+        // Cek duplikasi Username atau NIP
+        $cek = mysqli_query($conn, "SELECT id FROM users WHERE username='$username' UNION SELECT id FROM guru WHERE nip='$nip'");
+        if (mysqli_num_rows($cek) > 0) {
+            set_flash_message('danger', 'Gagal! Username atau NIP sudah terdaftar.');
+        } else {
+            mysqli_begin_transaction($conn);
+            try {
+                // 1. Insert ke tabel users
+                $stmt1 = mysqli_prepare($conn, "INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
+                mysqli_stmt_bind_param($stmt1, "sss", $username, $password, $role);
+                mysqli_stmt_execute($stmt1);
+                $user_id = mysqli_insert_id($conn);
+
+                // 2. Insert ke tabel guru
+                $stmt2 = mysqli_prepare($conn, "INSERT INTO guru (nip, nama, jenis_kelamin, user_id) VALUES (?, ?, ?, ?)");
+                mysqli_stmt_bind_param($stmt2, "sssi", $nip, $nama, $jk, $user_id);
+                mysqli_stmt_execute($stmt2);
+
+                mysqli_commit($conn);
+                set_flash_message('success', 'Data Guru dan Akun berhasil ditambahkan!');
+            } catch (Exception $e) {
+                mysqli_rollback($conn);
+                set_flash_message('danger', 'Terjadi kesalahan sistem: ' . $e->getMessage());
+            }
+        }
+    } 
+    // --- PROSES EDIT GURU ---
+    elseif ($aksi === 'edit') {
+        $id_guru = (int)$_POST['id_guru'];
+        $nip     = sanitize($_POST['nip']);
+        $nama    = sanitize($_POST['nama']);
+        $jk      = sanitize($_POST['jenis_kelamin']);
+
+        $stmt = mysqli_prepare($conn, "UPDATE guru SET nip=?, nama=?, jenis_kelamin=? WHERE id=?");
+        mysqli_stmt_bind_param($stmt, "sssi", $nip, $nama, $jk, $id_guru);
+        
+        if (mysqli_stmt_execute($stmt)) {
+            set_flash_message('success', 'Data Guru berhasil diperbarui!');
+        } else {
+            set_flash_message('danger', 'Gagal memperbarui data Guru.');
+        }
+    }
+    // --- PROSES HAPUS GURU ---
+    elseif ($aksi === 'hapus') {
+        $user_id = (int)$_POST['user_id'];
+        
+        // Cukup hapus dari tabel users, tabel guru otomatis terhapus karena ON DELETE CASCADE
+        $stmt = mysqli_prepare($conn, "DELETE FROM users WHERE id=?");
+        mysqli_stmt_bind_param($stmt, "i", $user_id);
+        
+        if (mysqli_stmt_execute($stmt)) {
+            set_flash_message('success', 'Data Guru beserta akun berhasil dihapus!');
+        } else {
+            set_flash_message('danger', 'Gagal menghapus data.');
+        }
+    }
+
+    // Pola PRG (Post/Redirect/Get) untuk mencegah resubmission form saat direfresh
+    header("Location: data_guru.php");
+    exit();
+}
+
+require_once __DIR__ . '/../includes/template_header.php';
+
+// Ambil data guru beserta informasi akunnya
+$query = "SELECT g.*, u.username FROM guru g JOIN users u ON g.user_id = u.id ORDER BY g.nama ASC";
+$result = mysqli_query($conn, $query);
+?>
+
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+    <h2><i class="bi bi-person-workspace text-primary me-2"></i>Data Guru</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah">
+        <i class="bi bi-plus-circle me-1"></i> Tambah Guru
+    </button>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="15%">NIP</th>
+                    <th width="30%">Nama Guru</th>
+                    <th width="15%">L/P</th>
+                    <th width="15%">Username Akun</th>
+                    <th width="20%" class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (mysqli_num_rows($result) > 0): ?>
+                    <?php $no = 1; while ($row = mysqli_fetch_assoc($result)): ?>
+                    <tr>
+                        <td><?= $no++; ?></td>
+                        <td><?= htmlspecialchars($row['nip']); ?></td>
+                        <td><?= htmlspecialchars($row['nama']); ?></td>
+                        <td><?= $row['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan'; ?></td>
+                        <td><span class="badge bg-secondary"><?= htmlspecialchars($row['username']); ?></span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEdit<?= $row['id']; ?>">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapus<?= $row['id']; ?>">
+                                <i class="bi bi-trash"></i> Hapus
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Modal Edit -->
+                    <div class="modal fade" id="modalEdit<?= $row['id']; ?>" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form method="POST">
+                                    <div class="modal-header bg-warning">
+                                        <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Edit Data Guru</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="hidden" name="aksi" value="edit">
+                                        <input type="hidden" name="id_guru" value="<?= $row['id']; ?>">
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">NIP</label>
+                                            <input type="text" class="form-control" name="nip" value="<?= htmlspecialchars($row['nip']); ?>" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Nama Lengkap</label>
+                                            <input type="text" class="form-control" name="nama" value="<?= htmlspecialchars($row['nama']); ?>" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Jenis Kelamin</label>
+                                            <select class="form-select" name="jenis_kelamin" required>
+                                                <option value="L" <?= $row['jenis_kelamin'] == 'L' ? 'selected' : ''; ?>>Laki-laki</option>
+                                                <option value="P" <?= $row['jenis_kelamin'] == 'P' ? 'selected' : ''; ?>>Perempuan</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                        <button type="submit" class="btn btn-warning">Simpan Perubahan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Hapus -->
+                    <div class="modal fade" id="modalHapus<?= $row['id']; ?>" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form method="POST">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Konfirmasi Hapus</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="hidden" name="aksi" value="hapus">
+                                        <input type="hidden" name="user_id" value="<?= $row['user_id']; ?>">
+                                        <p>Apakah Anda yakin ingin menghapus guru <strong><?= htmlspecialchars($row['nama']); ?></strong>?</p>
+                                        <p class="text-danger small"><i class="bi bi-info-circle"></i> Menghapus guru juga akan menghapus akun login dan data terkait lainnya secara permanen.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                        <button type="submit" class="btn btn-danger">Ya, Hapus Data</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-3">Belum ada data guru.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Tambah Guru & Akun -->
+<div class="modal fade" id="modalTambah" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>Tambah Data & Akun Guru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="aksi" value="tambah">
+                    <div class="row">
+                        <div class="col-md-6 border-end">
+                            <h6 class="text-primary mb-3">Data Diri Guru</h6>
+                            <div class="mb-3">
+                                <label class="form-label">NIP</label>
+                                <input type="text" class="form-control" name="nip" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nama Lengkap</label>
+                                <input type="text" class="form-control" name="nama" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Jenis Kelamin</label>
+                                <select class="form-select" name="jenis_kelamin" required>
+                                    <option value="" disabled selected>Pilih...</option>
+                                    <option value="L">Laki-laki</option>
+                                    <option value="P">Perempuan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Data Akun Login</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-control" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-control" name="password" required>
+                            </div>
+                            <div class="alert alert-info py-2 small">
+                                <i class="bi bi-info-circle me-1"></i> Akun akan otomatis diberi role <b>Guru</b>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
+
+
+===============================
+FILE: ./admin/data_user.php
+===============================
+<?php
+require_once __DIR__ . '/../config/koneksi_database.php';
+require_once __DIR__ . '/../includes/helper_cek_login.php';
+check_role(['admin']);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
+    $aksi = $_POST['aksi'];
+
+    if ($aksi === 'reset_password') {
+        $id_user  = (int)$_POST['id_user'];
+        $pass_baru = password_hash($_POST['password_baru'], PASSWORD_DEFAULT);
+
+        $stmt = mysqli_prepare($conn, "UPDATE users SET password = ? WHERE id = ?");
+        mysqli_stmt_bind_param($stmt, "si", $pass_baru, $id_user);
+        mysqli_stmt_execute($stmt) 
+            ? set_flash_message('success', 'Password pengguna berhasil diperbarui!') 
+            : set_flash_message('danger', 'Gagal mengedit password.');
+    }
+    header("Location: data_user.php");
+    exit();
+}
+
+require_once __DIR__ . '/../includes/template_header.php';
+
+$query = "SELECT id, username, role FROM users ORDER BY role ASC, username ASC";
+$result = mysqli_query($conn, $query);
+?>
+
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+    <h2><i class="bi bi-people text-danger me-2"></i>Kelola Akun User</h2>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th width="5%">No</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th width="20%" class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $no = 1; while ($row = mysqli_fetch_assoc($result)): ?>
+                <tr>
+                    <td><?= $no++; ?></td>
+                    <td><strong><?= htmlspecialchars($row['username']); ?></strong></td>
+                    <td>
+                        <span class="badge bg-<?= $row['role'] === 'admin' ? 'danger' : ($row['role'] === 'guru' ? 'primary' : 'success'); ?>">
+                            <?= strtoupper($row['role']); ?>
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalReset<?= $row['id']; ?>">
+                            <i class="bi bi-key"></i> Reset Password
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Modal Reset Password -->
+                <div class="modal fade" id="modalReset<?= $row['id']; ?>" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="POST">
+                                <div class="modal-header bg-warning">
+                                    <h5 class="modal-title">Reset Password - <?= htmlspecialchars($row['username']); ?></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" name="aksi" value="reset_password">
+                                    <input type="hidden" name="id_user" value="<?= $row['id']; ?>">
+                                    <div class="mb-3">
+                                        <label class="form-label">Password Baru</label>
+                                        <input type="password" class="form-control" name="password_baru" required minlength="4">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-warning">Simpan Password</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
+
+
+===============================
+FILE: ./admin/data_mapel.php
+===============================
+<?php
+require_once __DIR__ . '/../config/koneksi_database.php';
+require_once __DIR__ . '/../includes/helper_cek_login.php';
+check_role(['admin']);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
+    $aksi = $_POST['aksi'];
+
+    if ($aksi === 'tambah') {
+        $kode = sanitize($_POST['kode_mapel']);
+        $nama = sanitize($_POST['nama_mapel']);
+        $guru = (int)$_POST['guru_id'];
+
+        $stmt = mysqli_prepare($conn, "INSERT INTO mapel (kode_mapel, nama_mapel, guru_id) VALUES (?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "ssi", $kode, $nama, $guru);
+        mysqli_stmt_execute($stmt) ? set_flash_message('success', 'Mapel berhasil ditambahkan!') : set_flash_message('danger', 'Gagal menambah mapel.');
+    } 
+    elseif ($aksi === 'edit') {
+        $id_mapel = (int)$_POST['id_mapel'];
+        $kode     = sanitize($_POST['kode_mapel']);
+        $nama     = sanitize($_POST['nama_mapel']);
+        $guru     = (int)$_POST['guru_id'];
+
+        $stmt = mysqli_prepare($conn, "UPDATE mapel SET kode_mapel=?, nama_mapel=?, guru_id=? WHERE id=?");
+        mysqli_stmt_bind_param($stmt, "ssii", $kode, $nama, $guru, $id_mapel);
+        mysqli_stmt_execute($stmt) ? set_flash_message('success', 'Mapel berhasil diperbarui!') : set_flash_message('danger', 'Gagal memperbarui.');
+    }
+    elseif ($aksi === 'hapus') {
+        $id_mapel = (int)$_POST['id_mapel'];
+        $stmt = mysqli_prepare($conn, "DELETE FROM mapel WHERE id=?");
+        mysqli_stmt_bind_param($stmt, "i", $id_mapel);
+        mysqli_stmt_execute($stmt) ? set_flash_message('success', 'Mapel dihapus!') : set_flash_message('danger', 'Gagal menghapus.');
+    }
+    header("Location: data_mapel.php");
+    exit();
+}
+
+require_once __DIR__ . '/../includes/template_header.php';
+
+// Ambil data mapel beserta nama gurunya
+$query = "SELECT m.*, g.nama as nama_guru FROM mapel m JOIN guru g ON m.guru_id = g.id ORDER BY m.kode_mapel ASC";
+$result = mysqli_query($conn, $query);
+
+// Ambil daftar guru untuk dropdown
+$guru_list = mysqli_query($conn, "SELECT id, nama FROM guru ORDER BY nama ASC");
+$options_guru = "";
+while ($g = mysqli_fetch_assoc($guru_list)) {
+    $options_guru .= "<option value='{$g['id']}'>{$g['nama']}</option>";
+}
+?>
+
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+    <h2><i class="bi bi-book text-warning me-2"></i>Data Mata Pelajaran</h2>
+    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalTambah">
+        <i class="bi bi-plus-circle me-1"></i> Tambah Mapel
+    </button>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="15%">Kode</th>
+                    <th width="35%">Nama Mata Pelajaran</th>
+                    <th width="30%">Guru Pengampu</th>
+                    <th width="15%" class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $no = 1; while ($row = mysqli_fetch_assoc($result)): ?>
+                <tr>
+                    <td><?= $no++; ?></td>
+                    <td><span class="badge bg-secondary"><?= htmlspecialchars($row['kode_mapel']); ?></span></td>
+                    <td><?= htmlspecialchars($row['nama_mapel']); ?></td>
+                    <td><?= htmlspecialchars($row['nama_guru']); ?></td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#modalEdit<?= $row['id']; ?>"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalHapus<?= $row['id']; ?>"><i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>
+
+                <!-- Modal Edit Mapel -->
+                <div class="modal fade" id="modalEdit<?= $row['id']; ?>" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="POST">
+                                <div class="modal-header bg-warning">
+                                    <h5 class="modal-title">Edit Mapel</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" name="aksi" value="edit">
+                                    <input type="hidden" name="id_mapel" value="<?= $row['id']; ?>">
+                                    <div class="mb-3"><label>Kode Mapel</label><input type="text" class="form-control" name="kode_mapel" value="<?= htmlspecialchars($row['kode_mapel']); ?>" required></div>
+                                    <div class="mb-3"><label>Nama Mapel</label><input type="text" class="form-control" name="nama_mapel" value="<?= htmlspecialchars($row['nama_mapel']); ?>" required></div>
+                                    <div class="mb-3">
+                                        <label>Guru Pengampu</label>
+                                        <select class="form-select" name="guru_id" required>
+                                            <?php 
+                                            // Reset pointer query guru untuk dropdown
+                                            mysqli_data_seek($guru_list, 0);
+                                            while($g = mysqli_fetch_assoc($guru_list)): 
+                                            ?>
+                                                <option value="<?= $g['id'] ?>" <?= $row['guru_id'] == $g['id'] ? 'selected' : '' ?>><?= $g['nama'] ?></option>
+                                            <?php endwhile; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-warning">Simpan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Hapus Mapel -->
+                <div class="modal fade" id="modalHapus<?= $row['id']; ?>" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="POST">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title">Konfirmasi Hapus</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" name="aksi" value="hapus">
+                                    <input type="hidden" name="id_mapel" value="<?= $row['id']; ?>">
+                                    <p>Hapus mapel <strong><?= htmlspecialchars($row['nama_mapel']); ?></strong>?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-danger">Hapus</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Tambah Mapel -->
+<div class="modal fade" id="modalTambah" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">Tambah Mapel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="aksi" value="tambah">
+                    <div class="mb-3"><label>Kode Mapel</label><input type="text" class="form-control" name="kode_mapel" required></div>
+                    <div class="mb-3"><label>Nama Mapel</label><input type="text" class="form-control" name="nama_mapel" required></div>
+                    <div class="mb-3">
+                        <label>Guru Pengampu</label>
+                        <select class="form-select" name="guru_id" required>
+                            <option value="" disabled selected>-- Pilih Guru --</option>
+                            <?= $options_guru; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-warning">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
+
+
+===============================
+FILE: ./buat_admin.php
+===============================
+<?php
+require_once __DIR__ . '/config/koneksi_database.php';
+
+$username = 'admin';
+$password = 'admin123'; // Password yang ingin digunakan
+$role     = 'admin';
+
+// Hash password menggunakan BCRYPT
+$password_hashed = password_hash($password, PASSWORD_DEFAULT);
+
+// Cek apakah username admin sudah ada
+$stmt_check = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ?");
+mysqli_stmt_bind_param($stmt_check, "s", $username);
+mysqli_stmt_execute($stmt_check);
+mysqli_stmt_store_result($stmt_check);
+
+if (mysqli_stmt_num_rows($stmt_check) > 0) {
+    // Update password jika admin sudah ada
+    $stmt_update = mysqli_prepare($conn, "UPDATE users SET password = ? WHERE username = ?");
+    mysqli_stmt_bind_param($stmt_update, "ss", $password_hashed, $username);
+    if (mysqli_stmt_execute($stmt_update)) {
+        echo "<h3 style='color:green;'>✓ Password Admin berhasil diperbarui!</h3>";
+    }
+} else {
+    // Buat akun admin baru
+    $stmt_insert = mysqli_prepare($conn, "INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
+    mysqli_stmt_bind_param($stmt_insert, "sss", $username, $password_hashed, $role);
+    if (mysqli_stmt_execute($stmt_insert)) {
+        echo "<h3 style='color:green;'>✓ Akun Admin berhasil dibuat!</h3>";
+    }
+}
+
+echo "Username: <b>admin</b><br>";
+echo "Password: <b>admin123</b><br>";
+echo "<a href='auth/form_login.php'>Klik di sini untuk Login</a>";
+?>
+
+
+===============================
+FILE: ./includes/helper_fungsi.php
+===============================
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+/**
+ * Membersihkan input form dari karakter berbahaya (Anti-XSS & Trim)
+ */
+function sanitize($data) {
+    if (is_null($data)) return '';
+    $data = trim($data);
+    $data = stripslashes($data);
+    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * Menyiapkan pesan notifikasi temporary (flash message)
+ * $tipe: 'success', 'danger', 'warning', 'info'
+ */
+function set_flash_message($tipe, $pesan) {
+    $_SESSION['flash_message'] = [
+        'tipe' => $tipe,
+        'pesan' => $pesan
+    ];
+}
+
+/**
+ * Menampilkan pesan notifikasi dalam bentuk Alert Bootstrap 5
+ */
+function display_flash_message() {
+    if (isset($_SESSION['flash_message'])) {
+        $tipe = $_SESSION['flash_message']['tipe'];
+        $pesan = $_SESSION['flash_message']['pesan'];
+        
+        echo '<div class="alert alert-' . $tipe . ' alert-dismissible fade show shadow-sm" role="alert">';
+        echo '<i class="bi bi-info-circle-fill me-2"></i>' . $pesan;
+        echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+        echo '</div>';
+        
+        unset($_SESSION['flash_message']);
+    }
+}
+?>
+
+
+===============================
+FILE: ./includes/template_footer.php
+===============================
+</main> <!-- Akhir Container Utama -->
+
+<footer class="footer mt-auto py-3 bg-white border-top text-center text-muted shadow-sm">
+    <div class="container">
+        <small>&copy; <?= date('Y'); ?> <strong>SIPN</strong> - SMK Sangkuriang 1 Cimahi. All rights reserved.</small>
+    </div>
+</footer>
+
+<!-- Bootstrap 5 JS Bundle CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Script otomatis menandai menu aktif di Navbar
+    document.addEventListener("DOMContentLoaded", function() {
+        let currentUrl = window.location.href;
+        let navLinks = document.querySelectorAll('.nav-link');
+        
+        navLinks.forEach(function(link) {
+            // Jika URL saat ini cocok dengan href menu
+            if (link.href === currentUrl) {
+                link.classList.add('active');
+                link.classList.add('fw-bold'); // Menebalkan teks
+            }
+        });
+    });
+</script>
+</body>
+</html>
+
+
+===============================
+FILE: ./includes/helper_cek_login.php
+===============================
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+/**
+ * Memastikan pengguna sudah melakukan login
+ */
+function check_login() {
+    if (!isset($_SESSION['user_id'])) {
+        $_SESSION['flash_message'] = [
+            'tipe' => 'warning',
+            'pesan' => 'Silakan login terlebih dahulu untuk mengakses halaman ini.'
+        ];
+        header("Location: " . BASE_URL . "auth/form_login.php");
+        exit();
+    }
+}
+
+/**
+ * Memastikan role pengguna sesuai dengan halaman yang diakses
+ * Contoh penggunaan: check_role(['admin']);
+ */
+function check_role($allowed_roles = []) {
+    check_login();
+    
+    if (!in_array($_SESSION['role'], $allowed_roles)) {
+        $role_sekarang = $_SESSION['role'];
+        $_SESSION['flash_message'] = [
+            'tipe' => 'danger',
+            'pesan' => 'Anda tidak memiliki hak akses untuk membuka halaman tersebut.'
+        ];
+        header("Location: " . BASE_URL . $role_sekarang . "/dashboard_" . $role_sekarang . ".php");
+        exit();
+    }
+}
+?>
+
+
+===============================
+FILE: ./includes/template_header.php
+===============================
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . '/../config/koneksi_database.php';
+require_once __DIR__ . '/helper_fungsi.php';
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIPN - Sistem Informasi Pengelolaan Nilai</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<?php if (isset($_SESSION['user_id'])): ?>
+<!-- NAVBAR UTAMA -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="<?= BASE_URL; ?>">
+      <i class="bi bi-journal-check me-2"></i>SIPN SMK
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSIPN" aria-controls="navbarSIPN" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSIPN">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <?php if ($_SESSION['role'] === 'admin'): ?>
+            <!-- Menu Admin -->
+            <li class="nav-item">
+              <a class="nav-link" href="<?= BASE_URL; ?>admin/dashboard_admin.php"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="<?= BASE_URL; ?>admin/data_user.php"><i class="bi bi-people me-1"></i> Data User</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="<?= BASE_URL; ?>admin/data_siswa.php"><i class="bi bi-person-badge me-1"></i> Data Siswa</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="<?= BASE_URL; ?>admin/data_guru.php"><i class="bi bi-person-workspace me-1"></i> Data Guru</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="<?= BASE_URL; ?>admin/data_mapel.php"><i class="bi bi-book me-1"></i> Data Mapel</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="<?= BASE_URL; ?>admin/data_mengajar.php"><i class="bi bi-card-checklist me-1"></i> Data Mengajar</a>
+            </li>
+
+        <?php elseif ($_SESSION['role'] === 'guru'): ?>
+            <!-- Menu Guru -->
+            <li class="nav-item">
+              <a class="nav-link" href="<?= BASE_URL; ?>guru/dashboard_guru.php"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="<?= BASE_URL; ?>guru/data_nilai_siswa.php"><i class="bi bi-pencil-square me-1"></i> Kelola Nilai</a>
+            </li>
+
+        <?php elseif ($_SESSION['role'] === 'siswa'): ?>
+            <!-- Menu Siswa -->
+            <li class="nav-item">
+              <a class="nav-link" href="<?= BASE_URL; ?>siswa/dashboard_siswa.php"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="<?= BASE_URL; ?>siswa/lihat_nilai_rapor.php"><i class="bi bi-file-earmark-text me-1"></i> Lihat Nilai</a>
+            </li>
+        <?php endif; ?>
+      </ul>
+
+      <!-- User Information Dropdown -->
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle me-1"></i> <?= htmlspecialchars($_SESSION['username']); ?> (<?= ucfirst($_SESSION['role']); ?>)
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+            <li>
+              <a class="dropdown-item" href="<?= BASE_URL . $_SESSION['role']; ?>/profile_<?= $_SESSION['role']; ?>.php">
+                <i class="bi bi-person me-2"></i> Kelola Profile
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item text-danger" href="<?= BASE_URL; ?>auth/proses_logout.php">
+                <i class="bi bi-box-arrow-right me-2"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<?php endif; ?>
+
+<main class="container my-4 flex-grow-1">
+<?php display_flash_message(); ?>
+
+

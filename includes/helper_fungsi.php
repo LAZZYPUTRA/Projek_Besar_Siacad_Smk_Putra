@@ -7,11 +7,10 @@ if (session_status() === PHP_SESSION_NONE) {
  * Membersihkan input form dari karakter berbahaya (Anti-XSS & Trim)
  */
 function sanitize($data) {
-    global $conn;
+    if (is_null($data)) return '';
     $data = trim($data);
     $data = stripslashes($data);
-    $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
-    return mysqli_real_escape_string($conn, $data);
+    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
 }
 
 /**
@@ -38,7 +37,6 @@ function display_flash_message() {
         echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
         echo '</div>';
         
-        // Hapus pesan setelah ditampilkan agar tidak muncul kembali saat reload
         unset($_SESSION['flash_message']);
     }
 }
