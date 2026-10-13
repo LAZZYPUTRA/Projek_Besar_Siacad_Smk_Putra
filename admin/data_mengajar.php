@@ -1,5 +1,8 @@
 <?php
+require_once __DIR__ . '/../config/koneksi_database.php';
+require_once __DIR__ . '/../includes/helper_fungsi.php';
 require_once __DIR__ . '/../includes/helper_cek_login.php';
+
 check_role(['admin']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
@@ -25,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
 
 require_once __DIR__ . '/../includes/template_header.php';
 
-// Ambil data mengajar beserta nama mapel, guru, dan siswa
 $query = "
     SELECT mg.id, m.nama_mapel, m.kode_mapel, g.nama as nama_guru, s.nama as nama_siswa, s.kelas 
     FROM mengajar mg
@@ -36,7 +38,6 @@ $query = "
 ";
 $result = mysqli_query($conn, $query);
 
-// Data Dropdown
 $opt_mapel = "";
 $q_mapel = mysqli_query($conn, "SELECT id, nama_mapel, kode_mapel FROM mapel ORDER BY nama_mapel ASC");
 while ($m = mysqli_fetch_assoc($q_mapel)) { 
@@ -50,24 +51,24 @@ while ($s = mysqli_fetch_assoc($q_siswa)) {
 }
 ?>
 
-<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
-    <h2><i class="bi bi-card-checklist text-primary me-2"></i>Data Penugasan Kelas (Mengajar)</h2>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah">
-        <i class="bi bi-plus-circle me-1"></i> Tugaskan Siswa
+<div class="page-header flex-between">
+    <h2><i class="bi bi-card-checklist"></i> Data Penugasan Kelas (Mengajar)</h2>
+    <button class="btn btn-primary" data-modal-target="#modalTambah">
+        <i class="bi bi-plus-circle"></i> Tugaskan Siswa
     </button>
 </div>
 
-<div class="card shadow-sm border-0">
-    <div class="card-body table-responsive">
-        <table class="table table-hover table-bordered align-middle">
-            <thead class="table-light">
+<div class="card-panel">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
                 <tr>
-                    <th width="5%">No</th>
-                    <th width="25%">Mata Pelajaran</th>
-                    <th width="25%">Guru Pengampu</th>
-                    <th width="25%">Nama Siswa</th>
-                    <th width="10%">Kelas</th>
-                    <th width="10%" class="text-center">Aksi</th>
+                    <th style="width: 5%;">No</th>
+                    <th style="width: 25%;">Mata Pelajaran</th>
+                    <th style="width: 25%;">Guru Pengampu</th>
+                    <th style="width: 25%;">Nama Siswa</th>
+                    <th style="width: 10%;">Kelas</th>
+                    <th style="width: 10%;" class="text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,19 +79,19 @@ while ($s = mysqli_fetch_assoc($q_siswa)) {
                         <td><strong><?= htmlspecialchars($row['nama_mapel']); ?></strong> <br><small class="text-muted"><?= htmlspecialchars($row['kode_mapel']); ?></small></td>
                         <td><?= htmlspecialchars($row['nama_guru']); ?></td>
                         <td><?= htmlspecialchars($row['nama_siswa']); ?></td>
-                        <td><span class="badge bg-info text-dark"><?= htmlspecialchars($row['kelas']); ?></span></td>
+                        <td><span class="badge badge-info"><?= htmlspecialchars($row['kelas']); ?></span></td>
                         <td class="text-center">
-                            <form method="POST" onsubmit="return confirm('Hapus penugasan ini?');" class="d-inline">
+                            <form method="POST" onsubmit="return confirm('Hapus penugasan ini?');" class="inline-form">
                                 <input type="hidden" name="aksi" value="hapus">
                                 <input type="hidden" name="id_mengajar" value="<?= $row['id']; ?>">
-                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Hapus</button>
+                                <button type="submit" class="btn btn-sm btn-danger-outline"><i class="bi bi-trash"></i> Hapus</button>
                             </form>
                         </td>
                     </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-3">Belum ada data penugasan.</td>
+                        <td colspan="6" class="text-center text-muted">Belum ada data penugasan.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -99,37 +100,35 @@ while ($s = mysqli_fetch_assoc($q_siswa)) {
 </div>
 
 <!-- Modal Tambah Penugasan -->
-<div class="modal fade" id="modalTambah" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="POST">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Tugaskan Siswa ke Mapel</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+<div class="modal-overlay" id="modalTambah">
+    <div class="modal-box">
+        <form method="POST">
+            <div class="modal-header header-primary">
+                <h5>Tugaskan Siswa ke Mapel</h5>
+                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="aksi" value="tambah">
+                <div class="form-group">
+                    <label class="form-label">Mata Pelajaran</label>
+                    <select class="form-select" name="mapel_id" required>
+                        <option value="" disabled selected>-- Pilih Mapel --</option>
+                        <?= $opt_mapel; ?>
+                    </select>
                 </div>
-                <div class="modal-body">
-                    <input type="hidden" name="aksi" value="tambah">
-                    <div class="mb-3">
-                        <label class="form-label">Mata Pelajaran</label>
-                        <select class="form-select" name="mapel_id" required>
-                            <option value="" disabled selected>-- Pilih Mapel --</option>
-                            <?= $opt_mapel; ?>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Siswa</label>
-                        <select class="form-select" name="siswa_id" required>
-                            <option value="" disabled selected>-- Pilih Siswa --</option>
-                            <?= $opt_siswa; ?>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label class="form-label">Siswa</label>
+                    <select class="form-select" name="siswa_id" required>
+                        <option value="" disabled selected>-- Pilih Siswa --</option>
+                        <?= $opt_siswa; ?>
+                    </select>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-modal-close>Batal</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+        </form>
     </div>
 </div>
 

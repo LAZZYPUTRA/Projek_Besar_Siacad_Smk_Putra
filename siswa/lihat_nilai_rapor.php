@@ -1,99 +1,145 @@
 <?php
-// 1. Panggil file koneksi database TERLEBIH DAHULU
 require_once __DIR__ . '/../config/koneksi_database.php';
-// 2. Panggil helper untuk cek login dan hak akses
+require_once __DIR__ . '/../includes/helper_fungsi.php';
 require_once __DIR__ . '/../includes/helper_cek_login.php';
 
 check_role(['siswa']);
 
 $user_id = $_SESSION['user_id'];
 
-// Ambil data detail siswa berdasarkan user_id yang sedang login
-$q_siswa = mysqli_query($conn, "SELECT * FROM siswa WHERE user_id = $user_id");
+$query_siswa = mysqli_query($conn, "SELECT id, nama, nis, kelas FROM siswa WHERE user_id = '$user_id'");
+$siswa = mysqli_fetch_assoc($query_siswa);
+$id_siswa = $siswa['id'] ?? 0;
 
-// Proteksi jika data profil siswa belum terhubung ke user ini
-if (!$q_siswa || mysqli_num_rows($q_siswa) === 0) {
-    die("<div style='padding: 20px; text-align: center; font-family: sans-serif;'>
-            <h3>Error: Profil Siswa Tidak Ditemukan!</h3>
-            <p>Akun ini belum memiliki data profil siswa yang valid di database.</p>
-            <a href='../auth/logout.php'>Kembali ke Login</a>
-         </div>");
-}
-
-$siswa = mysqli_fetch_assoc($q_siswa);
-$siswa_id = $siswa['id'];
-
-// Ambil daftar nilai milik siswa ini
-$query = "
-    SELECT m.kode_mapel, m.nama_mapel, g.nama as nama_guru, 
-           nr.nilai_kkm, nr.nilai_pengetahuan, nr.nilai_keterampilan, nr.Keterangan
-    FROM mengajar mg
-    JOIN mapel m ON mg.mapel_id = m.id
+// Ambil data nilai rapor lengkap dari database
+$query_nilai = mysqli_query($conn, "
+    SELECT 
+        nr.nilai_kkm, 
+        nr.nilai_pengetahuan, 
+        nr.nilai_keterampilan, 
+        nr.Keterangan, 
+        m.kode_mapel, 
+        m.nama_mapel, 
+        g.nama AS nama_guru
+    FROM nilai_rapor nr
+    JOIN mapel m ON nr.mapel_id = m.id
     JOIN guru g ON m.guru_id = g.id
-    LEFT JOIN nilai_rapor nr ON (nr.siswa_id = mg.siswa_id AND nr.mapel_id = m.id)
-    WHERE mg.siswa_id = $siswa_id
-";
-$result = mysqli_query($conn, $query);
+    WHERE nr.siswa_id = '$id_siswa'
+    ORDER BY m.nama_mapel ASC
+");
 
 require_once __DIR__ . '/../includes/template_header.php';
 ?>
 
-<div class="card shadow-sm border-0 mb-4">
-    <div class="card-body">
-        <h4><i class="bi bi-person-badge text-primary me-2"></i>Rapor Digital Siswa</h4>
-        <div class="row mt-3">
-            <div class="col-md-4"><strong>Nama:</strong> <?= htmlspecialchars($siswa['nama']); ?></div>
-            <div class="col-md-4"><strong>NIS:</strong> <?= htmlspecialchars($siswa['nis']); ?></div>
-            <div class="col-md-4"><strong>Kelas:</strong> <?= htmlspecialchars($siswa['kelas']); ?></div>
+<div class="card-panel-clean print-area">
+    <div class="card-header-clean flex-between no-print">
+        <h3><i class="bi bi-file-earmark-text"></i> Laporan Hasil Belajar (Nilai Rapor)</h3>
+        <button onclick="window.print()" class="btn btn-secondary btn-sm">
+            <i class="bi bi-printer"></i> Cetak Rapor
+        </button>
+    </div>
+    
+    <div class="card-body-clean">
+        <!-- Informasi Identitas Siswa -->
+        <div class="student-identity-box mb-4">
+            <table class="info-table">
+                <tr>
+                    <td style="width: 140px;" class="text-muted">Nama Lengkap</td>
+                    <td style="width: 10px;">:</td>
+                    <td><strong><?= htmlspecialchars($siswa['nama']); ?></strong></td>
+                </tr>
+                <tr>
+                    <td class="text-muted">NIS</td>
+                    <td>:</td>
+                    <td><?= htmlspecialchars($siswa['nis']); ?></td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Kelas</td>
+                    <td>:</td>
+                    <td><?= htmlspecialchars($siswa['kelas']); ?></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Tabel Transkrip Nilai Rapor -->
+        <div class="table-responsive">
+            <table class="data-table bordered">
+                <thead>
+                    <tr>
+                        <th rowspan="2" class="text-center" style="width: 50px;">No</th>
+                        <th rowspan="2">Mata Pelajaran</th>
+                        <th rowspan="2">Guru Pengampu</th>
+                        <th rowspan="2" class="text-center">KKM</th>
+                        <th colspan="2" class="text-center">Nilai Capaian</th>
+                        <th rowspan="2" class="text-center">Keterangan</th>
+                    </tr>
+                    <tr>
+                        <th class="text-center">Pengetahuan</th>
+                        <th class="text-center">Keterampilan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (mysqli_num_rows($query_nilai) > 0): ?>
+                        <?php $no = 1; while ($row = mysqli_fetch_assoc($query_nilai)): ?>
+                            <tr>
+                                <td class="text-center"><?= $no++; ?></td>
+                                adapter:
+                                <td>
+                                    <strong><?= htmlspecialchars($row['nama_mapel']); ?></strong><br>
+                                    <small class="text-muted"><?= htmlspecialchars($row['kode_mapel']); ?></small>
+                                </td>
+                                <td><?= htmlspecialchars($row['nama_guru']); ?></td>
+                                <td class="text-center font-bold"><?= $row['nilai_kkm']; ?></td>
+                                <td class="text-center"><?= $row['nilai_pengetahuan']; ?></td>
+                                <td class="text-center"><?= $row['nilai_keterampilan']; ?></td>
+                                <td class="text-center">
+                                    <span class="badge badge-<?= strtolower($row['Keterangan']) === 'tuntas' ? 'success' : 'danger'; ?>">
+                                        <?= htmlspecialchars($row['Keterangan']); ?>
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">
+                                Belum ada data nilai rapor yang diinput oleh Guru.
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tanda Tangan Cetak -->
+        <div class="print-signature print-only mt-5">
+            <div class="signature-column float-right text-right" style="float: right;">
+                <p>Mengetahui,<br>Wali Kelas / Guru Pengampu</p>
+                <br><br><br>
+                <p class="font-bold underline">( ........................................................... )</p>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="card shadow-sm border-0">
-    <div class="card-body table-responsive">
-        <table class="table table-bordered align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th width="5%">No</th>
-                    <th width="10%">Kode</th>
-                    <th width="25%">Mata Pelajaran</th>
-                    <th width="20%">Guru Pengampu</th>
-                    <th width="8%">KKM</th>
-                    <th width="10%">Pengetahuan</th>
-                    <th width="10%">Keterampilan</th>
-                    <th width="12%">Keterangan</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (mysqli_num_rows($result) > 0): ?>
-                    <?php $no = 1; while ($row = mysqli_fetch_assoc($result)): ?>
-                    <tr>
-                        <td><?= $no++; ?></td>
-                        <td><?= htmlspecialchars($row['kode_mapel']); ?></td>
-                        <td><strong><?= htmlspecialchars($row['nama_mapel']); ?></strong></td>
-                        <td><?= htmlspecialchars($row['nama_guru']); ?></td>
-                        <td class="text-center"><?= $row['nilai_kkm'] ?? '-'; ?></td>
-                        <td class="text-center"><?= $row['nilai_pengetahuan'] ?? '-'; ?></td>
-                        <td class="text-center"><?= $row['nilai_keterampilan'] ?? '-'; ?></td>
-                        <td>
-                            <?php if (isset($row['Keterangan'])): ?>
-                                <span class="badge bg-<?= $row['Keterangan'] === 'Belum Tuntas' ? 'danger' : 'success'; ?>">
-                                    <?= htmlspecialchars($row['Keterangan']); ?>
-                                </span>
-                            <?php else: ?>
-                                <span class="badge bg-secondary">Belum Diisi</span>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="8" class="text-center text-muted py-3">Belum ada data mata pelajaran yang diikuti.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
+<style>
+    @media print {
+        .no-print, header, footer, .app-header, .app-footer {
+            display: none !important;
+        }
+        .print-only {
+            display: block !important;
+        }
+        .card-panel-clean {
+            border: none !important;
+            box-shadow: none !important;
+        }
+        body {
+            background-color: white !important;
+        }
+    }
+    .print-only {
+        display: none;
+    }
+</style>
 
 <?php require_once __DIR__ . '/../includes/template_footer.php'; ?>

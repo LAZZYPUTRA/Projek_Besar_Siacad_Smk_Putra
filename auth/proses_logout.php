@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once __DIR__ . '/../config/koneksi_database.php';
 require_once __DIR__ . '/../includes/helper_fungsi.php';
 
@@ -18,7 +20,7 @@ if (ini_get("session.use_cookies")) {
 // Hancurkan session
 session_destroy();
 
-// Mulai session baru untuk pesan notifikasi logout
+// Mulai session baru untuk pesan notifikasi
 session_start();
 set_flash_message('info', 'Anda telah berhasil logout.');
 

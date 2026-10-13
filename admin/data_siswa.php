@@ -1,12 +1,12 @@
 <?php
 require_once __DIR__ . '/../config/koneksi_database.php';
+require_once __DIR__ . '/../includes/helper_fungsi.php';
 require_once __DIR__ . '/../includes/helper_cek_login.php';
 check_role(['admin']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
     $aksi = $_POST['aksi'];
 
-    // --- PROSES TAMBAH SISWA & AKUN ---
     if ($aksi === 'tambah') {
         $nis      = sanitize($_POST['nis']);
         $nama     = sanitize($_POST['nama']);
@@ -39,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
             }
         }
     } 
-    // --- PROSES EDIT SISWA ---
     elseif ($aksi === 'edit') {
         $id_siswa = (int)$_POST['id_siswa'];
         $nis      = sanitize($_POST['nis']);
@@ -56,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
             set_flash_message('danger', 'Gagal memperbarui data Siswa.');
         }
     }
-    // --- PROSES HAPUS SISWA ---
     elseif ($aksi === 'hapus') {
         $user_id = (int)$_POST['user_id'];
         
@@ -79,17 +77,17 @@ $query = "SELECT s.*, u.username FROM siswa s JOIN users u ON s.user_id = u.id O
 $result = mysqli_query($conn, $query);
 ?>
 
-<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
-    <h2><i class="bi bi-person-badge text-success me-2"></i>Data Siswa</h2>
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTambah">
-        <i class="bi bi-plus-circle me-1"></i> Tambah Siswa
+<div class="page-header flex-between">
+    <h2><i class="bi bi-person-badge"></i> Data Siswa</h2>
+    <button class="btn btn-success" data-modal-target="#modalTambah">
+        <i class="bi bi-plus-circle"></i> Tambah Siswa
     </button>
 </div>
 
-<div class="card shadow-sm border-0">
-    <div class="card-body table-responsive">
-        <table class="table table-hover table-bordered align-middle">
-            <thead class="table-light">
+<div class="card-panel">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
                 <tr>
                     <th>No</th>
                     <th>NIS</th>
@@ -106,76 +104,72 @@ $result = mysqli_query($conn, $query);
                     <td><?= $no++; ?></td>
                     <td><?= htmlspecialchars($row['nis']); ?></td>
                     <td><?= htmlspecialchars($row['nama']); ?></td>
-                    <td><span class="badge bg-info text-dark"><?= htmlspecialchars($row['kelas']); ?></span></td>
+                    <td><span class="badge badge-info"><?= htmlspecialchars($row['kelas']); ?></span></td>
                     <td><?= $row['jenis_kelamin']; ?></td>
-                    <td><span class="badge bg-secondary"><?= htmlspecialchars($row['username']); ?></span></td>
+                    <td><span class="badge badge-secondary"><?= htmlspecialchars($row['username']); ?></span></td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEdit<?= $row['id']; ?>"><i class="bi bi-pencil-square"></i> Edit</button>
-                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapus<?= $row['id']; ?>"><i class="bi bi-trash"></i> Hapus</button>
+                        <button class="btn btn-sm btn-warning" data-modal-target="#modalEdit<?= $row['id']; ?>"><i class="bi bi-pencil-square"></i> Edit</button>
+                        <button class="btn btn-sm btn-danger" data-modal-target="#modalHapus<?= $row['id']; ?>"><i class="bi bi-trash"></i> Hapus</button>
                     </td>
                 </tr>
 
                 <!-- Modal Edit Siswa -->
-                <div class="modal fade" id="modalEdit<?= $row['id']; ?>" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form method="POST">
-                                <div class="modal-header bg-warning">
-                                    <h5 class="modal-title">Edit Data Siswa</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-overlay" id="modalEdit<?= $row['id']; ?>">
+                    <div class="modal-box">
+                        <form method="POST">
+                            <div class="modal-header header-warning">
+                                <h5>Edit Data Siswa</h5>
+                                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="aksi" value="edit">
+                                <input type="hidden" name="id_siswa" value="<?= $row['id']; ?>">
+                                <div class="form-group">
+                                    <label class="form-label">NIS</label>
+                                    <input type="text" class="form-input" name="nis" value="<?= htmlspecialchars($row['nis']); ?>" required>
                                 </div>
-                                <div class="modal-body">
-                                    <input type="hidden" name="aksi" value="edit">
-                                    <input type="hidden" name="id_siswa" value="<?= $row['id']; ?>">
-                                    <div class="mb-3">
-                                        <label>NIS</label>
-                                        <input type="text" class="form-control" name="nis" value="<?= htmlspecialchars($row['nis']); ?>" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label>Nama Lengkap</label>
-                                        <input type="text" class="form-control" name="nama" value="<?= htmlspecialchars($row['nama']); ?>" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label>Kelas</label>
-                                        <input type="text" class="form-control" name="kelas" value="<?= htmlspecialchars($row['kelas']); ?>" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label>Jenis Kelamin</label>
-                                        <select class="form-select" name="jenis_kelamin" required>
-                                            <option value="L" <?= $row['jenis_kelamin'] == 'L' ? 'selected' : ''; ?>>Laki-laki</option>
-                                            <option value="P" <?= $row['jenis_kelamin'] == 'P' ? 'selected' : ''; ?>>Perempuan</option>
-                                        </select>
-                                    </div>
+                                <div class="form-group">
+                                    <label class="form-label">Nama Lengkap</label>
+                                    <input type="text" class="form-input" name="nama" value="<?= htmlspecialchars($row['nama']); ?>" required>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                    <button type="submit" class="btn btn-warning">Simpan</button>
+                                <div class="form-group">
+                                    <label class="form-label">Kelas</label>
+                                    <input type="text" class="form-input" name="kelas" value="<?= htmlspecialchars($row['kelas']); ?>" required>
                                 </div>
-                            </form>
-                        </div>
+                                <div class="form-group">
+                                    <label class="form-label">Jenis Kelamin</label>
+                                    <select class="form-select" name="jenis_kelamin" required>
+                                        <option value="L" <?= $row['jenis_kelamin'] == 'L' ? 'selected' : ''; ?>>Laki-laki</option>
+                                        <option value="P" <?= $row['jenis_kelamin'] == 'P' ? 'selected' : ''; ?>>Perempuan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-modal-close>Batal</button>
+                                <button type="submit" class="btn btn-warning">Simpan</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
                 <!-- Modal Hapus Siswa -->
-                <div class="modal fade" id="modalHapus<?= $row['id']; ?>" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form method="POST">
-                                <div class="modal-header bg-danger text-white">
-                                    <h5 class="modal-title">Konfirmasi Hapus</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <input type="hidden" name="aksi" value="hapus">
-                                    <input type="hidden" name="user_id" value="<?= $row['user_id']; ?>">
-                                    <p>Hapus siswa <strong><?= htmlspecialchars($row['nama']); ?></strong> secara permanen?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                    <button type="submit" class="btn btn-danger">Hapus</button>
-                                </div>
-                            </form>
-                        </div>
+                <div class="modal-overlay" id="modalHapus<?= $row['id']; ?>">
+                    <div class="modal-box">
+                        <form method="POST">
+                            <div class="modal-header header-danger">
+                                <h5>Konfirmasi Hapus</h5>
+                                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="aksi" value="hapus">
+                                <input type="hidden" name="user_id" value="<?= $row['user_id']; ?>">
+                                <p>Hapus siswa <strong><?= htmlspecialchars($row['nama']); ?></strong> secara permanen?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-modal-close>Batal</button>
+                                <button type="submit" class="btn btn-danger">Hapus</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <?php endwhile; ?>
@@ -185,43 +179,41 @@ $result = mysqli_query($conn, $query);
 </div>
 
 <!-- Modal Tambah Siswa -->
-<div class="modal fade" id="modalTambah" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form method="POST">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">Tambah Siswa & Akun Baru</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="aksi" value="tambah">
-                    <div class="row">
-                        <div class="col-md-6 border-end">
-                            <h6>Data Siswa</h6>
-                            <div class="mb-3"><label>NIS</label><input type="text" class="form-control" name="nis" required></div>
-                            <div class="mb-3"><label>Nama Lengkap</label><input type="text" class="form-control" name="nama" required></div>
-                            <div class="mb-3"><label>Kelas</label><input type="text" class="form-control" name="kelas" placeholder="Cth: XII RPL 1" required></div>
-                            <div class="mb-3">
-                                <label>Jenis Kelamin</label>
-                                <select class="form-select" name="jenis_kelamin" required>
-                                    <option value="L">Laki-laki</option>
-                                    <option value="P">Perempuan</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Data Akun Login</h6>
-                            <div class="mb-3"><label>Username</label><input type="text" class="form-control" name="username" required></div>
-                            <div class="mb-3"><label>Password</label><input type="password" class="form-control" name="password" required></div>
+<div class="modal-overlay" id="modalTambah">
+    <div class="modal-box modal-lg">
+        <form method="POST">
+            <div class="modal-header header-success">
+                <h5>Tambah Siswa & Akun Baru</h5>
+                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="aksi" value="tambah">
+                <div class="form-row">
+                    <div class="form-column">
+                        <h6 class="form-subtitle">Data Siswa</h6>
+                        <div class="form-group"><label class="form-label">NIS</label><input type="text" class="form-input" name="nis" required></div>
+                        <div class="form-group"><label class="form-label">Nama Lengkap</label><input type="text" class="form-input" name="nama" required></div>
+                        <div class="form-group"><label class="form-label">Kelas</label><input type="text" class="form-input" name="kelas" placeholder="Cth: XII RPL 1" required></div>
+                        <div class="form-group">
+                            <label class="form-label">Jenis Kelamin</label>
+                            <select class="form-select" name="jenis_kelamin" required>
+                                <option value="L">Laki-laki</option>
+                                <option value="P">Perempuan</option>
+                            </select>
                         </div>
                     </div>
+                    <div class="form-column">
+                        <h6 class="form-subtitle">Data Akun Login</h6>
+                        <div class="form-group"><label class="form-label">Username</label><input type="text" class="form-input" name="username" required></div>
+                        <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" name="password" required></div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-success">Simpan Data</button>
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-modal-close>Batal</button>
+                <button type="submit" class="btn btn-success">Simpan Data</button>
+            </div>
+        </form>
     </div>
 </div>
 

@@ -1,27 +1,42 @@
-</main> <!-- Akhir Container Utama -->
+</main>
 
-<footer class="footer mt-auto py-3 bg-white border-top text-center text-muted shadow-sm">
-    <div class="container">
-        <small>&copy; <?= date('Y'); ?> <strong>SIPN</strong> - SMK Sangkuriang 1 Cimahi. All rights reserved.</small>
+<footer class="app-footer">
+    <div class="footer-container">
+        <div class="footer-info">
+            <small>&copy; <?= date('Y'); ?> <strong>SIPN</strong> — SMK Sangkuriang 1 Cimahi. Hak Cipta Dilindungi.</small>
+        </div>
+        <div class="footer-badges">
+            <span><i class="bi bi-patch-check-fill"></i> Terakreditasi A</span>
+            <span><i class="bi bi-shield-lock-fill"></i> SSL 256-Bit</span>
+        </div>
     </div>
 </footer>
 
-<!-- Bootstrap 5 JS Bundle CDN -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Script otomatis menandai menu aktif di Navbar
-    document.addEventListener("DOMContentLoaded", function() {
-        let currentUrl = window.location.href;
-        let navLinks = document.querySelectorAll('.nav-link');
-        
-        navLinks.forEach(function(link) {
-            // Jika URL saat ini cocok dengan href menu
-            if (link.href === currentUrl) {
-                link.classList.add('active');
-                link.classList.add('fw-bold'); // Menebalkan teks
-            }
-        });
+document.addEventListener("DOMContentLoaded", function() {
+    // Menandai menu aktif berdasarkan URL
+    const currentUrl = window.location.href;
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    navLinks.forEach(link => {
+        if (currentUrl.includes(link.getAttribute('href'))) {
+            link.classList.add('active');
+        }
     });
+
+    // Toggle dropdown profil pengguna
+    const userMenu = document.getElementById('userMenu');
+    if (userMenu) {
+        userMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.classList.toggle('is-open');
+        });
+
+        document.addEventListener('click', function() {
+            userMenu.classList.remove('is-open');
+        });
+    }
+});
 </script>
 </body>
 </html>
