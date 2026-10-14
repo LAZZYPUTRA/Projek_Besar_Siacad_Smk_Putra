@@ -1,18 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --primary-dark: #003633;
-  --primary-hover: #034d49;
-  --accent-orange: #fe932c;
-  --accent-peach: #fff4eb;
-  --accent-peach-border: #ffdcc3;
-  --text-dark: #0b1c30;
-  --text-muted: #64748b;
-  --border-color: #e2e8f0;
-  --bg-surface: #f8f9ff;
+  /* Palet Baru: Enterprise Modern Academic */
+  --primary-dark: #1e3a8a;       /* Deep Royal Blue yang berwibawa */
+  --primary-hover: #1d4ed8;      /* Hover Blue */
+  --accent-orange: #2563eb;      /* Aksen utama menggunakan Electric Blue */
+  --accent-peach: #eff6ff;       
+  --accent-peach-border: #bfdbfe;
+  
+  --text-dark: #0f172a;          /* Slate 900 (Sangat tajam dan mudah dibaca) */
+  --text-muted: #64748b;         /* Slate 500 */
+  --border-color: #e2e8f0;       /* Slate 200 */
+  --bg-surface: #f8fafc;         /* Slate 50 (Bersih dan tidak silau) */
+  --card-bg: #ffffff;
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
+[data-theme="dark"] {
+  /* Palet Dark Mode yang Nyaman di Mata (Zero Eye Strain) */
+  --primary-dark: #3b82f6;       /* Bright Blue untuk kontras gelap */
+  --primary-hover: #60a5fa;
+  --accent-orange: #38bdf8;
+  
+  --text-dark: #f8fafc;          /* Soft White */
+  --text-muted: #94a3b8;         /* Slate 400 */
+  --border-color: #1e293b;       /* Slate 800 */
+  --bg-surface: #090d16;         /* Deep Midnight Background */
+  --card-bg: #111827;            /* Gray 900 Surface */
+}
 * {
   box-sizing: border-box;
   margin: 0;
@@ -1064,28 +1079,8 @@ body {
   text-decoration: underline;
 }
 
-:root {
-  --primary-dark: #003633;
-  --primary-hover: #034d49;
-  --accent-orange: #fe932c;
-  --text-dark: #0b1c30;
-  --text-muted: #64748b;
-  --border-color: #e2e8f0;
-  --bg-surface: #f8f9ff;
-  --card-bg: #ffffff;
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-}
 
-[data-theme="dark"] {
-  --primary-dark: #00a896;
-  --primary-hover: #02c39a;
-  --accent-orange: #fe932c;
-  --text-dark: #f8fafc;
-  --text-muted: #94a3b8;
-  --border-color: #334155;
-  --bg-surface: #0f172a;
-  --card-bg: #1e293b;
-}
+
 
 body {
   background-color: var(--bg-surface);
@@ -1114,9 +1109,250 @@ body {
 [data-theme="dark"] .stat-card-clean .stat-label {
   color: var(--text-muted) !important;
 }
+/* Perbaikan khusus Dark Mode untuk Header, Dropdown Akun, dan Tombol */
+[data-theme="dark"] .app-header {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .brand-logo,
+[data-theme="dark"] .nav-link {
+  color: var(--text-dark) !important;
+}
+
+[data-theme="dark"] .nav-link:hover, 
+[data-theme="dark"] .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: var(--primary-dark) !important;
+}
+
+/* Memperbaiki teks nama akun di header saat dark mode */
+[data-theme="dark"] .user-name {
+  color: var(--text-dark) !important;
+}
+
+/* Memperbaiki latar belakang dan teks dropdown menu akun */
+[data-theme="dark"] .dropdown-content {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .dropdown-content a {
+  color: var(--text-dark) !important;
+}
+
+[data-theme="dark"] .dropdown-content a:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .dropdown-content a.link-danger {
+  color: #f87171 !important; /* Warna merah yang lebih lembut dan kontras di dark mode */
+}
+
+[data-theme="dark"] .dropdown-divider {
+  background-color: var(--border-color) !important;
+}
 
 /* Memastikan latar belakang kartu statistik bersih tetap kontras di dark mode */
 [data-theme="dark"] .stat-card-clean {
   background-color: var(--card-bg) !important;
   border-color: var(--border-color) !important;
+}
+/* =========================================================
+   NEW ENTERPRISE AUTH DESIGN TOKENS & LAYOUTS
+   ========================================================= */
+
+.auth-enterprise-wrapper {
+  min-height: 100vh;
+  display: flex;
+  background-color: var(--bg-surface);
+  font-family: var(--font-sans);
+}
+
+/* Split Screen Layout (Modern Enterprise) */
+.auth-split-container {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  width: 100%;
+  min-height: 100vh;
+}
+
+@media (max-width: 992px) {
+  .auth-split-container {
+    grid-template-columns: 1fr;
+  }
+  .auth-brand-side {
+    display: none !important;
+  }
+}
+
+/* Left Brand Hero Side */
+.auth-brand-side {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #001a18 100%);
+  color: #ffffff;
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-brand-side::before {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: rgba(254, 147, 44, 0.08);
+  border-radius: 50%;
+  top: -100px;
+  right: -100px;
+  pointer-events: none;
+}
+
+.brand-hero-content {
+  max-width: 480px;
+  z-index: 2;
+}
+
+.hero-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(254, 147, 44, 0.15);
+  color: var(--accent-orange);
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(254, 147, 44, 0.3);
+}
+
+.auth-brand-side h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.auth-brand-side p {
+  font-size: 0.95rem;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+.brand-hero-footer {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  z-index: 2;
+}
+
+/* Right Form Side */
+.auth-form-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 2rem;
+  background-color: var(--card-bg);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.02);
+}
+
+.auth-form-container {
+  width: 100%;
+  max-width: 420px;
+}
+
+.form-side-header {
+  margin-bottom: 2rem;
+}
+
+.form-side-header h3 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.form-side-header p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Enhanced Form Elements for Auth */
+.auth-input-group {
+  margin-bottom: 1.25rem;
+}
+
+.auth-input-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.auth-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-input-wrapper i.field-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.auth-input-wrapper input {
+  width: 100%;
+  padding: 0.75rem 0.8rem 0.75rem 2.6rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.auth-input-wrapper input:focus {
+  border-color: var(--primary-dark);
+  background: var(--card-bg);
+  box-shadow: 0 0 0 4px rgba(0, 54, 51, 0.08);
+}
+
+[data-theme="dark"] .auth-input-wrapper input:focus {
+  box-shadow: 0 0 0 4px rgba(0, 168, 150, 0.15);
+}
+
+.auth-btn-submit {
+  width: 100%;
+  padding: 0.85rem;
+  background: var(--primary-dark);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background 0.2s ease, transform 0.1s ease;
+  margin-top: 1.5rem;
+}
+
+.auth-btn-submit:hover {
+  background: var(--primary-hover);
+}
+
+.auth-btn-submit:active {
+  transform: scale(0.98);
 }

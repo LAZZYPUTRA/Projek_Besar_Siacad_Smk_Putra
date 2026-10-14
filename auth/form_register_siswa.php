@@ -30,171 +30,99 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         set_flash_message('danger', 'Gagal registrasi! NIS atau Username mungkin sudah terdaftar.');
     }
 }
-
-require_once __DIR__ . '/../includes/template_header.php';
 ?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrasi Siswa - SIPN SMK Sangkuriang 1</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css">
+</head>
+<body>
 
-<div class="auth-page-wrapper">
-    <!-- Top Bar Navigation Header -->
-    <div class="auth-top-bar">
-        <div class="brand-box">
-            <div class="brand-icon-box">
-                <i class="bi bi-journal-check"></i>
-            </div>
-            <div class="brand-text">
-                <h1>SIPN</h1>
-                <span>SMK SANGKURIANG 1 CIMAHI</span>
-            </div>
-        </div>
-        <div class="academic-badge">
-            <i class="bi bi-gear-wide-connected"></i> ACADEMIC PORTAL
-        </div>
-    </div>
-
-    <!-- Split Register Container -->
-    <div class="register-card-container">
-        <!-- Sidebar Kiri (Hijau Tua) -->
-        <div class="register-sidebar">
-            <div class="sidebar-brand">
-                <div class="brand-icon-sm"><i class="bi bi-journal-check"></i></div>
-                <div>
-                    <h3>SIPN</h3>
-                    <span>SMK SANGKURIANG 1 CIMAHI</span>
-                </div>
-            </div>
-
-            <div class="sidebar-tag">
-                <i class="bi bi-mortarboard"></i> T.A 2024/2025 • Kurikulum Merdeka
-            </div>
-
-            <h2 class="sidebar-title">Portal Rapor & Buku Induk Siswa</h2>
-            <p class="sidebar-desc">Daftarkan akun peserta didik Anda untuk verifikasi identitas resmi dan pembukaan akses capaian kompetensi digital secara terpadu.</p>
-
-            <div class="stepper-vertical">
-                <div class="step-item active">
-                    <div class="step-number">1</div>
-                    <div class="step-info">
-                        <strong>Identitas Siswa</strong>
-                        <span>Validasi NIS & Data Dapodik</span>
-                    </div>
-                </div>
-                <div class="step-item">
-                    <div class="step-number">2</div>
-                    <div class="step-info">
-                        <strong>Kredensial Login</strong>
-                        <span>Username & Kata Sandi Akun</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="sidebar-footer-note">
-                <i class="bi bi-arrow-repeat"></i> Sinkronisasi otomatis basis data Dapodik Kemendikbudristek.
-            </div>
+<div class="auth-enterprise-wrapper" style="justify-content: center; align-items: center; padding: 2rem 1rem;">
+    <div style="width: 100%; max-width: 580px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.06); overflow: hidden;">
+        
+        <div style="background: var(--primary-dark); color: #ffffff; padding: 2rem; text-align: center;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.3rem;">Registrasi Akun Siswa</h2>
+            <p style="font-size: 0.8rem; opacity: 0.8;">Sistem Informasi Pengelolaan Nilai • SMK Sangkuriang 1 Cimahi</p>
         </div>
 
-        <!-- Form Kanan (Putih) -->
-        <div class="register-form-panel">
-            <div class="panel-header-row">
-                <h2 class="panel-title">Registrasi Siswa Baru</h2>
-                <span class="auth-badge">AUTH/REGISTER</span>
-            </div>
-            <p class="panel-subtitle">Lengkapi data di bawah ini dengan cermat sesuai catatan ijazah resmi Anda.</p>
-
-            <!-- Step Indicator Pills -->
-            <div class="step-pills-row">
-                <span class="pill-step active"><span class="dot-active"></span> Tahap 1: Data Identitas</span>
-                <span class="pill-step"><span class="dot-inactive"></span> Tahap 2: Kredensial</span>
-            </div>
-
-            <form method="POST" class="auth-form">
-                <div class="form-group">
-                    <div class="form-label-row">
-                        <label class="form-label">Nomor Induk Siswa (NIS)</label>
-                        <span class="label-hint">Maks. 10 Angka</span>
-                    </div>
-                    <div class="input-wrapper">
-                        <span class="input-icon"><i class="bi bi-card-text"></i></span>
-                        <input type="text" name="nis" class="form-input" maxlength="10" required placeholder="Contoh: 2122100452">
+        <div style="padding: 2rem;">
+            <form method="POST">
+                <div class="auth-input-group">
+                    <label>Nomor Induk Siswa (NIS)</label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-card-text field-icon"></i>
+                        <input type="text" name="nis" maxlength="10" placeholder="Contoh: 2425100123" required>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Nama Lengkap Siswa</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon"><i class="bi bi-person"></i></span>
-                        <input type="text" name="nama" class="form-input" required placeholder="Sesuai ijazah SMP atau Dapodik">
+                <div class="auth-input-group">
+                    <label>Nama Lengkap Siswa</label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-person field-icon"></i>
+                        <input type="text" name="nama" placeholder="Sesuai ijazah atau dapodik..." required>
                     </div>
                 </div>
 
-                <div class="form-grid-2col">
-                    <div class="form-group">
-                        <label class="form-label">Rombongan Belajar (Kelas)</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon"><i class="bi bi-people"></i></span>
-                            <input type="text" name="kelas" class="form-input" required placeholder="Contoh: XII RPL 1">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="auth-input-group">
+                        <label>Kelas / Rombel</label>
+                        <div class="auth-input-wrapper">
+                            <i class="bi bi-people field-icon"></i>
+                            <input type="text" name="kelas" placeholder="Cth: XII RPL 1" required>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Jenis Kelamin</label>
-                        <div class="gender-radio-group">
-                            <label class="radio-card">
-                                <input type="radio" name="jenis_kelamin" value="L" checked>
-                                <span class="radio-custom"></span> Laki-laki
-                            </label>
-                            <label class="radio-card">
-                                <input type="radio" name="jenis_kelamin" value="P">
-                                <span class="radio-custom"></span> Perempuan
-                            </label>
+                    <div class="auth-input-group">
+                        <label>Jenis Kelamin</label>
+                        <div class="auth-input-wrapper">
+                            <i class="bi bi-gender-ambiguous field-icon"></i>
+                            <select name="jenis_kelamin" style="width: 100%; padding: 0.75rem 0.8rem 0.75rem 2.6rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; font-size: 0.9rem; color: var(--text-dark); outline: none;" required>
+                                <option value="L">Laki-laki</option>
+                                <option value="P">Perempuan</option>
+                            </select>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-section-divider">
-                    <span>Kredensial Akun Login</span>
+                <div style="border-top: 1px dashed var(--border-color); margin: 1.5rem 0; padding-top: 1rem;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Kredensial Akun Login</span>
                 </div>
 
-                <div class="form-grid-2col">
-                    <div class="form-group">
-                        <label class="form-label">Username</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon"><i class="bi bi-at"></i></span>
-                            <input type="text" name="username" class="form-input" required placeholder="Buat username">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="auth-input-group">
+                        <label>Username</label>
+                        <div class="auth-input-wrapper">
+                            <i class="bi bi-at field-icon"></i>
+                            <input type="text" name="username" placeholder="Buat username..." required>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Password</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon"><i class="bi bi-lock"></i></span>
-                            <input type="password" name="password" class="form-input" required placeholder="Buat password">
+                    <div class="auth-input-group">
+                        <label>Kata Sandi</label>
+                        <div class="auth-input-wrapper">
+                            <i class="bi bi-lock field-icon"></i>
+                            <input type="password" name="password" placeholder="••••••••" required>
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" class="btn-submit-primary">
-                    Daftar Sekarang <i class="bi bi-arrow-right"></i>
+                <button type="submit" class="auth-btn-submit">
+                    Daftar Sekarang <i class="bi bi-check-circle"></i>
                 </button>
             </form>
 
-            <div class="register-footer-links">
-                <a href="form_login.php" class="back-login-link"><i class="bi bi-arrow-left"></i> Sudah memiliki akun? Masuk di sini</a>
-                <span class="dapodik-verify"><i class="bi bi-shield-check"></i> Verifikasi Dapodik Otomatis</span>
+            <div style="margin-top: 1.5rem; text-align: center; font-size: 0.82rem;">
+                <a href="form_login.php" style="color: var(--primary-dark); font-weight: 700; text-decoration: none;"><i class="bi bi-arrow-left"></i> Sudah punya akun? Masuk di sini</a>
             </div>
         </div>
-    </div>
 
-    <!-- Outer Page Footer -->
-    <div class="auth-outer-footer">
-        <div class="footer-left">
-            <span><i class="bi bi-patch-check-fill"></i> Akreditasi A Unggul (BAN-SM)</span>
-            <span class="dot">•</span>
-            <span><i class="bi bi-lock-fill"></i> SSL 256-Bit Encrypted</span>
-        </div>
-        <div class="footer-right">
-            &copy; 2024 SIPN SMK Sangkuriang 1 Cimahi. Hak Cipta Dilindungi.
-        </div>
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
+</body>
+</html>
