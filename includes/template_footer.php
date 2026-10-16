@@ -1,61 +1,63 @@
 </main>
-
-<footer class="app-footer">
-    <div class="footer-container">
-        <div class="footer-info">
-            <small>&copy; <?= date('Y'); ?> <strong>SIPN</strong> — SMK Sangkuriang 1 Cimahi. Hak Cipta Dilindungi.</small>
-        </div>
-        <div class="footer-badges">
-            <span><i class="bi bi-patch-check-fill"></i> Terakreditasi A</span>
-            <span><i class="bi bi-shield-lock-fill"></i> SSL 256-Bit</span>
-        </div>
+        <footer class="app-footer">
+            <div class="footer-container">
+                <div class="footer-info">
+                    <small>&copy; <?= date('Y'); ?> <strong>SIPN</strong> — SMK Sangkuriang 1 Cimahi. Hak Cipta Dilindungi.</small>
+                </div>
+                <div class="footer-badges">
+                    <span><i class="bi bi-patch-check-fill"></i> Terakreditasi A</span>
+                </div>
+            </div>
+        </footer>
     </div>
-</footer>
+</div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Menandai menu aktif berdasarkan URL
-    const currentUrl = window.location.href;
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    navLinks.forEach(link => {
-        if (currentUrl.includes(link.getAttribute('href'))) {
-            link.classList.add('active');
-        }
-    });
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Logika Toggle Dark Mode Sidebar
+    const themeToggleBtn = document.getElementById('themeToggleSidebar');
+    const themeText = document.getElementById('themeText');
+    const bodyElement = document.body;
 
-    // Toggle dropdown profil pengguna
-    const userMenu = document.getElementById('userMenu');
-    if (userMenu) {
-        userMenu.addEventListener('click', function(e) {
+    const savedTheme = localStorage.getItem('sipn_theme') || 'light';
+    bodyElement.setAttribute('data-theme', savedTheme);
+    if (savedTheme === 'dark' && themeText) {
+        themeText.textContent = 'Light Mode';
+    }
+
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = bodyElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            bodyElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('sipn_theme', newTheme);
+            
+            if (newTheme === 'dark') {
+                themeText.textContent = 'Light Mode';
+            } else {
+                themeText.textContent = 'Dark Mode';
+            }
+        });
+    }
+
+    // 2. Logika Popover Profil (Setting & Logout) di Bawah Sidebar
+    const profileTrigger = document.getElementById('profileTriggerBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
+
+    if (profileTrigger && profileDropdown) {
+        profileTrigger.addEventListener('click', (e) => {
             e.stopPropagation();
-            this.classList.toggle('is-open');
+            const isVisible = profileDropdown.style.display === 'flex';
+            profileDropdown.style.display = isVisible ? 'none' : 'flex';
         });
 
-        document.addEventListener('click', function() {
-            userMenu.classList.remove('is-open');
+        // Tutup popup jika area luar diklik
+        document.addEventListener('click', () => {
+            profileDropdown.style.display = 'none';
         });
     }
 });
-const themeToggle = document.getElementById('themeToggle');
-const currentTheme = localStorage.getItem('theme') || 'light';
-
-if (currentTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-}
-
-if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-        let theme = document.documentElement.getAttribute('data-theme');
-        if (theme === 'dark') {
-            document.documentElement.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-        }
-    });
-}
 </script>
 </body>
 </html>
