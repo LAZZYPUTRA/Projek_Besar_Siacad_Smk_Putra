@@ -153,4 +153,4 @@ require_once __DIR__ . '/includes/template_header.php';
 
 </div>
 
-<?php require_once __DIR__ . '/includes/template_footer.php';?> 
+<?php require_once __DIR__ . '/includes/template_footer.php';   ?>
