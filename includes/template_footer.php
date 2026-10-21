@@ -14,7 +14,45 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Logika Toggle Dark Mode Sidebar
+    // ==========================================
+    // 1. UNIVERSAL MODAL HANDLER (GLOBAL)
+    // ==========================================
+    document.addEventListener('click', function(e) {
+        // Ketika tombol dengan atribut data-modal-target diklik
+        const trigger = e.target.closest('[data-modal-target]');
+        if (trigger) {
+            e.preventDefault();
+            const targetSelector = trigger.getAttribute('data-modal-target');
+            const modal = document.querySelector(targetSelector);
+            if (modal) {
+                modal.classList.add('is-active');
+                modal.style.display = 'flex';
+            } else {
+                console.warn('Modal target tidak ditemukan:', targetSelector);
+            }
+        }
+
+        // Ketika tombol close / batal di dalam modal diklik
+        const closer = e.target.closest('[data-modal-close]');
+        if (closer) {
+            e.preventDefault();
+            const modal = closer.closest('.modal-overlay');
+            if (modal) {
+                modal.classList.remove('is-active');
+                modal.style.display = 'none';
+            }
+        }
+
+        // Ketika area gelap di luar kotak modal diklik
+        if (e.target.classList.contains('modal-overlay')) {
+            e.target.classList.remove('is-active');
+            e.target.style.display = 'none';
+        }
+    });
+
+    // ==========================================
+    // 2. TOGGLE DARK MODE SIDEBAR
+    // ==========================================
     const themeToggleBtn = document.getElementById('themeToggleSidebar');
     const themeText = document.getElementById('themeText');
     const bodyElement = document.body;
@@ -41,7 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. Logika Popover Profil (Setting & Logout) di Bawah Sidebar
+    // ==========================================
+    // 3. POPOVER PROFIL (SETTING & LOGOUT)
+    // ==========================================
     const profileTrigger = document.getElementById('profileTriggerBtn');
     const profileDropdown = document.getElementById('profileDropdown');
 
@@ -52,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
             profileDropdown.style.display = isVisible ? 'none' : 'flex';
         });
 
-        // Tutup popup jika area luar diklik
         document.addEventListener('click', () => {
             profileDropdown.style.display = 'none';
         });
