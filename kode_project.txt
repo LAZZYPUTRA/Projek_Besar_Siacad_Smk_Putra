@@ -244,6 +244,24 @@ body {
   border: 1px solid var(--accent-peach-border);
 }
 
+/* =========================================================
+   FIX WARNA BADGE ROLE (ADMIN, GURU, SISWA)
+   ========================================================= */
+.badge-danger { 
+  background-color: #fee2e2 !important; 
+  color: #dc2626 !important; 
+}
+
+.badge-primary { 
+  background-color: #dbeafe !important; 
+  color: #1e40af !important; 
+}
+
+.badge-success { 
+  background-color: #dcfce7 !important; 
+  color: #166534 !important; 
+}
+
 /* Form Elements */
 .auth-form {
   display: flex;
@@ -595,6 +613,975 @@ body {
   .admin-main-content {
     margin-left: 70px;
   }
+}
+
+/* =========================================================
+   ENTERPRISE SIDEBAR & TOPBAR LAYOUT (ALL USERS)
+   ========================================================= */
+.app-layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-surface);
+}
+
+.app-sidebar {
+  width: 260px;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebar-brand-box {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sidebar-logo-icon {
+  width: 38px;
+  height: 38px;
+  background: var(--primary-dark);
+  color: #fff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.sidebar-brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-brand-text .brand-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  line-height: 1.1;
+}
+
+.sidebar-brand-text .brand-subtitle {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.sidebar-menu-container {
+  padding: 1.25rem 1rem;
+}
+
+.sidebar-section-title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0 0.75rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.sidebar-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.sidebar-theme-toggle-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Sidebar Profile Section & Popover */
+.sidebar-profile-section {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  position: relative;
+}
+
+.profile-dropdown-menu {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 1rem;
+  right: 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  overflow: hidden;
+  z-index: 105;
+  flex-direction: column;
+}
+
+.dropdown-link {
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: var(--text-dark);
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.2s ease;
+}
+
+.dropdown-link:hover {
+  background: var(--bg-surface);
+}
+
+.dropdown-link:last-child {
+  border-bottom: none;
+}
+
+.profile-trigger-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.profile-avatar-box {
+  width: 36px;
+  height: 36px;
+  background: var(--primary-dark);
+  color: #fff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.profile-meta {
+  overflow: hidden;
+  flex: 1;
+}
+
+.profile-username {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-userrole {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.profile-arrow {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Main Content & Topbar Area */
+.app-main-content {
+  flex: 1;
+  margin-left: 260px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-topbar-header {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.85rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+}
+
+.topbar-portal-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.topbar-navigation ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.topbar-nav-link {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+.topbar-nav-link:hover, .topbar-nav-link.active {
+  background: var(--bg-surface);
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+/* =========================================================
+   KOMPONEN TAMBAHAN: TABEL, CARD PANEL, MODAL & BUTTONS
+   ========================================================= */
+
+/* Flex Utility */
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Card Panel */
+.card-panel {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  padding: 1.5rem;
+  width: 100%;
+}
+
+/* Tabel Data Modern */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.data-table th {
+  background-color: var(--bg-surface);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 0.95rem 1rem;
+  color: var(--text-dark);
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.data-table tbody tr:hover {
+  background-color: rgba(30, 58, 138, 0.02);
+}
+
+/* Form Select & Row Layout dalam Modal */
+.form-select {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 0.88rem;
+  outline: none;
+  background: var(--bg-surface);
+  color: var(--text-dark);
+  transition: border-color 0.2s ease;
+}
+
+.form-select:focus {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-subtitle {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.badge-info { background: #dbeafe; color: #1e40af; }
+.badge-secondary { background: #f1f5f9; color: #475569; }
+.badge-success { background: #dcfce7; color: #166534; }
+
+/* Tombol (Buttons) */
+.btn {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.78rem;
+  border-radius: 6px;
+}
+
+/* =========================================================
+   PERBAIKAN WARNA TOMBOL & HEADER MODAL
+   ========================================================= */
+
+/* Tombol Utama Kustom (Tambah & Simpan) */
+.btn-primary-custom {
+  background-color: var(--primary-dark) !important;
+  color: #ffffff !important;
+  border: none;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.btn-primary-custom:hover {
+  opacity: 0.9;
+}
+
+/* Tombol Sekunder / Batal */
+
+/* Warna Header Modal */
+.modal-header.header-primary {
+  background-color: var(--primary-dark) !important;
+  color: #ffffff !important;
+}
+
+.modal-header.header-warning {
+  background-color: #d97706 !important;
+  color: #ffffff !important;
+}
+
+.modal-header.header-danger {
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
+}
+
+.modal-header h5 {
+  color: #ffffff !important;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.btn-success { background: #16a34a; color: #ffffff; }
+.btn-warning { background: #d97706; color: #ffffff; }
+.btn-danger  { background: #dc2626; color: #ffffff; }
+.btn-secondary { background: #64748b; color: #ffffff; }
+
+/* Modal Overlay & Box */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+/* Ketika modal aktif (ditampilkan via JS) */
+.modal-overlay.is-active {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: modalScaleIn 0.2s ease;
+}
+
+.modal-box.modal-lg {
+  max-width: 750px;
+}
+
+@keyframes modalScaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  padding: 1.15rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.modal-header h5 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.header-success { background: #16a34a; }
+.header-warning { background: #d97706; }
+.header-danger  { background: #dc2626; }
+.header-primary { background: var(--primary-dark); }
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* =========================================================
+   DASHBOARD & KARTU STATISTIK (GURU & ADMIN)
+   ========================================================= */
+.dashboard-wrapper { display: flex; flex-direction: column; gap: 1.5rem; }
+.dashboard-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+
+.banner-card {
+  padding: 2rem;
+  border-radius: 12px;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.banner-card h2 { margin-bottom: 0.5rem; font-weight: 800; font-size: 1.5rem; }
+
+/* =========================================================
+   GRID STATISTIK SIMETRIS & PRESISI (3 KARTU)
+   ========================================================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Membagi 3 kolom sama lebar */
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}/* =========================================================
+   GRID STATISTIK SIMETRIS & PRESISI (3 KARTU)
+   ========================================================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Membagi 3 kolom sama lebar */
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.stat-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--text-dark, #0f172a);
+  line-height: 1.2;
+}
+
+/* Pembungkus Ikon Bulat/Kotak Symmetrical */
+.stat-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+/* Akses Warna Berimbang */
+.stat-primary .stat-icon-box { background: rgba(37, 99, 235, 0.1); color: #2563eb; }
+.stat-success .stat-icon-box { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+.stat-info .stat-icon-box { background: rgba(14, 165, 233, 0.1); color: #0ea5e9; }
+
+/* Responsif untuk Layar Tablet & HP */
+@media (max-width: 992px) {
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+.stat-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--text-dark, #0f172a);
+  line-height: 1.2;
+}
+
+/* Pembungkus Ikon Bulat/Kotak Symmetrical */
+.stat-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+/* Akses Warna Berimbang */
+.stat-primary .stat-icon-box { background: rgba(37, 99, 235, 0.1); color: #2563eb; }
+.stat-success .stat-icon-box { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+.stat-info .stat-icon-box { background: rgba(14, 165, 233, 0.1); color: #0ea5e9; }
+
+/* Responsif untuk Layar Tablet & HP */
+@media (max-width: 992px) {
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+.stat-content { display: flex; flex-direction: column; }
+.stat-title { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+.stat-value { font-size: 1.8rem; font-weight: 800; color: var(--text-dark); margin-top: 0.3rem; }
+.stat-icon { font-size: 2.2rem; opacity: 0.2; }
+
+.stat-primary .stat-icon { color: var(--primary-dark); }
+.stat-success .stat-icon { color: #10b981; }
+.stat-info .stat-icon { color: #3b82f6; }
+
+/* =========================================================
+   MODUL TAMBAHAN: TOMBOL & ALERT NOTIFIKASI
+   ========================================================= */
+.full-width { width: 100%; justify-content: center; }
+.btn-primary { background: var(--primary-dark) !important; color: #fff !important; }
+.btn-primary:hover { opacity: 0.9 !important; }
+.btn-primary-outline { background: transparent; border: 1px solid var(--primary-dark); color: var(--primary-dark); }
+.btn-primary-outline:hover { background: var(--primary-dark); color: #fff; }
+
+.card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); font-weight: 700; background: var(--bg-surface); }
+.card-body { padding: 1.5rem; }
+.quick-links { display: flex; flex-direction: column; gap: 0.75rem; }
+.action-btn { justify-content: flex-start; padding: 0.85rem 1.2rem; }
+
+/* Alert Flash Messages */
+.alert { padding: 1rem 1.25rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center;}
+.alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.alert-danger { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+.alert-warning { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+.alert-info { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+.btn-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: inherit; opacity: 0.7; }
+.btn-close:hover { opacity: 1; }
+
+/* =========================================================
+   PERBAIKAN TATA LETAK GRID (LEBAR & PROPORSIONAL)
+   ========================================================= */
+
+/* =========================================================
+   PERBAIKAN TATA LETAK GRID (LEBAR & PROPORSIONAL)
+   ========================================================= */
+.grid-layout-main {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin-top: 1.5rem;
+}
+
+.grid-layout-side {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 992px) {
+  .grid-layout-main, 
+  .grid-layout-side { grid-template-columns: 1fr; }
+}
+
+/* =========================================================
+   PERBAIKAN KARTU STATISTIK DASHBOARD (SIMETRIS & FLEKSIBEL)
+   ========================================================= */
+.stats-grid {
+  display: grid;
+  /* Menggunakan auto-fit agar kartu tidak gepeng/sempit di layar medium */
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.stat-content { display: flex; flex-direction: column; gap: 0.3rem; }
+.stat-title { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-value { font-size: 1.85rem; font-weight: 800; color: var(--text-dark); line-height: 1; }
+
+.stat-icon-box, .stat-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.stat-primary .stat-icon-box { background: rgba(37, 99, 235, 0.1); color: #2563eb; }
+.stat-success .stat-icon-box { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+.stat-info .stat-icon-box { background: rgba(14, 165, 233, 0.1); color: #0ea5e9; }
+
+/* =========================================================
+   PERBAIKAN HALAMAN PROFIL (DARK MODE & GRID PRESISI)
+   ========================================================= */
+.profile-layout { 
+    display: grid; 
+    grid-template-columns: 320px 1fr; /* Memastikan rasio 2 kolom konsisten */
+    gap: 1.5rem; 
+    align-items: start; 
+    margin-top: 1rem; 
+}
+
+@media (max-width: 992px) {
+    .profile-layout { grid-template-columns: 1fr; }
+}
+
+.card-profile-left { 
+    background: var(--card-bg); 
+    border-radius: 16px; 
+    border: 1px solid var(--border-color); 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+    padding: 3rem 2rem; 
+    text-align: center; 
+}
+
+.avatar-wrapper { display: flex; justify-content: center; margin-bottom: 1.5rem; }
+.avatar-circle { 
+    width: 140px; height: 140px; border-radius: 50%; 
+    background: linear-gradient(135deg, var(--primary-dark), #3b82f6); 
+    color: white; display: flex; align-items: center; justify-content: center; 
+    font-size: 4.5rem; box-shadow: 0 8px 25px rgba(37, 99, 235, 0.25); 
+    border: 5px solid var(--bg-surface); /* Menyesuaikan border avatar di dark mode */
+}
+
+.profile-name { font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; }
+.profile-role-badge { 
+    display: inline-block; padding: 0.4rem 1.2rem; 
+    background: rgba(37, 99, 235, 0.1); color: var(--primary-dark); 
+    border-radius: 50px; font-size: 0.85rem; font-weight: 700; 
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2rem; 
+}
+
+.card-profile-right { 
+    background: var(--card-bg); border-radius: 16px; 
+    border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+    overflow: hidden; 
+}
+
+.profile-right-header { 
+    padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-color); 
+    background: var(--bg-surface); /* Perbaikan dari rgba yang bertabrakan dengan background gelap */
+}
+
+.profile-right-header h5 { margin: 0; font-size: 1.1rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; }
+.profile-right-body { padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: 1rem; }
+
+/* Baris Data Adaptif (Perbaikan Teks Hilang) */
+.info-row { 
+    display: grid; grid-template-columns: 220px 1fr; 
+    background: var(--bg-surface); /* Menggunakan variabel, bukan #f8fafc */
+    border: 1px solid var(--border-color); /* Menggunakan variabel, bukan #e2e8f0 */
+    border-radius: 12px; padding: 1.2rem 1.5rem; 
+    align-items: center; transition: all 0.2s ease; 
+}
+
+.info-row:hover { 
+    background: var(--card-bg); /* Menggunakan variabel, bukan #ffffff */
+    border-color: var(--primary-dark); 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03); transform: translateY(-2px); 
+}
+
+.info-label { font-size: 0.9rem; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 0.75rem; }
+.info-label i { font-size: 1.2rem; color: var(--primary-dark); opacity: 0.7; }
+.info-value { font-size: 1.05rem; font-weight: 700; color: var(--text-dark); }
+
+@media (max-width: 768px) {
+    .info-row { grid-template-columns: 1fr; gap: 0.5rem; padding: 1rem 1.25rem; }
+}
+/* =========================================================
+   PROFILE PAGE - CENTERED LAYOUT (ATAS KE BAWAH)
+   ========================================================= */
+/* =========================================================
+   PROFILE PAGE - CENTERED LAYOUT & DARK MODE FIX
+   ========================================================= */
+.profile-container-centered {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.profile-card-centered {
+    background: var(--card-bg) !important;
+    border-radius: 16px;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    overflow: hidden;
+    position: relative;
+    margin-top: 1rem;
+}
+
+.profile-header-centered {
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color) !important;
+    position: relative;
+    background: var(--bg-surface) !important;
+}
+
+.btn-edit-profile-absolute {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 8px;
+}
+
+.avatar-circle-centered {
+    width: 130px; height: 130px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-dark), #3b82f6);
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 4.5rem; margin: 0 auto 1.25rem;
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.25);
+    border: 5px solid var(--card-bg) !important;
+}
+
+.profile-body-centered {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* =========================================================
+   PERBAIKAN FATAL: BARIS DATA & MODAL (100% DARK MODE)
+   ========================================================= */
+.info-row { 
+    display: grid; grid-template-columns: 220px 1fr; 
+    background: var(--bg-surface) !important; 
+    border: 1px solid var(--border-color) !important; 
+    border-radius: 12px; padding: 1.2rem 1.5rem; 
+    align-items: center; transition: all 0.2s ease; 
+}
+
+.info-row:hover { 
+    background: var(--card-bg) !important; 
+    border-color: var(--primary-dark) !important; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03); transform: translateY(-2px); 
+}
+
+.info-label { font-size: 0.9rem; font-weight: 700; color: var(--text-muted) !important; display: flex; align-items: center; gap: 0.75rem; }
+.info-label i { font-size: 1.2rem; color: var(--primary-dark) !important; opacity: 0.7; }
+.info-value { font-size: 1.05rem; font-weight: 700; color: var(--text-dark) !important; }
+
+/* Kotak Pilihan Edit di Modal */
+.edit-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1rem; }
+.edit-option-card {
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px; padding: 2rem 1.5rem; text-align: center; cursor: pointer;
+    background: var(--bg-surface) !important;
+    color: var(--text-dark) !important;
+    transition: all 0.2s ease;
+}
+.edit-option-card:hover { border-color: var(--primary-dark) !important; box-shadow: 0 6px 16px rgba(30, 58, 138, 0.08); transform: translateY(-3px); }
+.edit-option-card i { font-size: 2.5rem; color: var(--primary-dark); margin-bottom: 0.75rem; display: block; }
+.edit-option-card h6 { font-size: 1rem; font-weight: 800; margin: 0 0 0.25rem 0; }
+.edit-option-card p { font-size: 0.75rem; color: var(--text-muted) !important; margin: 0; }
+
+@media (max-width: 576px) {
+    .edit-options-grid { grid-template-columns: 1fr; }
+    .btn-edit-profile-absolute { position: relative; top: 0; right: 0; margin-bottom: 1.5rem; width: 100%; }
 }
 
 
@@ -949,35 +1936,61 @@ $query_guru = mysqli_query($conn, "SELECT id, nama FROM guru WHERE user_id = '$i
 $data_guru = mysqli_fetch_assoc($query_guru);
 $id_guru = $data_guru['id'] ?? 0;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['simpan_nilai'])) {
-    $siswa_id           = intval($_POST['siswa_id']);
-    $mapel_id           = intval($_POST['mapel_id']);
-    $nilai_kkm          = intval($_POST['nilai_kkm']);
-    $nilai_pengetahuan  = intval($_POST['nilai_pengetahuan']);
-    $nilai_keterampilan = intval($_POST['nilai_keterampilan']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // 1. Aksi Simpan / Edit Nilai
+    if (isset($_POST['simpan_nilai'])) {
+        $siswa_id           = intval($_POST['siswa_id']);
+        $mapel_id           = intval($_POST['mapel_id']);
+        $nilai_kkm          = intval($_POST['nilai_kkm']);
+        $nilai_pengetahuan  = intval($_POST['nilai_pengetahuan']);
+        $nilai_keterampilan = intval($_POST['nilai_keterampilan']);
 
-    $rata_rata = ($nilai_pengetahuan + $nilai_keterampilan) / 2;
-    $keterangan = ($rata_rata >= $nilai_kkm) ? 'Tuntas' : 'Belum Tuntas';
+        $rata_rata = ($nilai_pengetahuan + $nilai_keterampilan) / 2;
+        $keterangan = ($rata_rata >= $nilai_kkm) ? 'Tuntas' : 'Belum Tuntas';
 
-    $cek_nilai = mysqli_query($conn, "SELECT id FROM nilai_rapor WHERE siswa_id = '$siswa_id' AND mapel_id = '$mapel_id'");
+        // Logika Upsert: Update jika sudah ada, Insert jika belum ada
+        $cek_nilai = mysqli_query($conn, "SELECT id FROM nilai_rapor WHERE siswa_id = '$siswa_id' AND mapel_id = '$mapel_id'");
 
-    if (mysqli_num_rows($cek_nilai) > 0) {
-        $stmt = $conn->prepare("UPDATE nilai_rapor SET nilai_kkm = ?, nilai_pengetahuan = ?, nilai_keterampilan = ?, Keterangan = ? WHERE siswa_id = ? AND mapel_id = ?");
-        $stmt->bind_param("iiiisi", $nilai_kkm, $nilai_pengetahuan, $nilai_keterampilan, $keterangan, $siswa_id, $mapel_id);
-    } else {
-        $stmt = $conn->prepare("INSERT INTO nilai_rapor (siswa_id, mapel_id, nilai_kkm, nilai_pengetahuan, nilai_keterampilan, Keterangan) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("iiiiis", $siswa_id, $mapel_id, $nilai_kkm, $nilai_pengetahuan, $nilai_keterampilan, $keterangan);
+        if (mysqli_num_rows($cek_nilai) > 0) {
+            $stmt = $conn->prepare("UPDATE nilai_rapor SET nilai_kkm = ?, nilai_pengetahuan = ?, nilai_keterampilan = ?, Keterangan = ? WHERE siswa_id = ? AND mapel_id = ?");
+            $stmt->bind_param("iiisii", $nilai_kkm, $nilai_pengetahuan, $nilai_keterampilan, $keterangan, $siswa_id, $mapel_id);
+        } else {
+            $stmt = $conn->prepare("INSERT INTO nilai_rapor (siswa_id, mapel_id, nilai_kkm, nilai_pengetahuan, nilai_keterampilan, Keterangan) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("iiiiis", $siswa_id, $mapel_id, $nilai_kkm, $nilai_pengetahuan, $nilai_keterampilan, $keterangan);
+        }
+
+        if ($stmt->execute()) {
+            set_flash_message('success', 'Data nilai rapor berhasil disimpan!');
+        } else {
+            set_flash_message('danger', 'Gagal menyimpan nilai rapor.');
+        }
+        $stmt->close();
+
+        header("Location: " . BASE_URL . "guru/data_nilai_siswa.php");
+        exit;
+    } 
+    // 2. Aksi Hapus Nilai
+    elseif (isset($_POST['aksi']) && $_POST['aksi'] === 'hapus_nilai') {
+        $id_nilai = intval($_POST['id_nilai']);
+
+        // Verifikasi pengaman: hapus nilai hanya jika mapel milik guru yang sedang login
+        $stmt = $conn->prepare("
+            DELETE nr FROM nilai_rapor nr
+            JOIN mapel m ON nr.mapel_id = m.id
+            WHERE nr.id = ? AND m.guru_id = ?
+        ");
+        $stmt->bind_param("ii", $id_nilai, $id_guru);
+
+        if ($stmt->execute()) {
+            set_flash_message('success', 'Data nilai rapor berhasil dihapus!');
+        } else {
+            set_flash_message('danger', 'Gagal menghapus data nilai.');
+        }
+        $stmt->close();
+
+        header("Location: " . BASE_URL . "guru/data_nilai_siswa.php");
+        exit;
     }
-
-    if ($stmt->execute()) {
-        set_flash_message('success', 'Nilai rapor berhasil disimpan!');
-    } else {
-        set_flash_message('danger', 'Gagal menyimpan nilai rapor.');
-    }
-    $stmt->close();
-
-    header("Location: " . BASE_URL . "guru/data_nilai_siswa.php");
-    exit;
 }
 
 $query_mapel = mysqli_query($conn, "SELECT id, kode_mapel, nama_mapel FROM mapel WHERE guru_id = '$id_guru'");
@@ -991,107 +2004,232 @@ $query_nilai = mysqli_query($conn, "
     ORDER BY s.nama ASC
 ");
 
+$mapel_list = [];
+while ($m = mysqli_fetch_assoc($query_mapel)) { $mapel_list[] = $m; }
+
+$siswa_list = [];
+while ($s = mysqli_fetch_assoc($query_siswa)) { $siswa_list[] = $s; }
+
+$nilai_list = [];
+while ($n = mysqli_fetch_assoc($query_nilai)) { $nilai_list[] = $n; }
+
 require_once __DIR__ . '/../includes/template_header.php';
 ?>
 
-<div class="dashboard-columns">
-    <div class="card-panel">
-        <div class="card-header header-primary">
-            <h5><i class="bi bi-pencil-square"></i> Input Nilai Rapor</h5>
-        </div>
-        <div class="card-body">
-            <form action="" method="POST">
-                <div class="form-group">
-                    <label class="form-label">Mata Pelajaran</label>
-                    <select name="mapel_id" class="form-select" required>
-                        <option value="">-- Pilih Mata Pelajaran --</option>
-                        <?php while ($m = mysqli_fetch_assoc($query_mapel)): ?>
-                            <option value="<?= $m['id']; ?>">[<?= htmlspecialchars($m['kode_mapel']); ?>] <?= htmlspecialchars($m['nama_mapel']); ?></option>
-                        <?php endwhile; ?>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Siswa</label>
-                    <select name="siswa_id" class="form-select" required>
-                        <option value="">-- Pilih Siswa --</option>
-                        <?php while ($s = mysqli_fetch_assoc($query_siswa)): ?>
-                            <option value="<?= $s['id']; ?>"><?= htmlspecialchars($s['nis']) . ' - ' . htmlspecialchars($s['nama']) . ' (' . htmlspecialchars($s['kelas']) . ')'; ?></option>
-                        <?php endwhile; ?>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Nilai KKM</label>
-                    <input type="number" min="0" max="100" name="nilai_kkm" class="form-input" required placeholder="Contoh: 75">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Nilai Pengetahuan</label>
-                    <input type="number" min="0" max="100" name="nilai_pengetahuan" class="form-input" required placeholder="0 - 100">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Nilai Keterampilan</label>
-                    <input type="number" min="0" max="100" name="nilai_keterampilan" class="form-input" required placeholder="0 - 100">
-                </div>
-
-                <button type="submit" name="simpan_nilai" class="btn btn-primary full-width">
-                    <i class="bi bi-save"></i> Simpan Nilai Rapor
-                </button>
-            </form>
-        </div>
+<!-- Header Halaman & Tombol Tambah -->
+<div class="page-header-action" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+            <i class="bi bi-pencil-square text-primary"></i> Kelola Nilai Rapor
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem; margin-bottom: 0;">Input, perbarui, dan kelola capaian nilai peserta didik.</p>
     </div>
+    <button type="button" class="btn-primary-custom" data-modal-target="#modalTambahNilai">
+        <i class="bi bi-plus-lg"></i> Input Nilai Baru
+    </button>
+</div>
 
-    <div class="card-panel">
-        <div class="card-header header-dark">
-            <h5><i class="bi bi-table"></i> Daftar Nilai Rapor Siswa</h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead>
+<!-- Tampilan Tabel Nilai Full-Width -->
+<div class="card-panel">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">No</th>
+                    <th style="width: 10%;">NIS</th>
+                    <th style="width: 20%;">Nama Siswa</th>
+                    <th class="text-center" style="width: 8%;">Kelas</th>
+                    <th style="width: 15%;">Mata Pelajaran</th>
+                    <th class="text-center" style="width: 8%;">KKM</th>
+                    <th class="text-center" style="width: 8%;">P.Tahuan</th>
+                    <th class="text-center" style="width: 8%;">K.Trampilan</th>
+                    <th class="text-center" style="width: 10%;">Status</th>
+                    <th class="text-center" style="width: 10%;">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (count($nilai_list) > 0): ?>
+                    <?php $no = 1; foreach ($nilai_list as $row): ?>
                         <tr>
-                            <th>No</th>
-                            <th>Siswa</th>
-                            <th>Mapel</th>
-                            <th>KKM</th>
-                            <th>Pengetahuan</th>
-                            <th>Keterampilan</th>
-                            <th>Keterangan</th>
+                            <td><strong><?= $no++; ?></strong></td>
+                            <td>
+                                <span class="badge badge-secondary" style="font-family: monospace; font-size: 0.85rem; letter-spacing: 0.5px;">
+                                    <?= htmlspecialchars($row['nis']); ?>
+                                </span>
+                            </td>
+                            <td>
+                                <strong style="color: var(--text-dark);"><?= htmlspecialchars($row['nama_siswa']); ?></strong>
+                            </td>
+                            <td class="text-center">
+                                <strong><?= htmlspecialchars($row['kelas']); ?></strong>
+                            </td>
+                            <td><?= htmlspecialchars($row['nama_mapel']); ?></td>
+                            <td class="text-center"><span class="badge badge-secondary"><?= $row['nilai_kkm']; ?></span></td>
+                            <td class="text-center" style="font-weight: 800; font-size: 1rem; color: var(--text-dark);"><?= $row['nilai_pengetahuan']; ?></td>
+                            <td class="text-center" style="font-weight: 800; font-size: 1rem; color: var(--text-dark);"><?= $row['nilai_keterampilan']; ?></td>
+                            <td class="text-center">
+                                <span class="badge badge-<?= strtolower($row['Keterangan']) === 'tuntas' ? 'success' : 'danger'; ?>">
+                                    <?= htmlspecialchars($row['Keterangan']); ?>
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div style="display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem;">
+                                    <button type="button" class="btn btn-sm btn-warning" data-modal-target="#modalEditNilai<?= $row['id']; ?>" title="Edit Nilai">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" data-modal-target="#modalHapusNilai<?= $row['id']; ?>" title="Hapus Nilai">
+                                        <i class="bi bi-trash"></i> Hapus
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (mysqli_num_rows($query_nilai) > 0): ?>
-                            <?php $no = 1; while ($row = mysqli_fetch_assoc($query_nilai)): ?>
-                                <tr>
-                                    <td><?= $no++; ?></td>
-                                    <td>
-                                        <strong><?= htmlspecialchars($row['nama_siswa']); ?></strong><br>
-                                        <small class="text-muted">NIS: <?= htmlspecialchars($row['nis']); ?> | Kelas: <?= htmlspecialchars($row['kelas']); ?></small>
-                                    </td>
-                                    <td><?= htmlspecialchars($row['nama_mapel']); ?></td>
-                                    <td><?= $row['nilai_kkm']; ?></td>
-                                    <td><?= $row['nilai_pengetahuan']; ?></td>
-                                    <td><?= $row['nilai_keterampilan']; ?></td>
-                                    <td>
-                                        <span class="badge badge-<?= strtolower($row['Keterangan']) === 'tuntas' ? 'success' : 'danger'; ?>">
-                                            <?= htmlspecialchars($row['Keterangan']); ?>
-                                        </span>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="7" class="text-center text-muted">Belum ada data nilai rapor.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="10" class="text-center text-muted" style="padding: 3rem;">
+                            <i class="bi bi-folder2-open" style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+                            Belum ada data nilai rapor yang diinputkan.
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
 </div>
+
+<!-- ================= MODAL TAMBAH NILAI BARU ================= -->
+<div class="modal-overlay" id="modalTambahNilai">
+    <div class="modal-box modal-lg" style="max-width: 600px;">
+        <form method="POST">
+            <div class="modal-header header-primary">
+                <h5>Input Nilai Rapor Siswa</h5>
+                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label class="form-label">Mata Pelajaran</label>
+                    <select name="mapel_id" class="form-control" required>
+                        <option value="" disabled selected>-- Pilih Mata Pelajaran --</option>
+                        <?php foreach ($mapel_list as $m): ?>
+                            <option value="<?= $m['id']; ?>">[<?= htmlspecialchars($m['kode_mapel']); ?>] <?= htmlspecialchars($m['nama_mapel']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label class="form-label">Peserta Didik (Siswa)</label>
+                    <select name="siswa_id" class="form-control" required>
+                        <option value="" disabled selected>-- Cari & Pilih Siswa --</option>
+                        <?php foreach ($siswa_list as $s): ?>
+                            <option value="<?= $s['id']; ?>"><?= htmlspecialchars($s['nis']) . ' - ' . htmlspecialchars($s['nama']) . ' (' . htmlspecialchars($s['kelas']) . ')'; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 1.5rem 0;">
+
+                <div class="form-grid-3">
+                    <div class="form-group">
+                        <label class="form-label">Batas KKM</label>
+                        <input type="number" min="0" max="100" name="nilai_kkm" class="form-control" required placeholder="Cth: 75">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nilai Pengetahuan</label>
+                        <input type="number" min="0" max="100" name="nilai_pengetahuan" class="form-control" required placeholder="0-100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nilai Keterampilan</label>
+                        <input type="number" min="0" max="100" name="nilai_keterampilan" class="form-control" required placeholder="0-100">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
+                <button type="submit" name="simpan_nilai" class="btn-primary-custom">
+                    <i class="bi bi-save"></i> Simpan Data Nilai
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ================= MODAL EDIT & HAPUS NILAI (PER BARIS TABEL) ================= -->
+<?php foreach ($nilai_list as $row): ?>
+
+<!-- 1. Modal Edit Nilai -->
+<div class="modal-overlay" id="modalEditNilai<?= $row['id']; ?>">
+    <div class="modal-box modal-lg" style="max-width: 600px;">
+        <form method="POST">
+            <div class="modal-header header-warning">
+                <h5>Edit Nilai Rapor - <?= htmlspecialchars($row['nama_siswa']); ?></h5>
+                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="mapel_id" value="<?= $row['mapel_id']; ?>">
+                <input type="hidden" name="siswa_id" value="<?= $row['siswa_id']; ?>">
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label class="form-label">Mata Pelajaran</label>
+                    <input type="text" class="form-control" value="<?= htmlspecialchars($row['nama_mapel']); ?>" disabled style="background: var(--bg-surface);">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label class="form-label">Peserta Didik</label>
+                    <input type="text" class="form-control" value="<?= htmlspecialchars($row['nis']) . ' - ' . htmlspecialchars($row['nama_siswa']); ?>" disabled style="background: var(--bg-surface);">
+                </div>
+
+                <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 1.5rem 0;">
+
+                <div class="form-grid-3">
+                    <div class="form-group">
+                        <label class="form-label">Batas KKM</label>
+                        <input type="number" min="0" max="100" name="nilai_kkm" class="form-control" value="<?= $row['nilai_kkm']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nilai Pengetahuan</label>
+                        <input type="number" min="0" max="100" name="nilai_pengetahuan" class="form-control" value="<?= $row['nilai_pengetahuan']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nilai Keterampilan</label>
+                        <input type="number" min="0" max="100" name="nilai_keterampilan" class="form-control" value="<?= $row['nilai_keterampilan']; ?>" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
+                <button type="submit" name="simpan_nilai" class="btn-warning">
+                    <i class="bi bi-save"></i> Perbarui Nilai
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 2. Modal Hapus Nilai -->
+<div class="modal-overlay" id="modalHapusNilai<?= $row['id']; ?>">
+    <div class="modal-box">
+        <form method="POST">
+            <div class="modal-header header-danger">
+                <h5>Konfirmasi Hapus Nilai</h5>
+                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="aksi" value="hapus_nilai">
+                <input type="hidden" name="id_nilai" value="<?= $row['id']; ?>">
+                <p>Apakah Anda yakin ingin menghapus data nilai milik <strong><?= htmlspecialchars($row['nama_siswa']); ?></strong> pada mapel <strong><?= htmlspecialchars($row['nama_mapel']); ?></strong>?</p>
+                <p style="font-size: 0.78rem; color: #dc2626; margin-top: 0.5rem; margin-bottom: 0;">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Data nilai yang terhapus tidak dapat dikembalikan.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
+                <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<?php endforeach; ?>
 
 <?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
 
@@ -1127,28 +2265,37 @@ $q_nilai_input = mysqli_query($conn, "
 ");
 $total_nilai_input = mysqli_fetch_assoc($q_nilai_input)['total'] ?? 0;
 
-$query_mapel_list = mysqli_query($conn, "SELECT kode_mapel, nama_mapel FROM mapel WHERE guru_id = '$id_guru'");
+$query_mapel_list = mysqli_query($conn, "SELECT id, kode_mapel, nama_mapel FROM mapel WHERE guru_id = '$id_guru'");
 
 require_once __DIR__ . '/../includes/template_header.php';
 ?>
 
-<div class="banner-card header-primary">
-    <h2>Selamat Datang, <?= htmlspecialchars($nama_guru); ?>!</h2>
-    <p>NIP: <?= htmlspecialchars($nip); ?> | Panel Pengelolaan Nilai Akademik Siswa (SIPN).</p>
+<!-- Header Halaman & Tombol Aksi Utama -->
+<div class="page-header-action" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+            <i class="bi bi-person-badge text-primary"></i> Selamat Datang, <?= htmlspecialchars($nama_guru); ?>!
+        </h2>
+    
+    </div>
+    <a href="<?= BASE_URL; ?>guru/data_nilai_siswa.php" class="btn-primary-custom">
+        <i class="bi bi-pencil-square"></i> Kelola & Input Nilai Rapor
+    </a>
 </div>
 
-<div class="stats-grid">
+<!-- Grid Ringkasan Statistik -->
+<div class="stats-grid" style="margin-bottom: 1.5rem;">
     <div class="stat-card stat-primary">
         <div class="stat-content">
             <span class="stat-title">Mapel Diampu</span>
             <span class="stat-value"><?= $total_mapel; ?></span>
         </div>
-        <i class="bi bi-book stat-icon"></i>
+        <i class="bi bi-journal-bookmark stat-icon"></i>
     </div>
 
     <div class="stat-card stat-success">
         <div class="stat-content">
-            <span class="stat-title">Total Siswa</span>
+            <span class="stat-title">Total Siswa Terdaftar</span>
             <span class="stat-value"><?= $total_siswa; ?></span>
         </div>
         <i class="bi bi-people stat-icon"></i>
@@ -1163,61 +2310,52 @@ require_once __DIR__ . '/../includes/template_header.php';
     </div>
 </div>
 
-<div class="dashboard-columns">
-    <div class="card-panel">
-        <div class="card-header">
-            <i class="bi bi-journal-bookmark"></i> Mata Pelajaran yang Diampu
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Kode Mapel</th>
-                            <th>Nama Mata Pelajaran</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (mysqli_num_rows($query_mapel_list) > 0): ?>
-                            <?php $no = 1; while ($row = mysqli_fetch_assoc($query_mapel_list)): ?>
-                                <tr>
-                                    <td><?= $no++; ?></td>
-                                    <td><span class="badge badge-secondary"><?= htmlspecialchars($row['kode_mapel']); ?></span></td>
-                                    <td><strong><?= htmlspecialchars($row['nama_mapel']); ?></strong></td>
-                                    <td>
-                                        <a href="<?= BASE_URL; ?>guru/data_nilai_siswa.php" class="btn btn-sm btn-primary-outline">
-                                            <i class="bi bi-pencil-square"></i> Input Nilai
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="4" class="text-center text-muted">Belum ada mata pelajaran yang ditugaskan.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<!-- Tabel Mata Pelajaran Diampu Full-Width (Gaya Admin) -->
+<div class="card-panel">
+    <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 1rem; font-weight: 800; color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="bi bi-journal-check text-primary"></i> Daftar Mata Pelajaran Diampu
+        </h3>
+        <span class="badge badge-primary"><?= $total_mapel; ?> Mapel</span>
     </div>
-
-    <div class="card-panel">
-        <div class="card-header">
-            <i class="bi bi-lightning-charge"></i> Akses Cepat
-        </div>
-        <div class="card-body">
-            <div class="quick-links">
-                <a href="<?= BASE_URL; ?>guru/data_nilai_siswa.php" class="btn btn-primary action-btn">
-                    <i class="bi bi-plus-circle"></i> Input Nilai Rapor
-                </a>
-                <a href="<?= BASE_URL; ?>profile.php" class="btn btn-secondary action-btn">
-                    <i class="bi bi-person-gear"></i> Pengaturan Profil
-                </a>
-            </div>
-        </div>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">No</th>
+                    <th style="width: 20%;">Kode Mapel</th>
+                    <th style="width: 55%;">Nama Mata Pelajaran</th>
+                    <th style="width: 20%;" class="text-center">Aksi Pengelolaan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (mysqli_num_rows($query_mapel_list) > 0): ?>
+                    <?php $no = 1; while ($row = mysqli_fetch_assoc($query_mapel_list)): ?>
+                        <tr>
+                            <td><strong><?= $no++; ?></strong></td>
+                            <td>
+                                <span class="badge badge-secondary" style="font-family: monospace; font-size: 0.85rem;">
+                                    <?= htmlspecialchars($row['kode_mapel']); ?>
+                                </span>
+                            </td>
+                            <td><strong style="color: var(--text-dark);"><?= htmlspecialchars($row['nama_mapel']); ?></strong></td>
+                            <td class="text-center">
+                                <a href="<?= BASE_URL; ?>guru/data_nilai_siswa.php" class="btn btn-sm btn-warning" title="Input Nilai">
+                                    <i class="bi bi-pencil-square"></i> Input Nilai
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="4" class="text-center text-muted" style="padding: 3rem;">
+                            <i class="bi bi-journal-x" style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+                            Belum ada mata pelajaran yang ditugaskan kepada Anda.
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -1545,61 +2683,91 @@ require_once __DIR__ . '/config/koneksi_database.php';
 require_once __DIR__ . '/includes/helper_fungsi.php';
 require_once __DIR__ . '/includes/helper_cek_login.php';
 
-check_login();
-
-$user_id = $_SESSION['user_id'];
-$role    = $_SESSION['role'];
-
-$query_user = mysqli_query($conn, "SELECT username FROM users WHERE id = '$user_id'");
-$data_user  = mysqli_fetch_assoc($query_user);
-
-$profil = [];
-if ($role === 'guru') {
-    $q_profil = mysqli_query($conn, "SELECT * FROM guru WHERE user_id = '$user_id'");
-    $profil   = mysqli_fetch_assoc($q_profil);
-} elseif ($role === 'siswa') {
-    $q_profil = mysqli_query($conn, "SELECT * FROM siswa WHERE user_id = '$user_id'");
-    $profil   = mysqli_fetch_assoc($q_profil);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profil'])) {
-    $username      = sanitize($_POST['username']);
-    $password_baru = $_POST['password'];
+$user_id = $_SESSION['user_id'];
+$role = $_SESSION['role'];
 
-    if (!empty($password_baru)) {
-        $hashed_password = password_hash($password_baru, PASSWORD_DEFAULT);
-        $stmt_user       = $conn->prepare("UPDATE users SET username = ?, password = ? WHERE id = ?");
-        $stmt_user->bind_param("ssi", $username, $hashed_password, $user_id);
-    } else {
-        $stmt_user = $conn->prepare("UPDATE users SET username = ? WHERE id = ?");
-        $stmt_user->bind_param("si", $username, $user_id);
+// 1. Ambil Data Gabungan (Users + Guru/Siswa)
+$query_user = mysqli_query($conn, "SELECT username, role FROM users WHERE id = '$user_id'");
+$data_user = mysqli_fetch_assoc($query_user);
+
+$nama_lengkap = $data_user['username'];
+$identitas_id = '';
+$jenis_kelamin = '';
+$kelas = '';
+
+if ($role === 'guru') {
+    $q_detail = mysqli_query($conn, "SELECT nip, nama, jenis_kelamin FROM guru WHERE user_id = '$user_id'");
+    if ($d = mysqli_fetch_assoc($q_detail)) {
+        $nama_lengkap = $d['nama'];
+        $identitas_id = $d['nip'];
+        $jenis_kelamin = $d['jenis_kelamin'];
     }
-    $stmt_user->execute();
-    $stmt_user->close();
-
-    if ($role === 'guru') {
-        $nama = sanitize($_POST['nama']);
-        $nip  = sanitize($_POST['nip']);
-        $jk   = sanitize($_POST['jenis_kelamin']);
-
-        $stmt_guru = $conn->prepare("UPDATE guru SET nama = ?, nip = ?, jenis_kelamin = ? WHERE user_id = ?");
-        $stmt_guru->bind_param("sssi", $nama, $nip, $jk, $user_id);
-        $stmt_guru->execute();
-        $stmt_guru->close();
-    } elseif ($role === 'siswa') {
-        $nama  = sanitize($_POST['nama']);
-        $nis   = sanitize($_POST['nis']);
-        $kelas = sanitize($_POST['kelas']);
-        $jk    = sanitize($_POST['jenis_kelamin']);
-
-        $stmt_siswa = $conn->prepare("UPDATE siswa SET nama = ?, nis = ?, kelas = ?, jenis_kelamin = ? WHERE user_id = ?");
-        $stmt_siswa->bind_param("ssssi", $nama, $nis, $kelas, $jk, $user_id);
-        $stmt_siswa->execute();
-        $stmt_siswa->close();
+} elseif ($role === 'siswa') {
+    $q_detail = mysqli_query($conn, "SELECT nis, nama, kelas, jenis_kelamin FROM siswa WHERE user_id = '$user_id'");
+    if ($d = mysqli_fetch_assoc($q_detail)) {
+        $nama_lengkap = $d['nama'];
+        $identitas_id = $d['nis'];
+        $kelas = $d['kelas'];
+        $jenis_kelamin = $d['jenis_kelamin'];
     }
+} elseif ($role === 'admin') {
+    $nama_lengkap = 'Administrator Sistem';
+}
 
-    $_SESSION['username'] = $username;
-    set_flash_message('success', 'Pengaturan akun dan profil berhasil diperbarui!');
+// 2. Proses Update Informasi Menyeluruh
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_informasi'])) {
+    $username_baru = sanitize($_POST['username']);
+    $password_baru = trim($_POST['password']);
+    
+    mysqli_begin_transaction($conn);
+    try {
+        // A. Update tabel users
+        $q_user_update = "UPDATE users SET username = '$username_baru'";
+        if (!empty($password_baru)) {
+            $password_hash = password_hash($password_baru, PASSWORD_DEFAULT);
+            $q_user_update .= ", password = '$password_hash'";
+        }
+        $q_user_update .= " WHERE id = '$user_id'";
+        mysqli_query($conn, $q_user_update);
+        
+        // B. Update tabel spesifik sesuai role
+        if ($role === 'guru') {
+            $nip = sanitize($_POST['nip']);
+            $nama = sanitize($_POST['nama']);
+            $jk = sanitize($_POST['jenis_kelamin']);
+            mysqli_query($conn, "UPDATE guru SET nip = '$nip', nama = '$nama', jenis_kelamin = '$jk' WHERE user_id = '$user_id'");
+        } elseif ($role === 'siswa') {
+            $nis = sanitize($_POST['nis']);
+            $nama = sanitize($_POST['nama']);
+            $kls = sanitize($_POST['kelas']);
+            $jk = sanitize($_POST['jenis_kelamin']);
+            mysqli_query($conn, "UPDATE siswa SET nis = '$nis', nama = '$nama', kelas = '$kls', jenis_kelamin = '$jk' WHERE user_id = '$user_id'");
+        }
+
+        mysqli_commit($conn);
+        $_SESSION['username'] = $username_baru; // Update session
+        set_flash_message('success', 'Informasi profil berhasil diperbarui secara menyeluruh!');
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        set_flash_message('danger', 'Gagal memperbarui profil: ' . $e->getMessage());
+    }
+    
+    header("Location: profile.php");
+    exit;
+}
+
+// 3. Proses Update Foto (Simulasi UI)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_foto'])) {
+    // Catatan: Anda perlu menambahkan kolom `foto` di database untuk membuat ini berfungsi permanen
+    set_flash_message('info', 'UI Upload Foto berhasil. (Harap tambahkan kolom "foto" di tabel users untuk menyimpan ke database).');
     header("Location: profile.php");
     exit;
 }
@@ -1607,74 +2775,223 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profil'])) {
 require_once __DIR__ . '/includes/template_header.php';
 ?>
 
-<div class="centered-layout">
-    <div class="card-panel profile-card">
-        <div class="card-header header-primary">
-            <h5><i class="bi bi-person-gear"></i> Pengaturan Akun & Profil</h5>
+<div class="profile-container-centered">
+    
+    <!-- Profil Card Berada di Tengah -->
+    <div class="profile-card-centered">
+        
+        <!-- Bagian Atas: Avatar, Judul, Tombol Edit -->
+        <div class="profile-header-centered">
+            
+            <button class="btn-primary-outline btn-edit-profile-absolute" data-modal-target="#modalOpsiEdit">
+                <i class="bi bi-pencil-square"></i> Edit Profil
+            </button>
+
+            <div class="avatar-circle-centered">
+                <i class="bi bi-person"></i>
+            </div>
+            
+            <h2 class="profile-name"><?= htmlspecialchars($nama_lengkap); ?></h2>
+            <div class="profile-role-badge">
+                <i class="bi bi-shield-check"></i> Hak Akses: <?= ucfirst($role); ?>
+            </div>
         </div>
-        <div class="card-body">
-            <form action="" method="POST">
-                <div class="form-section-title">Informasi Akun (Login)</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Username</label>
-                        <input type="text" name="username" class="form-input" value="<?= htmlspecialchars($data_user['username']); ?>" required>
+
+        <!-- Bagian Bawah: Informasi Detail -->
+        <div class="profile-body-centered">
+            
+            <div class="info-row">
+                <div class="info-label"><i class="bi bi-person-badge"></i> Username Akun</div>
+                <div class="info-value"><?= htmlspecialchars($data_user['username']); ?></div>
+            </div>
+
+            <?php if ($role === 'guru'): ?>
+                <div class="info-row">
+                    <div class="info-label"><i class="bi bi-hash"></i> NIP Pegawai</div>
+                    <div class="info-value" style="font-family: monospace; font-size: 1.15rem;"><?= htmlspecialchars($identitas_id); ?></div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label"><i class="bi bi-gender-ambiguous"></i> Jenis Kelamin</div>
+                    <div class="info-value"><?= $jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'; ?></div>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($role === 'siswa'): ?>
+                <div class="info-row">
+                    <div class="info-label"><i class="bi bi-hash"></i> NIS Siswa</div>
+                    <div class="info-value" style="font-family: monospace; font-size: 1.15rem;"><?= htmlspecialchars($identitas_id); ?></div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label"><i class="bi bi-bookmark-star"></i> Kelas / Rombel</div>
+                    <div class="info-value"><?= htmlspecialchars($kelas); ?></div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label"><i class="bi bi-gender-ambiguous"></i> Jenis Kelamin</div>
+                    <div class="info-value"><?= $jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'; ?></div>
+                </div>
+            <?php endif; ?>
+            
+            <div class="info-row">
+                <div class="info-label"><i class="bi bi-shield-lock"></i> Keamanan Sandi</div>
+                <div class="info-value" style="color: var(--text-muted);">•••••••• (Terenkripsi)</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ================= MODAL 1: PILIHAN OPSI EDIT ================= -->
+<div class="modal-overlay" id="modalOpsiEdit">
+    <div class="modal-box" style="max-width: 600px;">
+        <div class="modal-header header-primary">
+            <h5>Pilih Bagian yang Ingin Diedit</h5>
+            <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="edit-options-grid">
+                
+                <!-- Opsi Edit Informasi -->
+                <div class="edit-option-card" onclick="document.getElementById('modalOpsiEdit').classList.remove('is-active'); document.getElementById('modalEditInformasi').classList.add('is-active');">
+                    <i class="bi bi-card-text"></i>
+                    <h6>Edit Data Informasi</h6>
+                    <p>Ubah nama, NIS/NIP, kelas, username, atau kata sandi.</p>
+                </div>
+
+                <!-- Opsi Edit Foto -->
+                <div class="edit-option-card" onclick="document.getElementById('modalOpsiEdit').classList.remove('is-active'); document.getElementById('modalEditFoto').classList.add('is-active');">
+                    <i class="bi bi-camera-fill"></i>
+                    <h6>Ganti Foto Profil</h6>
+                    <p>Unggah atau perbarui foto profil identitas Anda.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================= MODAL 2: FORM EDIT INFORMASI MENYELURUH ================= -->
+<div class="modal-overlay" id="modalEditInformasi">
+    <div class="modal-box modal-lg" style="max-width: 650px;">
+        <form method="POST">
+            <div class="modal-header header-warning">
+                <h5><i class="bi bi-pencil-square"></i> Perbarui Data Profil (<?= ucfirst($role); ?>)</h5>
+                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 2rem;">
+                
+                <!-- Kredensial Akun -->
+                <div class="modal-section-title">
+                    <i class="bi bi-shield-lock-fill"></i> Data Kredensial Akun
+                </div>
+                <div class="form-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem;">
+                    <div class="auth-input-group" style="margin: 0;">
+                        <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem; display: block;">Username Login</label>
+                        <div class="auth-input-wrapper">
+                            <i class="bi bi-at field-icon"></i>
+                            <input type="text" name="username" value="<?= htmlspecialchars($data_user['username']); ?>" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Password Baru</label>
-                        <input type="password" name="password" class="form-input" placeholder="Kosongkan jika tidak diubah">
-                        <small class="help-text">Isi hanya jika ingin mengganti password.</small>
+                    <div class="auth-input-group" style="margin: 0;">
+                        <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem; display: block;">Password Baru</label>
+                        <div class="auth-input-wrapper">
+                            <i class="bi bi-key-fill field-icon"></i>
+                            <input type="password" name="password" placeholder="Kosongkan jika tidak diubah...">
+                        </div>
                     </div>
                 </div>
 
-                <?php if ($role === 'guru' || $role === 'siswa'): ?>
-                    <div class="form-section-title">Data Identitas Profil</div>
+                <!-- Identitas Personal -->
+                <?php if ($role !== 'admin'): ?>
+                <div class="modal-section-title">
+                    <i class="bi bi-person-vcard-fill"></i> Identitas Personal
+                </div>
+                <div class="form-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
                     
-                    <div class="form-group">
-                        <label class="form-label">Nama Lengkap</label>
-                        <input type="text" name="nama" class="form-input" value="<?= htmlspecialchars($profil['nama'] ?? ''); ?>" required>
+                    <?php if ($role === 'guru'): ?>
+                        <div class="auth-input-group" style="margin: 0;">
+                            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem; display: block;">NIP Pegawai</label>
+                            <div class="auth-input-wrapper">
+                                <i class="bi bi-hash field-icon"></i>
+                                <input type="text" name="nip" value="<?= htmlspecialchars($identitas_id); ?>" required>
+                            </div>
+                        </div>
+                    <?php elseif ($role === 'siswa'): ?>
+                        <div class="auth-input-group" style="margin: 0;">
+                            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem; display: block;">NIS Siswa</label>
+                            <div class="auth-input-wrapper">
+                                <i class="bi bi-hash field-icon"></i>
+                                <input type="text" name="nis" value="<?= htmlspecialchars($identitas_id); ?>" required>
+                            </div>
+                        </div>
+                        <div class="auth-input-group" style="margin: 0;">
+                            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem; display: block;">Kelas / Rombel</label>
+                            <div class="auth-input-wrapper">
+                                <i class="bi bi-bookmark-star-fill field-icon"></i>
+                                <input type="text" name="kelas" value="<?= htmlspecialchars($kelas); ?>" required>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="auth-input-group" style="grid-column: 1 / -1; margin: 0;">
+                        <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem; display: block;">Nama Lengkap</label>
+                        <div class="auth-input-wrapper">
+                            <i class="bi bi-person-lines-fill field-icon"></i>
+                            <input type="text" name="nama" value="<?= htmlspecialchars($nama_lengkap); ?>" required>
+                        </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <?php if ($role === 'guru'): ?>
-                                <label class="form-label">NIP</label>
-                                <input type="text" name="nip" class="form-input" value="<?= htmlspecialchars($profil['nip'] ?? ''); ?>" required>
-                            <?php elseif ($role === 'siswa'): ?>
-                                <label class="form-label">NIS</label>
-                                <input type="text" name="nis" class="form-input" value="<?= htmlspecialchars($profil['nis'] ?? ''); ?>" required>
-                            <?php endif; ?>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Jenis Kelamin</label>
-                            <select name="jenis_kelamin" class="form-select" required>
-                                <option value="L" <?= (isset($profil['jenis_kelamin']) && $profil['jenis_kelamin'] === 'L') ? 'selected' : ''; ?>>Laki-laki</option>
-                                <option value="P" <?= (isset($profil['jenis_kelamin']) && $profil['jenis_kelamin'] === 'P') ? 'selected' : ''; ?>>Perempuan</option>
+                    <div class="auth-input-group" style="grid-column: 1 / -1; margin: 0;">
+                        <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem; display: block;">Jenis Kelamin</label>
+                        <div class="auth-input-wrapper">
+                            <i class="bi bi-gender-ambiguous field-icon"></i>
+                            <select name="jenis_kelamin" required style="width: 100%; padding: 0.75rem 0.8rem 0.75rem 2.6rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; font-size: 0.9rem; color: var(--text-dark); outline: none; appearance: auto;">
+                                <option value="L" <?= $jenis_kelamin === 'L' ? 'selected' : ''; ?>>Laki-laki</option>
+                                <option value="P" <?= $jenis_kelamin === 'P' ? 'selected' : ''; ?>>Perempuan</option>
                             </select>
                         </div>
                     </div>
-
-                    <?php if ($role === 'siswa'): ?>
-                        <div class="form-group">
-                            <label class="form-label">Kelas</label>
-                            <input type="text" name="kelas" class="form-input" value="<?= htmlspecialchars($profil['kelas'] ?? ''); ?>" required placeholder="Contoh: X RPL 1">
-                        </div>
-                    <?php endif; ?>
-                    
-                <?php else: ?>
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i> Anda login sebagai <strong>Admin</strong>. Hanya pengaturan kredensial yang dapat diubah.
-                    </div>
+                </div>
                 <?php endif; ?>
 
-                <div class="form-actions align-right">
-                    <button type="submit" name="update_profil" class="btn btn-primary">
-                        <i class="bi bi-save"></i> Simpan Perubahan
-                    </button>
+            </div>
+            <div class="modal-footer" style="padding: 1.25rem 2rem;">
+                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
+                <button type="submit" name="update_informasi" class="btn-warning" style="padding: 0.65rem 1.25rem; font-size: 0.9rem; border-radius: 10px;">
+                    <i class="bi bi-check2-circle"></i> Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ================= MODAL 3: FORM EDIT FOTO ================= -->
+<div class="modal-overlay" id="modalEditFoto">
+    <div class="modal-box" style="max-width: 500px;">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="modal-header header-primary">
+                <h5><i class="bi bi-image"></i> Ganti Foto Profil</h5>
+                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+            </div>
+            <div class="modal-body text-center" style="padding: 2.5rem 2rem;">
+                
+                <div class="upload-dropzone">
+                    <i class="bi bi-cloud-arrow-up-fill" style="font-size: 4rem; color: var(--primary-dark); margin-bottom: 1rem; display: inline-block;"></i>
+                    <h6 style="font-size: 1.1rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.25rem;">Klik atau Seret Foto Anda</h6>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Format file didukung: JPG, PNG. Maksimal 2MB.</p>
+                    <input type="file" name="foto_profil" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;" accept="image/png, image/jpeg, image/jpg" required>
                 </div>
-            </form>
-        </div>
+
+                <div class="alert alert-info mt-4" style="text-align: left; padding: 0.85rem; font-size: 0.8rem; margin-bottom: 0;">
+                    <i class="bi bi-info-circle-fill"></i> UI Upload Foto telah siap digunakan. Pastikan Administrator telah menambahkan kolom <code>foto</code> di dalam database.
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 1.25rem 2rem;">
+                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
+                <button type="submit" name="update_foto" class="btn-primary-custom" style="padding: 0.65rem 1.25rem; font-size: 0.9rem; border-radius: 10px;">
+                    <i class="bi bi-upload"></i> Unggah Foto
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -2229,109 +3546,68 @@ require_once __DIR__ . '/../includes/template_header.php';
 
 $query = "SELECT g.*, u.username FROM guru g JOIN users u ON g.user_id = u.id ORDER BY g.nama ASC";
 $result = mysqli_query($conn, $query);
+
+$teachers = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $teachers[] = $row;
+}
 ?>
 
-<div class="page-header flex-between">
-    <h2><i class="bi bi-person-workspace"></i> Data Guru</h2>
-    <button class="btn btn-primary" data-modal-target="#modalTambah">
-        <i class="bi bi-plus-circle"></i> Tambah Guru
+<!-- Header Halaman & Tombol Tambah -->
+<div class="page-header-action" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+            <i class="bi bi-person-workspace text-primary"></i> Manajemen Data Guru
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem; margin-bottom: 0;">Pusat pengelolaan data pendidik dan kredensial akun pengajar.</p>
+    </div>
+    <button type="button" class="btn-primary-custom" data-modal-target="#modalTambah">
+        <i class="bi bi-plus-lg"></i> Tambah Guru Baru
     </button>
 </div>
 
+<!-- Tampilan Tabel Data Guru Full-Width -->
 <div class="card-panel">
     <div class="table-responsive">
         <table class="data-table">
             <thead>
                 <tr>
                     <th style="width: 5%;">No</th>
-                    <th style="width: 15%;">NIP</th>
-                    <th style="width: 30%;">Nama Guru</th>
-                    <th style="width: 15%;">L/P</th>
-                    <th style="width: 15%;">Username Akun</th>
-                    <th style="width: 20%;" class="text-center">Aksi</th>
+                    <th style="width: 18%;">NIP</th>
+                    <th style="width: 32%;">Nama Guru & Gelar</th>
+                    <th style="width: 12%;">Jenis Kelamin</th>
+                    <th style="width: 18%;">Username Akun</th>
+                    <th style="width: 15%;" class="text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                <?php if (mysqli_num_rows($result) > 0): ?>
-                    <?php $no = 1; while ($row = mysqli_fetch_assoc($result)): ?>
+                <?php if (count($teachers) > 0): ?>
+                    <?php $no = 1; foreach ($teachers as $row): ?>
                     <tr>
-                        <td><?= $no++; ?></td>
+                        <td><strong><?= $no++; ?></strong></td>
                         <td><?= htmlspecialchars($row['nip']); ?></td>
-                        <td><?= htmlspecialchars($row['nama']); ?></td>
-                        <td><?= $row['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan'; ?></td>
+                        <td><strong><?= htmlspecialchars($row['nama']); ?></strong></td>
+                        <td>
+                            <span class="badge badge-primary">
+                                <?= $row['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan'; ?>
+                            </span>
+                        </td>
                         <td><span class="badge badge-secondary"><?= htmlspecialchars($row['username']); ?></span></td>
                         <td class="text-center">
-                            <button class="btn btn-sm btn-warning" data-modal-target="#modalEdit<?= $row['id']; ?>">
-                                <i class="bi bi-pencil-square"></i> Edit
-                            </button>
-                            <button class="btn btn-sm btn-danger" data-modal-target="#modalHapus<?= $row['id']; ?>">
-                                <i class="bi bi-trash"></i> Hapus
-                            </button>
+                            <div class="table-action-btn" style="display: inline-flex; justify-content: center; gap: 0.35rem;">
+                                <button type="button" class= "btn btn-sm btn-warning" data-modal-target="#modalEdit<?= $row['id']; ?>" title="Edit Data">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger" data-modal-target="#modalHapus<?= $row['id']; ?>" title="Hapus Data">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
-
-                    <!-- Modal Edit -->
-                    <div class="modal-overlay" id="modalEdit<?= $row['id']; ?>">
-                        <div class="modal-box">
-                            <form method="POST">
-                                <div class="modal-header header-warning">
-                                    <h5><i class="bi bi-pencil-square"></i> Edit Data Guru</h5>
-                                    <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                    <input type="hidden" name="aksi" value="edit">
-                                    <input type="hidden" name="id_guru" value="<?= $row['id']; ?>">
-                                    
-                                    <div class="form-group">
-                                        <label class="form-label">NIP</label>
-                                        <input type="text" class="form-input" name="nip" value="<?= htmlspecialchars($row['nip']); ?>" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Nama Lengkap</label>
-                                        <input type="text" class="form-input" name="nama" value="<?= htmlspecialchars($row['nama']); ?>" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Jenis Kelamin</label>
-                                        <select class="form-select" name="jenis_kelamin" required>
-                                            <option value="L" <?= $row['jenis_kelamin'] == 'L' ? 'selected' : ''; ?>>Laki-laki</option>
-                                            <option value="P" <?= $row['jenis_kelamin'] == 'P' ? 'selected' : ''; ?>>Perempuan</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-modal-close>Batal</button>
-                                    <button type="submit" class="btn btn-warning">Simpan Perubahan</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Modal Hapus -->
-                    <div class="modal-overlay" id="modalHapus<?= $row['id']; ?>">
-                        <div class="modal-box">
-                            <form method="POST">
-                                <div class="modal-header header-danger">
-                                    <h5><i class="bi bi-exclamation-triangle"></i> Konfirmasi Hapus</h5>
-                                    <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                    <input type="hidden" name="aksi" value="hapus">
-                                    <input type="hidden" name="user_id" value="<?= $row['user_id']; ?>">
-                                    <p>Apakah Anda yakin ingin menghapus guru <strong><?= htmlspecialchars($row['nama']); ?></strong>?</p>
-                                    <p class="text-danger small"><i class="bi bi-info-circle"></i> Menghapus guru juga akan menghapus akun login secara permanen.</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-modal-close>Batal</button>
-                                    <button type="submit" class="btn btn-danger">Ya, Hapus Data</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" class="text-center text-muted">Belum ada data guru.</td>
+                        <td colspan="6" class="text-center text-muted" style="text-align: center; padding: 2rem;">Belum ada data guru terdaftar.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -2339,55 +3615,112 @@ $result = mysqli_query($conn, $query);
     </div>
 </div>
 
+<!-- ================= SEMUA MODAL DI LUAR TABEL ================= -->
+<?php foreach ($teachers as $row): ?>
+
+<!-- Modal Edit Guru -->
+<div class="modal-overlay" id="modalEdit<?= $row['id']; ?>">
+    <div class="modal-box">
+        <form method="POST">
+            <div class="modal-header header-warning">
+                <h5>Edit Data Guru</h5>
+                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="aksi" value="edit">
+                <input type="hidden" name="id_guru" value="<?= $row['id']; ?>">
+                
+                <div class="form-group">
+                    <label class="form-label">NIP</label>
+                    <input type="text" class="form-control" name="nip" value="<?= htmlspecialchars($row['nip']); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nama Lengkap & Gelar</label>
+                    <input type="text" class="form-control" name="nama" value="<?= htmlspecialchars($row['nama']); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Jenis Kelamin</label>
+                    <select class="form-select" name="jenis_kelamin" required>
+                        <option value="L" <?= $row['jenis_kelamin'] == 'L' ? 'selected' : ''; ?>>Laki-laki</option>
+                        <option value="P" <?= $row['jenis_kelamin'] == 'P' ? 'selected' : ''; ?>>Perempuan</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
+                <button type="submit" class="btn-primary-custom">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Hapus Guru -->
+<div class="modal-overlay" id="modalHapus<?= $row['id']; ?>">
+    <div class="modal-box">
+        <form method="POST">
+            <div class="modal-header header-danger">
+                <h5>Konfirmasi Hapus</h5>
+                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="aksi" value="hapus">
+                <input type="hidden" name="user_id" value="<?= $row['user_id']; ?>">
+                <p>Hapus guru <strong><?= htmlspecialchars($row['nama']); ?></strong>?</p>
+                <p style="font-size: 0.78rem; color: #dc2626; margin-top: 0.5rem;">Tindakan ini juga menghapus akun login terkait secara permanen.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
+                <button type="submit" class="btn btn-danger" style="background: #dc2626; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 700; cursor: pointer;">Ya, Hapus</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<?php endforeach; ?>
+
 <!-- Modal Tambah Guru & Akun -->
 <div class="modal-overlay" id="modalTambah">
-    <div class="modal-box modal-lg">
+    <div class="modal-box modal-lg" style="max-width: 650px;">
         <form method="POST">
             <div class="modal-header header-primary">
-                <h5><i class="bi bi-plus-circle"></i> Tambah Data & Akun Guru</h5>
+                <h5>Tambah Data & Akun Guru Baru</h5>
                 <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
             </div>
             <div class="modal-body">
                 <input type="hidden" name="aksi" value="tambah">
-                <div class="form-row">
-                    <div class="form-column">
-                        <h6 class="form-subtitle">Data Diri Guru</h6>
-                        <div class="form-group">
-                            <label class="form-label">NIP</label>
-                            <input type="text" class="form-input" name="nip" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Nama Lengkap</label>
-                            <input type="text" class="form-input" name="nama" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Jenis Kelamin</label>
-                            <select class="form-select" name="jenis_kelamin" required>
-                                <option value="" disabled selected>Pilih...</option>
-                                <option value="L">Laki-laki</option>
-                                <option value="P">Perempuan</option>
-                            </select>
-                        </div>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">NIP</label>
+                        <input type="text" class="form-control" name="nip" placeholder="Contoh: 1985..." required>
                     </div>
-                    <div class="form-column">
-                        <h6 class="form-subtitle">Data Akun Login</h6>
-                        <div class="form-group">
-                            <label class="form-label">Username</label>
-                            <input type="text" class="form-input" name="username" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Password</label>
-                            <input type="password" class="form-input" name="password" required>
-                        </div>
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle"></i> Akun akan otomatis diberi role <b>Guru</b>.
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label">Jenis Kelamin</label>
+                        <select class="form-select" name="jenis_kelamin" required>
+                            <option value="" disabled selected>Pilih...</option>
+                            <option value="L">Laki-laki</option>
+                            <option value="P">Perempuan</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nama Lengkap & Gelar</label>
+                    <input type="text" class="form-control" name="nama" placeholder="Contoh: Budi Santoso, S.Kom." required>
+                </div>
+                <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 1.25rem 0;">
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Username Login</label>
+                        <input type="text" class="form-control" name="username" placeholder="Buat username..." required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Kata Sandi (Password)</label>
+                        <input type="password" class="form-control" name="password" placeholder="••••••••" required>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-modal-close>Batal</button>
-                <button type="submit" class="btn btn-primary">Simpan Data</button>
+                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
+                <button type="submit" class="btn-primary-custom">Simpan Data Guru</button>
             </div>
         </form>
     </div>
@@ -2405,32 +3738,90 @@ require_once __DIR__ . '/../includes/helper_fungsi.php';
 require_once __DIR__ . '/../includes/helper_cek_login.php';
 check_role(['admin']);
 
+$logged_in_user_id = $_SESSION['user_id'] ?? 0;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
     $aksi = $_POST['aksi'];
 
     if ($aksi === 'reset_password') {
-        $id_user  = (int)$_POST['id_user'];
+        $id_user   = (int)$_POST['id_user'];
         $pass_baru = password_hash($_POST['password_baru'], PASSWORD_DEFAULT);
 
         $stmt = mysqli_prepare($conn, "UPDATE users SET password = ? WHERE id = ?");
         mysqli_stmt_bind_param($stmt, "si", $pass_baru, $id_user);
-        mysqli_stmt_execute($stmt) 
-            ? set_flash_message('success', 'Password pengguna berhasil diperbarui!') 
-            : set_flash_message('danger', 'Gagal mengedit password.');
+        
+        if (mysqli_stmt_execute($stmt)) {
+            set_flash_message('success', 'Password pengguna berhasil diperbarui!');
+        } else {
+            set_flash_message('danger', 'Gagal memperbarui password.');
+        }
+    } 
+    elseif ($aksi === 'edit_user') {
+        $id_user  = (int)$_POST['id_user'];
+        $username = sanitize($_POST['username']);
+        $role     = sanitize($_POST['role']);
+
+        $stmt_cek = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ? AND id != ?");
+        mysqli_stmt_bind_param($stmt_cek, "si", $username, $id_user);
+        mysqli_stmt_execute($stmt_cek);
+        $res_cek = mysqli_stmt_get_result($stmt_cek);
+
+        if (mysqli_num_rows($res_cek) > 0) {
+            set_flash_message('danger', 'Gagal! Username tersebut sudah digunakan oleh akun lain.');
+        } else {
+            $stmt = mysqli_prepare($conn, "UPDATE users SET username = ?, role = ? WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, "ssi", $username, $role, $id_user);
+            
+            if (mysqli_stmt_execute($stmt)) {
+                if ($id_user === $logged_in_user_id) {
+                    $_SESSION['username'] = $username;
+                    $_SESSION['role']     = $role;
+                }
+                set_flash_message('success', 'Data akun user berhasil diperbarui!');
+            } else {
+                set_flash_message('danger', 'Gagal memperbarui data user.');
+            }
+        }
     }
+    elseif ($aksi === 'hapus_user') {
+        $id_user = (int)$_POST['id_user'];
+
+        if ($id_user === $logged_in_user_id) {
+            set_flash_message('danger', 'Gagal! Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif.');
+        } else {
+            $stmt = mysqli_prepare($conn, "DELETE FROM users WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, "i", $id_user);
+            
+            if (mysqli_stmt_execute($stmt)) {
+                set_flash_message('success', 'Akun user berhasil dihapus!');
+            } else {
+                set_flash_message('danger', 'Gagal menghapus user.');
+            }
+        }
+    }
+
     header("Location: data_user.php");
     exit();
 }
-
 
 require_once __DIR__ . '/../includes/template_header.php';
 
 $query = "SELECT id, username, role FROM users ORDER BY role ASC, username ASC";
 $result = mysqli_query($conn, $query);
+
+$users = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $users[] = $row;
+}
 ?>
 
-<div class="page-header">
-    <h2><i class="bi bi-people"></i> Kelola Akun User</h2>
+<div class="page-header-action" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <div>
+        <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+            <i class="bi bi-people text-primary"></i> Kelola Akun User
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem; margin-bottom: 0;">Kelola hak akses role, kredensial login, dan reset kata sandi pengguna.</p>
+    </div>
 </div>
 
 <div class="card-panel">
@@ -2439,56 +3830,142 @@ $result = mysqli_query($conn, $query);
             <thead>
                 <tr>
                     <th style="width: 5%;">No</th>
-                    <th>Username</th>
-                    <th>Role</th>
-                    <th style="width: 20%;" class="text-center">Aksi</th>
+                    <th style="width: 30%;">Username</th>
+                    <th style="width: 25%;">Role Hak Akses</th>
+                    <th style="width: 40%;" class="text-center">Aksi Pengelolaan</th>
                 </tr>
             </thead>
             <tbody>
-                <?php $no = 1; while ($row = mysqli_fetch_assoc($result)): ?>
-                <tr>
-                    <td><?= $no++; ?></td>
-                    <td><strong><?= htmlspecialchars($row['username']); ?></strong></td>
-                    <td>
-                        <span class="badge badge-<?= $row['role'] === 'admin' ? 'danger' : ($row['role'] === 'guru' ? 'primary' : 'success'); ?>">
-                            <?= strtoupper($row['role']); ?>
-                        </span>
-                    </td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-warning" data-modal-target="#modalReset<?= $row['id']; ?>">
-                            <i class="bi bi-key"></i> Reset Password
-                        </button>
-                    </td>
-                </tr>
-
-                <!-- Modal Reset Password (Native Overlay) -->
-                <div class="modal-overlay" id="modalReset<?= $row['id']; ?>">
-                    <div class="modal-box">
-                        <form method="POST">
-                            <div class="modal-header header-warning">
-                                <h5>Reset Password - <?= htmlspecialchars($row['username']); ?></h5>
-                                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+                <?php if (count($users) > 0): ?>
+                    <?php $no = 1; foreach ($users as $row): ?>
+                    <tr>
+                        <td><?= $no++; ?></td>
+                        <td>
+                            <strong><?= htmlspecialchars($row['username']); ?></strong>
+                            <?php if ($row['id'] === $logged_in_user_id): ?>
+                                <span style="font-size: 0.7rem; color: #166534; background: #dcfce7; padding: 2px 6px; border-radius: 4px; margin-left: 0.4rem; font-weight: 700;">(Anda)</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <span class="badge badge-<?= $row['role'] === 'admin' ? 'danger' : ($row['role'] === 'guru' ? 'primary' : 'success'); ?>">
+                                <?= strtoupper($row['role']); ?>
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <!-- Wrapper Flexbox agar tombol sejajar rapi ke samping -->
+                            <div style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; flex-wrap: nowrap;">
+                               <button type="button" class="btn btn-sm btn-secondary" data-modal-target="#modalEdit<?= $row['id']; ?>" title="Edit User">
+                                    <i class="bi bi-key"></i> Edit
+                                <button type="button" class="btn btn-sm btn-warning" data-modal-target="#modalReset<?= $row['id']; ?>" title="Reset Password">
+                                    <i class="bi bi-key"></i> Reset
+                                </button>
+                                <?php if ($row['id'] !== $logged_in_user_id): ?>
+                                    <button type="button" class="btn btn-sm btn-danger" data-modal-target="#modalHapus<?= $row['id']; ?>" title="Hapus User">
+                                        <i class="bi bi-trash"></i> Hapus
+                                    </button>
+                                <?php endif; ?>
                             </div>
-                            <div class="modal-body">
-                                <input type="hidden" name="aksi" value="reset_password">
-                                <input type="hidden" name="id_user" value="<?= $row['id']; ?>">
-                                <div class="form-group">
-                                    <label class="form-label">Password Baru</label>
-                                    <input type="password" class="form-input" name="password_baru" required minlength="4">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-modal-close>Batal</button>
-                                <button type="submit" class="btn btn-warning">Simpan Password</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <?php endwhile; ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="4" class="text-center" style="text-align: center; padding: 2rem;">Belum ada data user.</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
 </div>
+
+<!-- ================= MODAL DI LUAR TABEL ================= -->
+<?php foreach ($users as $row): ?>
+
+<!-- 1. Modal Edit User & Role -->
+<div class="modal-overlay" id="modalEdit<?= $row['id']; ?>">
+    <div class="modal-box">
+        <form method="POST">
+            <div class="modal-header header-primary">
+                <h5>Edit Akun User - <?= htmlspecialchars($row['username']); ?></h5>
+                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="aksi" value="edit_user">
+                <input type="hidden" name="id_user" value="<?= $row['id']; ?>">
+                
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username" value="<?= htmlspecialchars($row['username']); ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Role Akses</label>
+                    <select class="form-select" name="role" required>
+                        <option value="admin" <?= $row['role'] === 'admin' ? 'selected' : ''; ?>>ADMIN</option>
+                        <option value="guru" <?= $row['role'] === 'guru' ? 'selected' : ''; ?>>GURU</option>
+                        <option value="siswa" <?= $row['role'] === 'siswa' ? 'selected' : ''; ?>>SISWA</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
+                <button type="submit" class="btn-primary-custom">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 2. Modal Reset Password -->
+<div class="modal-overlay" id="modalReset<?= $row['id']; ?>">
+    <div class="modal-box">
+        <form method="POST">
+            <div class="modal-header header-warning">
+                <h5>Reset Password - <?= htmlspecialchars($row['username']); ?></h5>
+                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="aksi" value="reset_password">
+                <input type="hidden" name="id_user" value="<?= $row['id']; ?>">
+                <div class="form-group">
+                    <label class="form-label">Password Baru</label>
+                    <input type="password" class="form-control" name="password_baru" required minlength="4" placeholder="Masukkan password baru...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
+                <button type="submit" class="btn btn-warning" style="background: #d97706; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 700; cursor: pointer;">Simpan Password</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 3. Modal Hapus User -->
+<?php if ($row['id'] !== $logged_in_user_id): ?>
+<div class="modal-overlay" id="modalHapus<?= $row['id']; ?>">
+    <div class="modal-box">
+        <form method="POST">
+            <div class="modal-header header-danger">
+                <h5>Konfirmasi Hapus Akun</h5>
+                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="aksi" value="hapus_user">
+                <input type="hidden" name="id_user" value="<?= $row['id']; ?>">
+                <p>Apakah Anda yakin ingin menghapus akun user <strong><?= htmlspecialchars($row['username']); ?></strong>?</p>
+                <p style="font-size: 0.78rem; color: #dc2626; margin-top: 0.5rem; margin-bottom: 0;">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Peringatan: Menghapus akun ini juga dapat menghapus data profil yang terhubung.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
+                <button type="submit" class="btn btn-danger" style="background: #dc2626; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 700; cursor: pointer;">Ya, Hapus</button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php endforeach; ?>
 
 <?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
 
@@ -2784,63 +4261,104 @@ function display_flash_message() {
 FILE: ./includes/template_footer.php
 ===============================
 </main>
-
-<footer class="app-footer">
-    <div class="footer-container">
-        <div class="footer-info">
-            <small>&copy; <?= date('Y'); ?> <strong>SIPN</strong> — SMK Sangkuriang 1 Cimahi. Hak Cipta Dilindungi.</small>
-        </div>
-        <div class="footer-badges">
-            <span><i class="bi bi-patch-check-fill"></i> Terakreditasi A</span>
-            <span><i class="bi bi-shield-lock-fill"></i> SSL 256-Bit</span>
-        </div>
+        <footer class="app-footer">
+            <div class="footer-container">
+                <div class="footer-info">
+                    <small>&copy; <?= date('Y'); ?> <strong>SIPN</strong> — SMK Sangkuriang 1 Cimahi. Hak Cipta Dilindungi.</small>
+                </div>
+                <div class="footer-badges">
+                    <span><i class="bi bi-patch-check-fill"></i> Terakreditasi A</span>
+                </div>
+            </div>
+        </footer>
     </div>
-</footer>
+</div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Menandai menu aktif berdasarkan URL
-    const currentUrl = window.location.href;
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    navLinks.forEach(link => {
-        if (currentUrl.includes(link.getAttribute('href'))) {
-            link.classList.add('active');
+document.addEventListener('DOMContentLoaded', () => {
+    // ==========================================
+    // 1. UNIVERSAL MODAL HANDLER (GLOBAL)
+    // ==========================================
+    document.addEventListener('click', function(e) {
+        // Ketika tombol dengan atribut data-modal-target diklik
+        const trigger = e.target.closest('[data-modal-target]');
+        if (trigger) {
+            e.preventDefault();
+            const targetSelector = trigger.getAttribute('data-modal-target');
+            const modal = document.querySelector(targetSelector);
+            if (modal) {
+                modal.classList.add('is-active');
+                modal.style.display = 'flex';
+            } else {
+                console.warn('Modal target tidak ditemukan:', targetSelector);
+            }
+        }
+
+        // Ketika tombol close / batal di dalam modal diklik
+        const closer = e.target.closest('[data-modal-close]');
+        if (closer) {
+            e.preventDefault();
+            const modal = closer.closest('.modal-overlay');
+            if (modal) {
+                modal.classList.remove('is-active');
+                modal.style.display = 'none';
+            }
+        }
+
+        // Ketika area gelap di luar kotak modal diklik
+        if (e.target.classList.contains('modal-overlay')) {
+            e.target.classList.remove('is-active');
+            e.target.style.display = 'none';
         }
     });
 
-    // Toggle dropdown profil pengguna
-    const userMenu = document.getElementById('userMenu');
-    if (userMenu) {
-        userMenu.addEventListener('click', function(e) {
+    // ==========================================
+    // 2. TOGGLE DARK MODE SIDEBAR
+    // ==========================================
+    const themeToggleBtn = document.getElementById('themeToggleSidebar');
+    const themeText = document.getElementById('themeText');
+    const bodyElement = document.body;
+
+    const savedTheme = localStorage.getItem('sipn_theme') || 'light';
+    bodyElement.setAttribute('data-theme', savedTheme);
+    if (savedTheme === 'dark' && themeText) {
+        themeText.textContent = 'Light Mode';
+    }
+
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = bodyElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            bodyElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('sipn_theme', newTheme);
+            
+            if (newTheme === 'dark') {
+                themeText.textContent = 'Light Mode';
+            } else {
+                themeText.textContent = 'Dark Mode';
+            }
+        });
+    }
+
+    // ==========================================
+    // 3. POPOVER PROFIL (SETTING & LOGOUT)
+    // ==========================================
+    const profileTrigger = document.getElementById('profileTriggerBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
+
+    if (profileTrigger && profileDropdown) {
+        profileTrigger.addEventListener('click', (e) => {
             e.stopPropagation();
-            this.classList.toggle('is-open');
+            const isVisible = profileDropdown.style.display === 'flex';
+            profileDropdown.style.display = isVisible ? 'none' : 'flex';
         });
 
-        document.addEventListener('click', function() {
-            userMenu.classList.remove('is-open');
+        document.addEventListener('click', () => {
+            profileDropdown.style.display = 'none';
         });
     }
 });
-const themeToggle = document.getElementById('themeToggle');
-const currentTheme = localStorage.getItem('theme') || 'light';
-
-if (currentTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-}
-
-if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-        let theme = document.documentElement.getAttribute('data-theme');
-        if (theme === 'dark') {
-            document.documentElement.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-        }
-    });
-}
 </script>
 </body>
 </html>
@@ -2909,406 +4427,102 @@ $current_page     = basename($_SERVER['PHP_SELF']);
 </head>
 <body data-theme="light">
 
-<?php if ($current_role === 'admin'): ?>
-    <!-- LAYOUT ADMIN: SIDEBAR KIRI + TOPBAR KONTEN -->
-    <div class="admin-layout-wrapper" style="display: flex; min-height: 100vh;">
-        
-        <!-- Sidebar Kiri Admin -->
-        <aside class="admin-sidebar" style="width: 260px; background: var(--card-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;">
-            <div>
-                <!-- Brand / Logo (Teks Biasa, Aman) -->
-                <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem;">
-                    <div style="width: 38px; height: 38px; background: var(--primary-dark); color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
-                        <i class="bi bi-shield-lock-fill"></i>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.95rem; font-weight: 800; color: var(--text-dark); line-height: 1.1;">SIPN ADMIN</div>
-                        <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">SMK SANGKURIANG 1</div>
-                    </div>
-                </div>
-
-                <!-- Navigasi Sidebar Menu Utama -->
-                <div style="padding: 1.25rem 1rem;">
-                    <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 0.75rem; margin-bottom: 0.5rem; display: block;">Menu Utama</span>
-                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.3rem;">
-                        <li>
-                            <a href="<?= BASE_URL; ?>admin/dashboard_admin.php" class="nav-link <?= $current_page === 'dashboard_admin.php' ? 'active' : ''; ?>">
-                                <i class="bi bi-grid-1x2-fill"></i> Dashboard
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL; ?>admin/riwayat.php" class="nav-link <?= $current_page === 'riwayat.php' ? 'active' : ''; ?>">
-                                <i class="bi bi-clock-history"></i> Riwayat Aktivitas
-                            </a>
-                        </li>
-                    </ul>
-
-                    <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 0.75rem; margin: 1.25rem 0 0.5rem; display: block;">Master Data</span>
-                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.3rem;">
-                        <li>
-                            <a href="<?= BASE_URL; ?>admin/data_guru.php" class="nav-link <?= $current_page === 'data_guru.php' ? 'active' : ''; ?>">
-                                <i class="bi bi-person-workspace"></i> Data Guru
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL; ?>admin/data_siswa.php" class="nav-link <?= $current_page === 'data_siswa.php' ? 'active' : ''; ?>">
-                                <i class="bi bi-people-fill"></i> Data Siswa
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL; ?>admin/data_mapel.php" class="nav-link <?= $current_page === 'data_mapel.php' ? 'active' : ''; ?>">
-                                <i class="bi bi-journal-bookmark-fill"></i> Mata Pelajaran
-                            </a>
-                        </li>
-                        <li>
-                            <!-- Diarahkan ke data_mengajar.php (sesuai nama file fisik Anda) -->
-                            <a href="<?= BASE_URL; ?>admin/data_mengajar.php" class="nav-link <?= $current_page === 'data_mengajar.php' ? 'active' : ''; ?>">
-                                <i class="bi bi-link-45deg"></i> Penugasan Mengajar
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL; ?>admin/data_user.php" class="nav-link <?= $current_page === 'data_user.php' ? 'active' : ''; ?>">
-                                <i class="bi bi-person-badge-fill"></i> Kelola User
-                            </a>
-                        </li>
-                    </ul>
-
-                    <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 0.75rem; margin: 1.25rem 0 0.5rem; display: block;">Informasi</span>
-                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.3rem;">
-                        <li>
-                            <a href="<?= BASE_URL; ?>about.php" class="nav-link <?= $current_page === 'about.php' ? 'active' : ''; ?>">
-                                <i class="bi bi-info-circle"></i> Tentang SIPN
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL; ?>contact.php" class="nav-link <?= $current_page === 'contact.php' ? 'active' : ''; ?>">
-                                <i class="bi bi-headset"></i> Kontak Bantuan
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Bagian Bawah Sidebar: Profil & Tombol Pengaturan -->
-            <div style="padding: 1rem; border-top: 1px solid var(--border-color); background: var(--bg-surface);">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
-                    <div style="display: flex; align-items: center; gap: 0.6rem; overflow: hidden;">
-                        <div style="width: 35px; height: 35px; background: var(--primary-dark); color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;">
-                            <?= strtoupper(substr($current_username, 0, 1)); ?>
-                        </div>
-                        <div style="overflow: hidden;">
-                            <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= htmlspecialchars($current_username); ?></div>
-                            <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Administrator</div>
-                        </div>
-                    </div>
-                    <a href="<?= BASE_URL; ?>profile.php" title="Pengaturan Profil" style="width: 32px; height: 32px; border-radius: 8px; background: var(--card-bg); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; color: var(--text-dark); text-decoration: none; flex-shrink: 0;">
-                        <i class="bi bi-gear-fill"></i>
-                    </a>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Area Konten Utama Admin -->
-        <div class="admin-main-content" style="flex: 1; margin-left: 260px; display: flex; flex-direction: column; min-height: 100vh;">
-            <header class="app-header" style="background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 0.75rem 2rem; display: flex; justify-content: flex-end; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 99;">
-                <button type="button" id="themeToggle" style="background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-dark); padding: 0.4rem 0.75rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem;">
-                    <i class="bi bi-moon-stars-fill"></i> <span>Dark Mode</span>
-                </button>
-                <a href="<?= BASE_URL; ?>auth/logout.php" style="background: #fee2e2; color: #dc2626; border: none; padding: 0.4rem 0.85rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 0.3rem;">
-                    <i class="bi bi-box-arrow-right"></i> Keluar
-                </a>
-            </header>
-            <main class="page-container" style="padding: 2rem; flex: 1;">
-
-<?php else: ?>
-    <!-- LAYOUT USER (GURU & SISWA): NAVBAR ATAS BERSIH -->
-    <header class="app-header">
-        <div class="header-container" style="max-width: 1200px; margin: 0 auto; padding: 0.85rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-            
-            <div class="brand-logo" style="display: flex; align-items: center; gap: 0.65rem;">
-                <div class="brand-icon" style="width: 36px; height: 36px; background: var(--primary-dark); color: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+<!-- Layout Utama Enterprise (Sidebar Kiri + Konten & Topbar Kanan) -->
+<div class="app-layout-wrapper">
+    
+    <!-- ================= SIDEBAR KIRI ================= -->
+    <aside class="app-sidebar">
+        <div>
+            <!-- Logo Sekolah / Brand -->
+            <div class="sidebar-brand-box">
+                <div class="sidebar-logo-icon">
                     <i class="bi bi-mortarboard-fill"></i>
                 </div>
-                <div class="brand-info" style="display: flex; flex-direction: column;">
-                    <span class="brand-name" style="font-size: 1.1rem; font-weight: 800; color: var(--primary-dark); line-height: 1;">SIPN AKADEMIK</span>
-                    <span class="brand-sub" style="font-size: 0.65rem; font-weight: 700; color: var(--text-muted);">SMK SANGKURIANG 1 CIMAHI</span>
+                <div class="sidebar-brand-text">
+                    <span class="brand-title">SIPN AKADEMIK</span>
+                    <span class="brand-subtitle">SMK SANGKURIANG 1</span>
                 </div>
             </div>
 
-            <nav class="main-nav">
-                <ul class="nav-list" style="display: flex; list-style: none; gap: 0.5rem; align-items: center;">
-                    <?php if ($current_role === 'siswa'): ?>
-                        <li><a href="<?= BASE_URL; ?>siswa/dashboard_siswa.php" class="nav-link <?= $current_page === 'dashboard_siswa.php' ? 'active' : ''; ?>"><i class="bi bi-grid-1x2"></i> Dashboard</a></li>
-                        <li><a href="<?= BASE_URL; ?>siswa/lihat_nilai_rapor.php" class="nav-link <?= $current_page === 'lihat_nilai_rapor.php' ? 'active' : ''; ?>"><i class="bi bi-file-earmark-text"></i> Transkrip Rapor</a></li>
-                    <?php elseif ($current_role === 'guru'): ?>
-                        <li><a href="<?= BASE_URL; ?>guru/dashboard_guru.php" class="nav-link <?= $current_page === 'dashboard_guru.php' ? 'active' : ''; ?>"><i class="bi bi-grid-1x2"></i> Dashboard</a></li>
-                        <li><a href="<?= BASE_URL; ?>guru/data_nilai_siswa.php" class="nav-link <?= $current_page === 'data_nilai_siswa.php' ? 'active' : ''; ?>"><i class="bi bi-pencil-square"></i> Input Nilai Siswa</a></li>
+            <!-- Menu Samping (Navigasi & Utilitas) -->
+            <div class="sidebar-menu-container">
+                <span class="sidebar-section-title">Menu Utilitas</span>
+                <ul class="sidebar-nav-list">
+                    <?php if ($current_role === 'admin'): ?>
+                        <li><a href="<?= BASE_URL; ?>admin/dashboard_admin.php" class="nav-link <?= $current_page === 'dashboard_admin.php' ? 'active' : ''; ?>"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+                        <li><a href="<?= BASE_URL; ?>admin/riwayat.php" class="nav-link <?= $current_page === 'riwayat.php' ? 'active' : ''; ?>"><i class="bi bi-clock-history"></i> Riwayat Aktivitas</a></li>
+                        <li><a href="<?= BASE_URL; ?>admin/data_guru.php" class="nav-link <?= strpos($current_page, 'guru') !== false ? 'active' : ''; ?>"><i class="bi bi-person-workspace"></i> Data Guru</a></li>
+                        <li><a href="<?= BASE_URL; ?>admin/data_siswa.php" class="nav-link <?= strpos($current_page, 'siswa') !== false ? 'active' : ''; ?>"><i class="bi bi-people-fill"></i> Data Siswa</a></li>
+                        <li><a href="<?= BASE_URL; ?>admin/data_mapel.php" class="nav-link <?= strpos($current_page, 'mapel') !== false ? 'active' : ''; ?>"><i class="bi bi-journal-bookmark-fill"></i> Mata Pelajaran</a></li>
+                        <li><a href="<?= BASE_URL; ?>admin/data_mengajar.php" class="nav-link <?= strpos($current_page, 'mengajar') !== false ? 'active' : ''; ?>"><i class="bi bi-link-45deg"></i> Penugasan</a></li>
+                        <li><a href="<?= BASE_URL; ?>admin/data_user.php" class="nav-link <?= strpos($current_page, 'user') !== false ? 'active' : ''; ?>"><i class="bi bi-person-badge-fill"></i> Kelola User</a></li>
                     <?php endif; ?>
-                    <li><a href="<?= BASE_URL; ?>about.php" class="nav-link <?= $current_page === 'about.php' ? 'active' : ''; ?>"><i class="bi bi-info-circle"></i> Tentang</a></li>
-                    <li><a href="<?= BASE_URL; ?>contact.php" class="nav-link <?= $current_page === 'contact.php' ? 'active' : ''; ?>"><i class="bi bi-headset"></i> Kontak</a></li>
+                    
+                    <li>
+                        <button type="button" id="themeToggleSidebar" class="nav-link sidebar-theme-toggle-btn">
+                            <i class="bi bi-moon-stars-fill"></i> <span id="themeText">Dark Mode</span>
+                        </button>
+                    </li>
+                    <li><a href="<?= BASE_URL; ?>about.php" class="nav-link <?= $current_page === 'about.php' ? 'active' : ''; ?>"><i class="bi bi-info-circle"></i> Tentang SIPN</a></li>
+                    <li><a href="<?= BASE_URL; ?>contact.php" class="nav-link <?= $current_page === 'contact.php' ? 'active' : ''; ?>"><i class="bi bi-headset"></i> Kontak Bantuan</a></li>
                 </ul>
-            </nav>
-
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <button type="button" id="themeToggle" style="background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-dark); padding: 0.4rem 0.7rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.3rem;">
-                    <i class="bi bi-moon-stars-fill"></i>
-                </button>
-
-                <div class="user-menu" id="userMenuDropdown" style="position: relative;">
-                    <div class="user-menu-btn" onclick="document.getElementById('userMenuDropdown').classList.toggle('is-open')" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 0.4rem 0.8rem; border-radius: 10px; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                        <span class="user-name" style="font-weight: 700; font-size: 0.82rem; color: var(--text-dark);"><?= htmlspecialchars($current_username); ?></span>
-                        <span class="role-badge" style="background: var(--primary-dark); color: #fff; font-size: 0.58rem; font-weight: 800; padding: 2px 6px; border-radius: 6px; text-transform: uppercase;"><?= $current_role; ?></span>
-                    </div>
-                    <div class="dropdown-content">
-                        <a href="<?= BASE_URL; ?>profile.php"><i class="bi bi-gear"></i> Pengaturan Profil</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="<?= BASE_URL; ?>auth/logout.php" class="link-danger"><i class="bi bi-box-arrow-right"></i> Keluar Sistem</a>
-                    </div>
-                </div>
             </div>
-
         </div>
-    </header>
-    <main class="page-container" style="max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; min-height: calc(100vh - 180px);">
 
-<?php endif; ?>
-
-<!-- Script Toggle Dark Mode Global (Lengkap) -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const themeToggleBtn = document.getElementById('themeToggle');
-    const bodyElement = document.body;
-
-    const savedTheme = localStorage.getItem('sipn_theme') || 'light';
-    bodyElement.setAttribute('data-theme', savedTheme);
-    if (savedTheme === 'dark' && themeToggleBtn) {
-        themeToggleBtn.innerHTML = '<i class="bi bi-sun-fill"></i> <span>Light Mode</span>';
-    }
-
-    if (themeToggleBtn)<?php
-// Pastikan session sudah aktif
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-$current_role     =$_SESSION['role'] ?? 'guest';
-$current_username =$_SESSION['username'] ?? 'Pengguna';
-$current_page     = basename($_SERVER['PHP_SELF']);
-?>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIPN - Sistem Informasi Pengelolaan Nilai | SMK Sangkuriang 1 Cimahi</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css">
-</head>
-<body data-theme="light">
-
-<?php if ($current_role === 'admin'): ?>
-    <!-- ================================================= -->
-    <!-- LAYOUT ADMIN: SIDEBAR KIRI + TOPBAR KONTEN        -->
-    <!-- ================================================= -->
-    <div class="admin-layout-wrapper" style="display: flex; min-height: 100vh;">
-        
-        <!-- Sidebar Kiri Admin -->
-        <aside class="admin-sidebar" style="width: 260px; background: var(--card-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;">
-            <div>
-                <!-- Brand / Logo (Teks Biasa, Aman dari Logout) -->
-                <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem;">
-                    <div style="width: 38px; height: 38px; background: var(--primary-dark); color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
-                        <i class="bi bi-shield-lock-fill"></i>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.95rem; font-weight: 800; color: var(--text-dark); line-height: 1.1;">SIPN ADMIN</div>
-                        <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">SMK SANGKURIANG 1</div>
-                    </div>
-                </div>
-
-                <!-- Navigasi Sidebar Menu Utama -->
-                <div style="padding: 1.25rem 1rem;">
-                    <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 0.75rem; margin-bottom: 0.5rem; display: block;">Menu Utama</span>
-                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.3rem;">
-                        <li>
-                            <a href="<?= BASE_URL; ?>admin/dashboard_admin.php" class="nav-link <?= $current_page === 'dashboard_admin.php' ? 'active' : ''; ?>">
-                                <i class="bi bi-grid-1x2-fill"></i> Dashboard
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL; ?>admin/riwayat.php" class="nav-link <?= $current_page === 'riwayat.php' ? 'active' : ''; ?>">
-                                <i class="bi bi-clock-history"></i> Riwayat Aktivitas
-                            </a>
-                        </li>
-                    </ul>
-
-                    <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 0.75rem; margin: 1.25rem 0 0.5rem; display: block;">Master Data</span>
-                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.3rem;">
-                        <li>
-                            <a href="<?= BASE_URL; ?>admin/kelola_guru.php" class="nav-link <?= strpos($current_page, 'guru') !== false ? 'active' : ''; ?>">
-                                <i class="bi bi-person-workspace"></i> Data Guru
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL; ?>admin/kelola_siswa.php" class="nav-link <?= strpos($current_page, 'siswa') !== false ? 'active' : ''; ?>">
-                                <i class="bi bi-people-fill"></i> Data Siswa
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL; ?>admin/kelola_mapel.php" class="nav-link <?= strpos($current_page, 'mapel') !== false ? 'active' : ''; ?>">
-                                <i class="bi bi-journal-bookmark-fill"></i> Mata Pelajaran
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL; ?>admin/data_mengajar.php" class="nav-link <?= strpos($current_page, 'penugasan') !== false ? 'active' : ''; ?>">
-                                <i class="bi bi-link-45deg"></i> Penugasan Mengajar
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL; ?>admin/kelola_user.php" class="nav-link <?= strpos($current_page, 'user') !== false ? 'active' : ''; ?>">
-                                <i class="bi bi-person-badge-fill"></i> Kelola User
-                            </a>
-                        </li>
-                    </ul>
-
-                    <span style="font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 0 0.75rem; margin: 1.25rem 0 0.5rem; display: block;">Informasi</span>
-                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.3rem;">
-                        <li>
-                            <a href="<?= BASE_URL; ?>about.php" class="nav-link <?= $current_page === 'about.php' ? 'active' : ''; ?>">
-                                <i class="bi bi-info-circle"></i> Tentang SIPN
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL; ?>contact.php" class="nav-link <?= $current_page === 'contact.php' ? 'active' : ''; ?>">
-                                <i class="bi bi-headset"></i> Kontak Bantuan
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Bagian Bawah Sidebar: Profil & Tombol Pengaturan Sesuai Permintaan -->
-            <div style="padding: 1rem; border-top: 1px solid var(--border-color); background: var(--bg-surface);">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
-                    <div style="display: flex; align-items: center; gap: 0.6rem; overflow: hidden;">
-                        <div style="width: 35px; height: 35px; background: var(--primary-dark); color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;">
-                            <?= strtoupper(substr($current_username, 0, 1)); ?>
-                        </div>
-                        <div style="overflow: hidden;">
-                            <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= htmlspecialchars($current_username); ?></div>
-                            <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Administrator</div>
-                        </div>
-                    </div>
-                    <a href="<?= BASE_URL; ?>profile.php" title="Pengaturan Profil" style="width: 32px; height: 32px; border-radius: 8px; background: var(--card-bg); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; color: var(--text-dark); text-decoration: none; flex-shrink: 0;">
-                        <i class="bi bi-gear-fill"></i>
-                    </a>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Area Konten Utama Admin -->
-        <div class="admin-main-content" style="flex: 1; margin-left: 260px; display: flex; flex-direction: column; min-height: 100vh;">
-            <header class="app-header" style="background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 0.75rem 2rem; display: flex; justify-content: flex-end; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 99;">
-                <button type="button" id="themeToggle" style="background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-dark); padding: 0.4rem 0.75rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem;">
-                    <i class="bi bi-moon-stars-fill"></i> <span>Dark Mode</span>
-                </button>
-                <a href="<?= BASE_URL; ?>auth/logout.php" style="background: #fee2e2; color: #dc2626; border: none; padding: 0.4rem 0.85rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 0.3rem;">
-                    <i class="bi bi-box-arrow-right"></i> Keluar
+        <!-- ================= PROFIL DI BAGIAN BAWAH SIDEBAR ================= -->
+        <div class="sidebar-profile-section">
+            
+            <!-- Popover Menu Setting & Logout -->
+            <div id="profileDropdown" class="profile-dropdown-menu">
+                <a href="<?= BASE_URL; ?>profile.php" class="dropdown-link">
+                    <i class="bi bi-gear-fill text-primary"></i> Pengaturan Profil
                 </a>
-            </header>
-            <main class="page-container" style="padding: 2rem; flex: 1;">
-
-<?php else: ?>
-    <!-- ================================================= -->
-    <!-- LAYOUT USER (GURU & SISWA): NAVBAR ATAS BERSIH    -->
-    <!-- ================================================= -->
-    <header class="app-header">
-        <div class="header-container" style="max-width: 1200px; margin: 0 auto; padding: 0.85rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-            
-            <!-- Logo / Judul Web (Teks Biasa, Aman dari Logout) -->
-            <div class="brand-logo" style="display: flex; align-items: center; gap: 0.65rem;">
-                <div class="brand-icon" style="width: 36px; height: 36px; background: var(--primary-dark); color: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
-                    <i class="bi bi-mortarboard-fill"></i>
-                </div>
-                <div class="brand-info" style="display: flex; flex-direction: column;">
-                    <span class="brand-name" style="font-size: 1.1rem; font-weight: 800; color: var(--primary-dark); line-height: 1;">SIPN AKADEMIK</span>
-                    <span class="brand-sub" style="font-size: 0.65rem; font-weight: 700; color: var(--text-muted);">SMK SANGKURIANG 1 CIMAHI</span>
-                </div>
+                <a href="<?= BASE_URL; ?>auth/logout.php" class="dropdown-link text-danger">
+                    <i class="bi bi-box-arrow-right"></i> Keluar Sistem
+                </a>
             </div>
 
-            <!-- Navigasi Menu Atas -->
-            <nav class="main-nav">
-                <ul class="nav-list" style="display: flex; list-style: none; gap: 0.5rem; align-items: center;">
+            <!-- Tombol Profil (Trigger Popover) -->
+            <div id="profileTriggerBtn" class="profile-trigger-card">
+                <div class="profile-avatar-box">
+                    <?= strtoupper(substr($current_username, 0, 1)); ?>
+                </div>
+                <div class="profile-meta">
+                    <div class="profile-username"><?= htmlspecialchars($current_username); ?></div>
+                    <div class="profile-userrole"><?= $current_role; ?></div>
+                </div>
+                <i class="bi bi-chevron-up profile-arrow"></i>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ================= KONTEN UTAMA & TOPBAR ================= -->
+    <div class="app-main-content">
+        
+        <!-- Navbar Atas (Beranda & Halaman Nilai) -->
+        <header class="app-topbar-header">
+            <div class="topbar-left-brand">
+                <span class="topbar-portal-title">Sistem Informasi Pengelolaan Nilai</span>
+            </div>
+            <nav class="topbar-navigation">
+                <ul>
                     <?php if ($current_role === 'siswa'): ?>
-                        <li><a href="<?= BASE_URL; ?>siswa/dashboard_siswa.php" class="nav-link <?= $current_page === 'dashboard_siswa.php' ? 'active' : ''; ?>"><i class="bi bi-grid-1x2"></i> Dashboard</a></li>
-                        <li><a href="<?= BASE_URL; ?>siswa/lihat_nilai_rapor.php" class="nav-link <?= $current_page === 'lihat_nilai_rapor.php' ? 'active' : ''; ?>"><i class="bi bi-file-earmark-text"></i> Transkrip Rapor</a></li>
+                        <li><a href="<?= BASE_URL; ?>siswa/dashboard_siswa.php" class="topbar-nav-link <?= $current_page === 'dashboard_siswa.php' ? 'active' : ''; ?>"><i class="bi bi-house-door"></i> Beranda</a></li>
+                        <li><a href="<?= BASE_URL; ?>siswa/lihat_nilai_rapor.php" class="topbar-nav-link <?= $current_page === 'lihat_nilai_rapor.php' ? 'active' : ''; ?>"><i class="bi bi-file-earmark-text"></i> Lihat Nilai Rapor</a></li>
                     <?php elseif ($current_role === 'guru'): ?>
-                        <li><a href="<?= BASE_URL; ?>guru/dashboard_guru.php" class="nav-link <?= $current_page === 'dashboard_guru.php' ? 'active' : ''; ?>"><i class="bi bi-grid-1x2"></i> Dashboard</a></li>
-                        <li><a href="<?= BASE_URL; ?>guru/input_nilai.php" class="nav-link <?= strpos($current_page, 'nilai') !== false ? 'active' : ''; ?>"><i class="bi bi-pencil-square"></i> Input Nilai Siswa</a></li>
+                        <li><a href="<?= BASE_URL; ?>guru/dashboard_guru.php" class="topbar-nav-link <?= $current_page === 'dashboard_guru.php' ? 'active' : ''; ?>"><i class="bi bi-house-door"></i> Beranda</a></li>
+                        <li><a href="<?= BASE_URL; ?>guru/data_nilai_siswa.php" class="topbar-nav-link <?= strpos($current_page, 'nilai') !== false ? 'active' : ''; ?>"><i class="bi bi-pencil-square"></i> Kelola Nilai Siswa</a></li>
+                    <?php elseif ($current_role === 'admin'): ?>
+                        <li><a href="<?= BASE_URL; ?>admin/dashboard_admin.php" class="topbar-nav-link <?= $current_page === 'dashboard_admin.php' ? 'active' : ''; ?>"><i class="bi bi-house-door"></i> Beranda</a></li>
                     <?php endif; ?>
-                    <li><a href="<?= BASE_URL; ?>about.php" class="nav-link <?= $current_page === 'about.php' ? 'active' : ''; ?>"><i class="bi bi-info-circle"></i> Tentang</a></li>
-                    <li><a href="<?= BASE_URL; ?>contact.php" class="nav-link <?= $current_page === 'contact.php' ? 'active' : ''; ?>"><i class="bi bi-headset"></i> Kontak</a></li>
                 </ul>
             </nav>
+        </header>
 
-            <!-- Aksi Kanan (Dark Mode & Menu Akun Profil) -->
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <button type="button" id="themeToggle" style="background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-dark); padding: 0.4rem 0.7rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.3rem;">
-                    <i class="bi bi-moon-stars-fill"></i>
-                </button>
+        <!-- Area Konten Utama Halaman -->
+        <main class="page-container">
 
-                <div class="user-menu" id="userMenuDropdown">
-                    <div class="user-menu-btn" onclick="document.getElementById('userMenuDropdown').classList.toggle('is-open')" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 0.4rem 0.8rem; border-radius: 10px; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                        <span class="user-name" style="font-weight: 700; font-size: 0.82rem; color: var(--text-dark);"><?= htmlspecialchars($current_username); ?></span>
-                        <span class="role-badge" style="background: var(--primary-dark); color: #fff; font-size: 0.58rem; font-weight: 800; padding: 2px 6px; border-radius: 6px; text-transform: uppercase;"><?= $current_role; ?></span>
-                    </div>
-                    <div class="dropdown-content">
-                        <a href="<?= BASE_URL; ?>profile.php"><i class="bi bi-gear"></i> Pengaturan Profil</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="<?= BASE_URL; ?>auth/logout.php" class="link-danger"><i class="bi bi-box-arrow-right"></i> Keluar Sistem</a>
-                    </div>
-                </div>
-            </div>
+            <?php display_flash_message(); ?>
 
-        </div>
-    </header>
-    <main class="page-container" style="max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; min-height: calc(100vh - 180px);">
-
-<?php endif; ?>
-
-<!-- Script Toggle Dark Mode Global -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const themeToggleBtn = document.getElementById('themeToggle');
-    const htmlElement = document.documentElement;
-    const bodyElement = document.body;
-
-    // Cek local storage tema sebelumnya
-    const savedTheme = localStorage.getItem('sipn_theme') || 'light';
-    bodyElement.setAttribute('data-theme', savedTheme);
-    if(savedTheme === 'dark') {
-        if(themeToggleBtn) themeToggleBtn.innerHTML = '<i class="bi bi-sun-fill"></i> <span>Light Mode</span>';
-    }
-
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', () => {
-            const currentTheme = bodyElement.getAttribute('data-theme');
-            const newTheme = currentTheme === ' {
-        themeToggleBtn.addEventListener('click', () => {
-            const currentTheme = bodyElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            bodyElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('sipn_theme', newTheme);
-            
-            if (newTheme === 'dark') {
-                themeToggleBtn.innerHTML = '<i class="bi bi-sun-fill"></i> <span>Light Mode</span>';
-            } else {
-                themeToggleBtn.innerHTML = '<i class="bi bi-moon-stars-fill"></i> <span>Dark Mode</span>';
-            }
-        });
-    }
-});
-</script>
 
 

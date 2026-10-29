@@ -26,28 +26,37 @@ $q_nilai_input = mysqli_query($conn, "
 ");
 $total_nilai_input = mysqli_fetch_assoc($q_nilai_input)['total'] ?? 0;
 
-$query_mapel_list = mysqli_query($conn, "SELECT kode_mapel, nama_mapel FROM mapel WHERE guru_id = '$id_guru'");
+$query_mapel_list = mysqli_query($conn, "SELECT id, kode_mapel, nama_mapel FROM mapel WHERE guru_id = '$id_guru'");
 
 require_once __DIR__ . '/../includes/template_header.php';
 ?>
 
-<div class="banner-card header-primary">
-    <h2>Selamat Datang, <?= htmlspecialchars($nama_guru); ?>!</h2>
-    <p>NIP: <?= htmlspecialchars($nip); ?> | Panel Pengelolaan Nilai Akademik Siswa (SIPN).</p>
+<!-- Header Halaman & Tombol Aksi Utama -->
+<div class="page-header-action" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+            <i class="bi bi-person-badge text-primary"></i> Selamat Datang, <?= htmlspecialchars($nama_guru); ?>!
+        </h2>
+    
+    </div>
+    <a href="<?= BASE_URL; ?>guru/data_nilai_siswa.php" class="btn-primary-custom">
+        <i class="bi bi-pencil-square"></i> Kelola & Input Nilai Rapor
+    </a>
 </div>
 
-<div class="stats-grid">
+<!-- Grid Ringkasan Statistik -->
+<div class="stats-grid" style="margin-bottom: 1.5rem;">
     <div class="stat-card stat-primary">
         <div class="stat-content">
             <span class="stat-title">Mapel Diampu</span>
             <span class="stat-value"><?= $total_mapel; ?></span>
         </div>
-        <i class="bi bi-book stat-icon"></i>
+        <i class="bi bi-journal-bookmark stat-icon"></i>
     </div>
 
     <div class="stat-card stat-success">
         <div class="stat-content">
-            <span class="stat-title">Total Siswa</span>
+            <span class="stat-title">Total Siswa Terdaftar</span>
             <span class="stat-value"><?= $total_siswa; ?></span>
         </div>
         <i class="bi bi-people stat-icon"></i>
@@ -62,61 +71,52 @@ require_once __DIR__ . '/../includes/template_header.php';
     </div>
 </div>
 
-<div class="dashboard-columns">
-    <div class="card-panel">
-        <div class="card-header">
-            <i class="bi bi-journal-bookmark"></i> Mata Pelajaran yang Diampu
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Kode Mapel</th>
-                            <th>Nama Mata Pelajaran</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (mysqli_num_rows($query_mapel_list) > 0): ?>
-                            <?php $no = 1; while ($row = mysqli_fetch_assoc($query_mapel_list)): ?>
-                                <tr>
-                                    <td><?= $no++; ?></td>
-                                    <td><span class="badge badge-secondary"><?= htmlspecialchars($row['kode_mapel']); ?></span></td>
-                                    <td><strong><?= htmlspecialchars($row['nama_mapel']); ?></strong></td>
-                                    <td>
-                                        <a href="<?= BASE_URL; ?>guru/data_nilai_siswa.php" class="btn btn-sm btn-primary-outline">
-                                            <i class="bi bi-pencil-square"></i> Input Nilai
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="4" class="text-center text-muted">Belum ada mata pelajaran yang ditugaskan.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<!-- Tabel Mata Pelajaran Diampu Full-Width (Gaya Admin) -->
+<div class="card-panel">
+    <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 1rem; font-weight: 800; color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="bi bi-journal-check text-primary"></i> Daftar Mata Pelajaran Diampu
+        </h3>
+        <span class="badge badge-primary"><?= $total_mapel; ?> Mapel</span>
     </div>
-
-    <div class="card-panel">
-        <div class="card-header">
-            <i class="bi bi-lightning-charge"></i> Akses Cepat
-        </div>
-        <div class="card-body">
-            <div class="quick-links">
-                <a href="<?= BASE_URL; ?>guru/data_nilai_siswa.php" class="btn btn-primary action-btn">
-                    <i class="bi bi-plus-circle"></i> Input Nilai Rapor
-                </a>
-                <a href="<?= BASE_URL; ?>profile.php" class="btn btn-secondary action-btn">
-                    <i class="bi bi-person-gear"></i> Pengaturan Profil
-                </a>
-            </div>
-        </div>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">No</th>
+                    <th style="width: 20%;">Kode Mapel</th>
+                    <th style="width: 55%;">Nama Mata Pelajaran</th>
+                    <th style="width: 20%;" class="text-center">Aksi Pengelolaan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (mysqli_num_rows($query_mapel_list) > 0): ?>
+                    <?php $no = 1; while ($row = mysqli_fetch_assoc($query_mapel_list)): ?>
+                        <tr>
+                            <td><strong><?= $no++; ?></strong></td>
+                            <td>
+                                <span class="badge badge-secondary" style="font-family: monospace; font-size: 0.85rem;">
+                                    <?= htmlspecialchars($row['kode_mapel']); ?>
+                                </span>
+                            </td>
+                            <td><strong style="color: var(--text-dark);"><?= htmlspecialchars($row['nama_mapel']); ?></strong></td>
+                            <td class="text-center">
+                                <a href="<?= BASE_URL; ?>guru/data_nilai_siswa.php" class="btn btn-sm btn-warning" title="Input Nilai">
+                                    <i class="bi bi-pencil-square"></i> Input Nilai
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="4" class="text-center text-muted" style="padding: 3rem;">
+                            <i class="bi bi-journal-x" style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+                            Belum ada mata pelajaran yang ditugaskan kepada Anda.
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
 </div>
 

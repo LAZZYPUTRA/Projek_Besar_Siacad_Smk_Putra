@@ -113,3 +113,5 @@ $current_page     = basename($_SERVER['PHP_SELF']);
 
         <!-- Area Konten Utama Halaman -->
         <main class="page-container">
+
+            <?php display_flash_message(); ?>
