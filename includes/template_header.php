@@ -7,6 +7,16 @@ if (session_status() === PHP_SESSION_NONE) {
 $current_role     = $_SESSION['role'] ?? 'guest';
 $current_username = $_SESSION['username'] ?? 'Pengguna';
 $current_page     = basename($_SERVER['PHP_SELF']);
+
+// Ambil foto profil dari database berdasarkan user login
+$current_foto = null;
+if (isset($_SESSION['user_id']) && isset($conn)) {
+    $user_id_header = $_SESSION['user_id'];
+    $q_foto_header = mysqli_query($conn, "SELECT foto FROM users WHERE id = '$user_id_header'");
+    if ($q_foto_header && $d_foto = mysqli_fetch_assoc($q_foto_header)) {
+        $current_foto = $d_foto['foto'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -77,7 +87,11 @@ $current_page     = basename($_SERVER['PHP_SELF']);
             <!-- Tombol Profil (Trigger Popover) -->
             <div id="profileTriggerBtn" class="profile-trigger-card">
                 <div class="profile-avatar-box">
-                    <?= strtoupper(substr($current_username, 0, 1)); ?>
+                    <?php if (!empty($current_foto) && file_exists(__DIR__ . '/../assets/img/profil/' . $current_foto)): ?>
+                        <img src="<?= BASE_URL; ?>assets/img/profil/<?= htmlspecialchars($current_foto); ?>" alt="Foto Profil">
+                    <?php else: ?>
+                        <?= strtoupper(substr($current_username, 0, 1)); ?>
+                    <?php endif; ?>
                 </div>
                 <div class="profile-meta">
                     <div class="profile-username"><?= htmlspecialchars($current_username); ?></div>
