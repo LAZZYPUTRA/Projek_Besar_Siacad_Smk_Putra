@@ -5,31 +5,31 @@ require_once __DIR__ . '/../includes/helper_cek_login.php';
 
 check_role(['siswa']);
 
-$user_id = $_SESSION['user_id'];
+$user_id = (int) ($_SESSION['user_id'] ?? 0);
 
-// Ambil data siswa berdasarkan user login[cite: 5]
+// Ambil data siswa berdasarkan akun yang sedang login.
 $query_siswa = mysqli_query($conn, "SELECT * FROM siswa WHERE user_id = '$user_id'");
-$siswa = mysqli_fetch_assoc($query_siswa);
+$siswa = $query_siswa ? mysqli_fetch_assoc($query_siswa) : null;
 
 if (!$siswa) {
     die("Data profil siswa tidak ditemukan. Hubungi Administrator.");
 }
 
-$id_siswa   = $siswa['id'];
+$id_siswa   = (int) $siswa['id'];
 $nama_siswa = $siswa['nama'];
 $nis        = $siswa['nis'];
 $kelas      = $siswa['kelas'];
 
-// Hitung statistik riil dari database[cite: 5]
-$query_stat = mysqli_query($conn, "SELECT COUNT(*) as total_nilai FROM nilai_rapor WHERE siswa_id = '$id_siswa'");
-$stat = mysqli_fetch_assoc($query_stat);
-$total_nilai = $stat['total_nilai'] ?? 0;
+// Hitung statistik berdasarkan data akademik siswa.
+$query_stat = mysqli_query($conn, "SELECT COUNT(*) AS total_nilai FROM nilai_rapor WHERE siswa_id = '$id_siswa'");
+$stat = $query_stat ? mysqli_fetch_assoc($query_stat) : null;
+$total_nilai = $query_stat ? (int) ($stat['total_nilai'] ?? 0) : null;
 
-$query_mapel = mysqli_query($conn, "SELECT COUNT(*) as total_mapel FROM mengajar WHERE siswa_id = '$id_siswa'");
-$stat_mapel = mysqli_fetch_assoc($query_mapel);
-$total_mapel = $stat_mapel['total_mapel'] ?? 0;
+$query_mapel = mysqli_query($conn, "SELECT COUNT(*) AS total_mapel FROM mengajar WHERE siswa_id = '$id_siswa'");
+$stat_mapel = $query_mapel ? mysqli_fetch_assoc($query_mapel) : null;
+$total_mapel = $query_mapel ? (int) ($stat_mapel['total_mapel'] ?? 0) : null;
 
-// Ambil daftar nilai rapor riil untuk ringkasan[cite: 5]
+// Ambil daftar nilai rapor untuk ditampilkan pada dashboard.
 $query_nilai_list = mysqli_query($conn, "
     SELECT nr.*, m.kode_mapel, m.nama_mapel, g.nama AS nama_guru
     FROM nilai_rapor nr
@@ -39,104 +39,137 @@ $query_nilai_list = mysqli_query($conn, "
     ORDER BY m.nama_mapel ASC
 ");
 
+$dashboard_query_error = !$query_siswa || !$query_stat || !$query_mapel || !$query_nilai_list;
+
 require_once __DIR__ . '/../includes/template_header.php';
 ?>
 
-<div class="dashboard-wrapper" style="display: flex; flex-direction: column; gap: 1.5rem;">
-    
-    <!-- Hero Banner Profil Akademik Siswa (Enterprise Style) -->
-    <div style="background: linear-gradient(135deg, var(--primary-dark) 0%, #1e40af 100%); color: #ffffff; padding: 2rem; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-        <div style="display: flex; align-items: center; gap: 1.25rem;">
-            <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.15); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
-                <i class="bi bi-mortarboard-fill"></i>
-            </div>
-            <div>
-                <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.8;">Portal Akademik Peserta Didik</span>
-                <h2 style="font-size: 1.4rem; font-weight: 800; margin-top: 2px; color: #ffffff;"><?= htmlspecialchars($nama_siswa); ?></h2>
-                <p style="font-size: 0.85rem; opacity: 0.9; margin-top: 4px;">NIS: <?= htmlspecialchars($nis); ?> &bull; Rombel Kelas: <strong><?= htmlspecialchars($kelas); ?></strong></p>
+<div class="sipn-role-dashboard sipn-student-dashboard">
+    <section class="sipn-role-hero" aria-labelledby="studentDashboardTitle">
+        <div class="sipn-role-hero__content">
+            <span class="sipn-role-eyebrow">
+                <i class="bi bi-mortarboard-fill" aria-hidden="true"></i>
+                Portal Akademik Peserta Didik
+            </span>
+            <h1 id="studentDashboardTitle">Selamat Datang, <?= htmlspecialchars($nama_siswa, ENT_QUOTES, 'UTF-8'); ?></h1>
+            <p>Pantau ringkasan mata pelajaran dan perkembangan nilai rapor Anda.</p>
+            <div class="sipn-role-identity">
+                <span><i class="bi bi-card-text" aria-hidden="true"></i> NIS: <?= htmlspecialchars($nis, ENT_QUOTES, 'UTF-8'); ?></span>
+                <span><i class="bi bi-people" aria-hidden="true"></i> Kelas: <?= htmlspecialchars($kelas, ENT_QUOTES, 'UTF-8'); ?></span>
             </div>
         </div>
-        <div style="display: none; @media(min-width: 768px){display: block;}">
-            <a href="<?= BASE_URL; ?>siswa/lihat_nilai_rapor.php" class="btn" style="background: rgba(255,255,255,0.2); color: #ffffff; border: 1px solid rgba(255,255,255,0.3); font-weight: 700; font-size: 0.85rem; padding: 0.6rem 1rem; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-                <i class="bi bi-file-earmark-text"></i> Buka Transkrip Lengkap
+        <a class="sipn-role-hero__action" href="<?= BASE_URL; ?>siswa/lihat_nilai_rapor.php">
+            <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
+            <span>Buka Transkrip Lengkap</span>
+            <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+        </a>
+    </section>
+
+    <?php if ($dashboard_query_error): ?>
+        <div class="sipn-role-notice" role="status">
+            <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+            <span>Sebagian data akademik gagal dimuat. Periksa koneksi database atau hubungi administrator.</span>
+        </div>
+    <?php endif; ?>
+
+    <section class="sipn-role-stats sipn-role-stats--two" aria-label="Ringkasan akademik siswa">
+        <article class="sipn-role-stat sipn-role-stat--blue">
+            <span class="sipn-role-stat__label">Mata Pelajaran Diikuti</span>
+            <span class="sipn-role-stat__main">
+                <strong class="sipn-role-stat__value"><?= $total_mapel !== null ? number_format($total_mapel, 0, ',', '.') : '—'; ?></strong>
+                <span class="sipn-role-stat__icon" aria-hidden="true"><i class="bi bi-journal-bookmark-fill"></i></span>
+            </span>
+            <span class="sipn-role-stat__foot">Jumlah penugasan mata pelajaran pada akun Anda</span>
+        </article>
+        <article class="sipn-role-stat sipn-role-stat--green">
+            <span class="sipn-role-stat__label">Nilai Rapor Tercatat</span>
+            <span class="sipn-role-stat__main">
+                <strong class="sipn-role-stat__value"><?= $total_nilai !== null ? number_format($total_nilai, 0, ',', '.') : '—'; ?></strong>
+                <span class="sipn-role-stat__icon" aria-hidden="true"><i class="bi bi-award-fill"></i></span>
+            </span>
+            <span class="sipn-role-stat__foot">Jumlah entri nilai rapor yang telah tersedia</span>
+        </article>
+    </section>
+
+    <section class="sipn-role-panel sipn-role-shortcuts" aria-labelledby="studentShortcutTitle">
+        <div class="sipn-role-section-heading">
+            <div>
+                <span class="sipn-role-section-kicker">Navigasi cepat</span>
+                <h2 id="studentShortcutTitle">Akses Akademik</h2>
+                <p>Buka transkrip atau lihat ringkasan nilai pada halaman ini.</p>
+            </div>
+            <span class="sipn-role-section-mark" aria-hidden="true"><i class="bi bi-book-half"></i></span>
+        </div>
+        <div class="sipn-role-quick-grid sipn-role-quick-grid--two">
+            <a class="sipn-role-quick-link" href="<?= BASE_URL; ?>siswa/lihat_nilai_rapor.php">
+                <span class="sipn-role-quick-link__icon sipn-role-quick-link__icon--blue" aria-hidden="true"><i class="bi bi-file-earmark-bar-graph"></i></span>
+                <span class="sipn-role-quick-link__text"><strong>Lihat Nilai Rapor</strong><small>Buka transkrip akademik lengkap</small></span>
+                <i class="bi bi-chevron-right sipn-role-quick-link__arrow" aria-hidden="true"></i>
+            </a>
+            <a class="sipn-role-quick-link" href="#studentGrades">
+                <span class="sipn-role-quick-link__icon sipn-role-quick-link__icon--green" aria-hidden="true"><i class="bi bi-table"></i></span>
+                <span class="sipn-role-quick-link__text"><strong>Ringkasan Nilai</strong><small>Lihat data nilai yang tercatat</small></span>
+                <i class="bi bi-chevron-right sipn-role-quick-link__arrow" aria-hidden="true"></i>
             </a>
         </div>
-    </div>
+    </section>
 
-    <!-- Statistik Ringkas Berbasis Data Riil -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
-        <div class="stat-card-clean" style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px;">
-            <div class="stat-icon bg-blue" style="width: 48px; height: 48px; background: rgba(59, 130, 246, 0.1); color: #2563eb; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;"><i class="bi bi-journal-bookmark-fill"></i></div>
+    <section class="sipn-role-panel sipn-role-data-panel" id="studentGrades" aria-labelledby="studentGradesTitle">
+        <div class="sipn-role-panel__heading">
             <div>
-                <span class="stat-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Mata Pelajaran Diikuti</span>
-                <h3 class="stat-val" style="font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin-top: 2px;"><?= $total_mapel; ?> <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Mapel</span></h3>
+                <span class="sipn-role-section-kicker">Data akademik</span>
+                <h2 id="studentGradesTitle">Ringkasan Nilai Capaian Kompetensi Rapor</h2>
+                <p>Nilai yang telah dimasukkan oleh guru pengampu.</p>
             </div>
+            <a class="sipn-role-heading-link" href="<?= BASE_URL; ?>siswa/lihat_nilai_rapor.php">Lihat selengkapnya <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
         </div>
-
-        <div class="stat-card-clean" style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px;">
-            <div class="stat-icon bg-green" style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); color: #059669; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;"><i class="bi bi-award-fill"></i></div>
-            <div>
-                <span class="stat-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Nilai Rapor Masuk</span>
-                <h3 class="stat-val" style="font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin-top: 2px;"><?= $total_nilai; ?> <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Capaian</span></h3>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tabel Ringkasan Nilai Rapor -->
-    <div class="card-panel-clean" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
-        <div class="card-header-clean" style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem;">
-                <i class="bi bi-table text-primary"></i> Ringkasan Nilai Capaian Kompetensi Rapor
-            </h3>
-            <a href="<?= BASE_URL; ?>siswa/lihat_nilai_rapor.php" class="btn-link" style="font-size: 0.82rem; font-weight: 700; color: var(--primary-dark); text-decoration: none; display: flex; align-items: center; gap: 0.3rem;">
-                Lihat Selengkapnya <i class="bi bi-arrow-right"></i>
-            </a>
-        </div>
-        <div class="card-body-clean" style="padding: 1.5rem;">
-            <div class="table-responsive">
-                <table class="data-table" style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 0.75rem; font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted);">No</th>
-                            <th style="padding: 0.75rem; font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted);">Mata Pelajaran</th>
-                            <th style="padding: 0.75rem; font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted);">KKM</th>
-                            <th style="padding: 0.75rem; font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted);">Pengetahuan</th>
-                            <th style="padding: 0.75rem; font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted);">Keterampilan</th>
-                            <th style="padding: 0.75rem; font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted);">Keterangan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (mysqli_num_rows($query_nilai_list) > 0): ?>
-                            <?php $no = 1; while ($row = mysqli_fetch_assoc($query_nilai_list)): ?>
-                                <tr style="border-bottom: 1px solid var(--border-color); transition: background 0.15s ease;">
-                                    <td style="padding: 0.85rem; font-weight: 600; color: var(--text-muted);"><?= $no++; ?></td>
-                                    <td style="padding: 0.85rem;">
-                                        <strong style="color: var(--text-dark);"><?= htmlspecialchars($row['nama_mapel']); ?></strong>
-                                        <br><small style="color: var(--text-muted); font-family: monospace; font-size: 0.75rem;"><?= htmlspecialchars($row['kode_mapel']); ?></small>
-                                    </td>
-                                    <td style="padding: 0.85rem; font-weight: 600; color: var(--text-dark);"><?= $row['nilai_kkm']; ?></td>
-                                    <td style="padding: 0.85rem; font-weight: 700; color: var(--text-dark);"><?= $row['nilai_pengetahuan']; ?></td>
-                                    <td style="padding: 0.85rem; font-weight: 700; color: var(--text-dark);"><?= $row['nilai_keterampilan']; ?></td>
-                                    <td style="padding: 0.85rem;">
-                                        <span class="badge badge-<?= strtolower($row['Keterangan']) === 'tuntas' ? 'success' : 'danger'; ?>" style="padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.72rem; font-weight: 700;">
-                                            <?= htmlspecialchars($row['Keterangan']); ?>
-                                        </span>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-                        <?php else: ?>
+        <div class="table-responsive">
+            <table class="data-table sipn-role-table">
+                <thead>
+                    <tr>
+                        <th style="width: 6%;">No</th>
+                        <th>Mata Pelajaran</th>
+                        <th>KKM</th>
+                        <th>Pengetahuan</th>
+                        <th>Keterampilan</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($query_nilai_list && mysqli_num_rows($query_nilai_list) > 0): ?>
+                        <?php $no = 1; while ($row = mysqli_fetch_assoc($query_nilai_list)): ?>
+                            <?php $status_tuntas = strtolower(trim((string) ($row['Keterangan'] ?? ''))) === 'tuntas'; ?>
                             <tr>
-                                <td colspan="6" class="text-center text-muted py-4" style="padding: 2rem; text-align: center; color: var(--text-muted);">
-                                    <i class="bi bi-folder2-open" style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>
-                                    Belum ada data nilai rapor yang diinputkan oleh Guru pengampu.
+                                <td><?= $no++; ?></td>
+                                <td>
+                                    <strong><?= htmlspecialchars($row['nama_mapel'], ENT_QUOTES, 'UTF-8'); ?></strong>
+                                    <small class="sipn-role-table__subtext"><?= htmlspecialchars($row['kode_mapel'], ENT_QUOTES, 'UTF-8'); ?></small>
+                                </td>
+                                <td><?= htmlspecialchars((string) $row['nilai_kkm'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><strong><?= htmlspecialchars((string) $row['nilai_pengetahuan'], ENT_QUOTES, 'UTF-8'); ?></strong></td>
+                                <td><strong><?= htmlspecialchars((string) $row['nilai_keterampilan'], ENT_QUOTES, 'UTF-8'); ?></strong></td>
+                                <td>
+                                    <span class="sipn-role-status <?= $status_tuntas ? 'sipn-role-status--success' : 'sipn-role-status--warning'; ?>">
+                                        <?= htmlspecialchars((string) ($row['Keterangan'] ?? '-'), ENT_QUOTES, 'UTF-8'); ?>
+                                    </span>
                                 </td>
                             </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6" class="sipn-role-empty">
+                                <i class="bi <?= $query_nilai_list ? 'bi-folder2-open' : 'bi-exclamation-circle'; ?>" aria-hidden="true"></i>
+                                <strong><?= $query_nilai_list ? 'Belum ada nilai rapor' : 'Daftar nilai gagal dimuat'; ?></strong>
+                                <span><?= $query_nilai_list ? 'Nilai akan tampil di sini setelah guru pengampu memasukkannya.' : 'Silakan muat ulang halaman atau hubungi administrator.'; ?></span>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
-    </div>
+    </section>
+
+    <p class="sipn-role-footnote"><i class="bi bi-info-circle" aria-hidden="true"></i> Ringkasan ditampilkan berdasarkan data nilai yang tersimpan di database SIPN.</p>
 </div>
 
 <?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
