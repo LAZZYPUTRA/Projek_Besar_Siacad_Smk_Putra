@@ -70,77 +70,112 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
     exit();
 }
 
-require_once __DIR__ . '/../includes/template_header.php';
-
 $query = "SELECT g.*, u.username FROM guru g JOIN users u ON g.user_id = u.id ORDER BY g.nama ASC";
 $result = mysqli_query($conn, $query);
-
 $teachers = [];
-while ($row = mysqli_fetch_assoc($result)) {
-    $teachers[] = $row;
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $teachers[] = $row;
+    }
 }
+
+$total_guru = count($teachers);
+$total_guru_laki = count(array_filter($teachers, static fn($row) => ($row['jenis_kelamin'] ?? '') === 'L'));
+$total_guru_perempuan = count(array_filter($teachers, static fn($row) => ($row['jenis_kelamin'] ?? '') === 'P'));
+$data_guru_error = !$result;
+
+require_once __DIR__ . '/../includes/template_header.php';
 ?>
 
-<!-- Header Halaman & Tombol Tambah -->
-<div class="page-header-action" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-    <div>
-        <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; margin: 0;">
-            <i class="bi bi-person-workspace text-primary"></i> Manajemen Data Guru
-        </h2>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem; margin-bottom: 0;">Pusat pengelolaan data pendidik dan kredensial akun pengajar.</p>
-    </div>
-    <button type="button" class="btn-primary-custom" data-modal-target="#modalTambah">
-        <i class="bi bi-plus-lg"></i> Tambah Guru Baru
-    </button>
-</div>
+<div class="sipn-admin-data-page sipn-admin-data-page--guru">
+    <header class="sipn-admin-data-hero sipn-admin-data-enter" style="--admin-enter-delay: 0ms;">
+        <div class="sipn-admin-data-hero__copy">
+            <span class="sipn-admin-data-eyebrow"><i class="bi bi-shield-check" aria-hidden="true"></i> Administrasi Pendidik</span>
+            <h1>Manajemen Data Guru</h1>
+            <p>Kelola identitas pendidik dan akun akses portal SIPN dalam satu tempat.</p>
+            <div class="sipn-admin-data-hero__meta">
+                <span><i class="bi bi-people-fill" aria-hidden="true"></i> <?= number_format($total_guru, 0, ',', '.'); ?> guru terdaftar</span>
+                <span><i class="bi bi-database-check" aria-hidden="true"></i> Data terhubung dengan akun SIPN</span>
+            </div>
+        </div>
+        <button type="button" class="sipn-admin-data-primary" data-modal-target="#modalTambah">
+            <i class="bi bi-person-plus-fill" aria-hidden="true"></i> Tambah Guru Baru
+        </button>
+        <span class="sipn-admin-data-hero__ornament" aria-hidden="true"><i class="bi bi-mortarboard-fill"></i></span>
+    </header>
 
-<!-- Tampilan Tabel Data Guru Full-Width -->
-<div class="card-panel">
-    <div class="table-responsive">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th style="width: 5%;">No</th>
-                    <th style="width: 18%;">NIP</th>
-                    <th style="width: 32%;">Nama Guru & Gelar</th>
-                    <th style="width: 12%;">Jenis Kelamin</th>
-                    <th style="width: 18%;">Username Akun</th>
-                    <th style="width: 15%;" class="text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (count($teachers) > 0): ?>
-                    <?php $no = 1; foreach ($teachers as $row): ?>
-                    <tr>
-                        <td><strong><?= $no++; ?></strong></td>
-                        <td><?= htmlspecialchars($row['nip']); ?></td>
-                        <td><strong><?= htmlspecialchars($row['nama']); ?></strong></td>
-                        <td>
-                            <span class="badge badge-primary">
-                                <?= $row['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan'; ?>
-                            </span>
-                        </td>
-                        <td><span class="badge badge-secondary"><?= htmlspecialchars($row['username']); ?></span></td>
-                        <td class="text-center">
-                            <div class="table-action-btn" style="display: inline-flex; justify-content: center; gap: 0.35rem;">
-                                <button type="button" class= "btn btn-sm btn-warning" data-modal-target="#modalEdit<?= $row['id']; ?>" title="Edit Data">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button type="button" class="btn btn-sm btn-danger" data-modal-target="#modalHapus<?= $row['id']; ?>" title="Hapus Data">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </div>
+    <?php if ($data_guru_error): ?>
+        <div class="sipn-admin-data-notice" role="alert"><i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i> Data guru gagal dimuat. Periksa koneksi database, lalu muat ulang halaman.</div>
+    <?php endif; ?>
+
+    <section class="sipn-admin-data-stats sipn-admin-data-stats--three" aria-label="Ringkasan data guru">
+        <article class="sipn-admin-data-stat sipn-admin-data-enter" style="--admin-enter-delay: 70ms;">
+            <span class="sipn-admin-data-stat__icon sipn-admin-data-stat__icon--blue"><i class="bi bi-person-workspace" aria-hidden="true"></i></span>
+            <span class="sipn-admin-data-stat__body"><small>Total Guru</small><strong><?= number_format($total_guru, 0, ',', '.'); ?></strong><em>Seluruh pendidik terdaftar</em></span>
+        </article>
+        <article class="sipn-admin-data-stat sipn-admin-data-enter" style="--admin-enter-delay: 125ms;">
+            <span class="sipn-admin-data-stat__icon sipn-admin-data-stat__icon--green"><i class="bi bi-gender-male" aria-hidden="true"></i></span>
+            <span class="sipn-admin-data-stat__body"><small>Laki-laki</small><strong><?= number_format($total_guru_laki, 0, ',', '.'); ?></strong><em>Data berdasarkan jenis kelamin</em></span>
+        </article>
+        <article class="sipn-admin-data-stat sipn-admin-data-enter" style="--admin-enter-delay: 180ms;">
+            <span class="sipn-admin-data-stat__icon sipn-admin-data-stat__icon--violet"><i class="bi bi-gender-female" aria-hidden="true"></i></span>
+            <span class="sipn-admin-data-stat__body"><small>Perempuan</small><strong><?= number_format($total_guru_perempuan, 0, ',', '.'); ?></strong><em>Data berdasarkan jenis kelamin</em></span>
+        </article>
+    </section>
+
+    <section class="sipn-admin-data-panel sipn-admin-data-enter" style="--admin-enter-delay: 225ms;" aria-labelledby="teacherTableTitle">
+        <div class="sipn-admin-data-panel__heading">
+            <div>
+                <span class="sipn-admin-data-kicker">Direktori pendidik</span>
+                <h2 id="teacherTableTitle">Daftar Guru</h2>
+                <p>Gunakan pencarian untuk menemukan guru berdasarkan NIP, nama, jenis kelamin, atau username.</p>
+            </div>
+            <span class="sipn-admin-data-total"><i class="bi bi-person-lines-fill" aria-hidden="true"></i> <?= number_format($total_guru, 0, ',', '.'); ?> data</span>
+        </div>
+
+        <div class="sipn-admin-data-toolbar">
+            <label class="sipn-admin-data-search">
+                <i class="bi bi-search" aria-hidden="true"></i>
+                <input type="search" data-admin-table-search placeholder="Cari NIP, nama guru, atau username..." autocomplete="off" aria-label="Cari data guru">
+                <kbd>⌕</kbd>
+            </label>
+            <button type="button" class="sipn-admin-data-reset" data-admin-search-clear><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reset</button>
+            <span class="sipn-admin-data-result" aria-live="polite">Menampilkan <strong data-admin-results-count><?= $total_guru; ?></strong> dari <?= $total_guru; ?> guru</span>
+        </div>
+
+        <div class="sipn-admin-data-table-wrap">
+            <table class="sipn-admin-data-table" data-admin-search-table>
+                <thead><tr>
+                    <th class="sipn-admin-data-col-number">No.</th>
+                    <th>NIP</th>
+                    <th>Nama Guru &amp; Gelar</th>
+                    <th>Jenis Kelamin</th>
+                    <th>Username Akun</th>
+                    <th class="sipn-admin-data-col-action">Aksi</th>
+                </tr></thead>
+                <tbody>
+                <?php if ($teachers): ?>
+                    <?php foreach ($teachers as $index => $row): ?>
+                    <tr data-admin-search-row style="--admin-row-delay: <?= min($index, 12) * 45; ?>ms;">
+                        <td class="sipn-admin-data-number"><?= $index + 1; ?></td>
+                        <td><span class="sipn-admin-data-code"><?= htmlspecialchars((string) $row['nip'], ENT_QUOTES, 'UTF-8'); ?></span></td>
+                        <td><div class="sipn-admin-data-person"><span class="sipn-admin-data-avatar"><i class="bi bi-person-fill" aria-hidden="true"></i></span><strong><?= htmlspecialchars((string) $row['nama'], ENT_QUOTES, 'UTF-8'); ?></strong></div></td>
+                        <td><span class="sipn-admin-data-pill <?= ($row['jenis_kelamin'] ?? '') === 'L' ? 'is-blue' : 'is-violet'; ?>"><?= ($row['jenis_kelamin'] ?? '') === 'L' ? 'Laki-laki' : 'Perempuan'; ?></span></td>
+                        <td><span class="sipn-admin-data-username"><i class="bi bi-person-circle" aria-hidden="true"></i><?= htmlspecialchars((string) $row['username'], ENT_QUOTES, 'UTF-8'); ?></span></td>
+                        <td class="sipn-admin-data-actions" data-search-ignore>
+                            <button type="button" class="sipn-admin-icon-button is-edit" data-modal-target="#modalEdit<?= (int) $row['id']; ?>" title="Edit data guru" aria-label="Edit <?= htmlspecialchars((string) $row['nama'], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-pencil-square" aria-hidden="true"></i></button>
+                            <button type="button" class="sipn-admin-icon-button is-delete" data-modal-target="#modalHapus<?= (int) $row['id']; ?>" title="Hapus data guru" aria-label="Hapus <?= htmlspecialchars((string) $row['nama'], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-trash3" aria-hidden="true"></i></button>
                         </td>
                     </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <tr>
-                        <td colspan="6" class="text-center text-muted" style="text-align: center; padding: 2rem;">Belum ada data guru terdaftar.</td>
-                    </tr>
+                    <tr><td colspan="6" class="sipn-admin-data-empty"><i class="bi bi-folder2-open" aria-hidden="true"></i><strong>Belum ada data guru</strong><span>Tambahkan data guru untuk mulai mengelola akun pendidik.</span></td></tr>
                 <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+            <div class="sipn-admin-data-no-match" data-admin-search-empty hidden><i class="bi bi-search" aria-hidden="true"></i><strong>Data tidak ditemukan</strong><span>Coba kata kunci lain atau tekan tombol reset.</span></div>
+        </div>
+    </section>
 </div>
 
 <!-- ================= SEMUA MODAL DI LUAR TABEL ================= -->
@@ -299,243 +334,5 @@ while ($row = mysqli_fetch_assoc($result)) {
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
-</file>
-
-<file path="admin/data_user.php">
-<?php
-require_once __DIR__ . '/../config/koneksi_database.php';
-require_once __DIR__ . '/../includes/helper_fungsi.php';
-require_once __DIR__ . '/../includes/helper_cek_login.php';
-check_role(['admin']);
-
-$logged_in_user_id = $_SESSION['user_id'] ?? 0;
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
-    $aksi = $_POST['aksi'];
-
-    if ($aksi === 'reset_password') {
-        $id_user   = (int)$_POST['id_user'];
-        $pass_baru = password_hash($_POST['password_baru'], PASSWORD_DEFAULT);
-
-        $stmt = mysqli_prepare($conn, "UPDATE users SET password = ? WHERE id = ?");
-        mysqli_stmt_bind_param($stmt, "si", $pass_baru, $id_user);
-        
-        if (mysqli_stmt_execute($stmt)) {
-            set_flash_message('success', 'Password pengguna berhasil diperbarui!');
-        } else {
-            set_flash_message('danger', 'Gagal memperbarui password.');
-        }
-    } 
-    elseif ($aksi === 'edit_user') {
-        $id_user  = (int)$_POST['id_user'];
-        $username = sanitize($_POST['username']);
-        $role     = sanitize($_POST['role']);
-
-        $stmt_cek = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ? AND id != ?");
-        mysqli_stmt_bind_param($stmt_cek, "si", $username, $id_user);
-        mysqli_stmt_execute($stmt_cek);
-        $res_cek = mysqli_stmt_get_result($stmt_cek);
-
-        if (mysqli_num_rows($res_cek) > 0) {
-            set_flash_message('danger', 'Gagal! Username tersebut sudah digunakan oleh akun lain.');
-        } else {
-            $stmt = mysqli_prepare($conn, "UPDATE users SET username = ?, role = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "ssi", $username, $role, $id_user);
-            
-            if (mysqli_stmt_execute($stmt)) {
-                if ($id_user === $logged_in_user_id) {
-                    $_SESSION['username'] = $username;
-                    $_SESSION['role']     = $role;
-                }
-                set_flash_message('success', 'Data akun user berhasil diperbarui!');
-            } else {
-                set_flash_message('danger', 'Gagal memperbarui data user.');
-            }
-        }
-    }
-    elseif ($aksi === 'hapus_user') {
-        $id_user = (int)$_POST['id_user'];
-
-        if ($id_user === $logged_in_user_id) {
-            set_flash_message('danger', 'Gagal! Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif.');
-        } else {
-            $stmt = mysqli_prepare($conn, "DELETE FROM users WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "i", $id_user);
-            
-            if (mysqli_stmt_execute($stmt)) {
-                set_flash_message('success', 'Akun user berhasil dihapus!');
-            } else {
-                set_flash_message('danger', 'Gagal menghapus user.');
-            }
-        }
-    }
-
-    header("Location: data_user.php");
-    exit();
-}
-
-require_once __DIR__ . '/../includes/template_header.php';
-
-$query = "SELECT id, username, role FROM users ORDER BY role ASC, username ASC";
-$result = mysqli_query($conn, $query);
-
-$users = [];
-while ($row = mysqli_fetch_assoc($result)) {
-    $users[] = $row;
-}
-?>
-
-<div class="page-header-action" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-    <div>
-        <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; margin: 0;">
-            <i class="bi bi-people text-primary"></i> Kelola Akun User
-        </h2>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem; margin-bottom: 0;">Kelola hak akses role, kredensial login, dan reset kata sandi pengguna.</p>
-    </div>
-</div>
-
-<div class="card-panel">
-    <div class="table-responsive">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th style="width: 5%;">No</th>
-                    <th style="width: 30%;">Username</th>
-                    <th style="width: 25%;">Role Hak Akses</th>
-                    <th style="width: 40%;" class="text-center">Aksi Pengelolaan</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (count($users) > 0): ?>
-                    <?php $no = 1; foreach ($users as $row): ?>
-                    <tr>
-                        <td><?= $no++; ?></td>
-                        <td>
-                            <strong><?= htmlspecialchars($row['username']); ?></strong>
-                            <?php if ($row['id'] === $logged_in_user_id): ?>
-                                <span style="font-size: 0.7rem; color: #166534; background: #dcfce7; padding: 2px 6px; border-radius: 4px; margin-left: 0.4rem; font-weight: 700;">(Anda)</span>
-                            <?php endif; ?>
-                        </td>
-                        <td>
-                            <span class="badge badge-<?= $row['role'] === 'admin' ? 'danger' : ($row['role'] === 'guru' ? 'primary' : 'success'); ?>">
-                                <?= strtoupper($row['role']); ?>
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <!-- Wrapper Flexbox agar tombol sejajar rapi ke samping -->
-                            <div style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; flex-wrap: nowrap;">
-                               <button type="button" class="btn btn-sm btn-secondary" data-modal-target="#modalEdit<?= $row['id']; ?>" title="Edit User">
-                                    <i class="bi bi-key"></i> Edit
-                                <button type="button" class="btn btn-sm btn-warning" data-modal-target="#modalReset<?= $row['id']; ?>" title="Reset Password">
-                                    <i class="bi bi-key"></i> Reset
-                                </button>
-                                <?php if ($row['id'] !== $logged_in_user_id): ?>
-                                    <button type="button" class="btn btn-sm btn-danger" data-modal-target="#modalHapus<?= $row['id']; ?>" title="Hapus User">
-                                        <i class="bi bi-trash"></i> Hapus
-                                    </button>
-                                <?php endif; ?>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="4" class="text-center" style="text-align: center; padding: 2rem;">Belum ada data user.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- ================= MODAL DI LUAR TABEL ================= -->
-<?php foreach ($users as $row): ?>
-
-<!-- 1. Modal Edit User & Role -->
-<div class="modal-overlay" id="modalEdit<?= $row['id']; ?>">
-    <div class="modal-box">
-        <form method="POST">
-            <div class="modal-header header-primary">
-                <h5>Edit Akun User - <?= htmlspecialchars($row['username']); ?></h5>
-                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" name="aksi" value="edit_user">
-                <input type="hidden" name="id_user" value="<?= $row['id']; ?>">
-                
-                <div class="form-group">
-                    <label class="form-label">Username</label>
-                    <input type="text" class="form-control" name="username" value="<?= htmlspecialchars($row['username']); ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Role Akses</label>
-                    <select class="form-select" name="role" required>
-                        <option value="admin" <?= $row['role'] === 'admin' ? 'selected' : ''; ?>>ADMIN</option>
-                        <option value="guru" <?= $row['role'] === 'guru' ? 'selected' : ''; ?>>GURU</option>
-                        <option value="siswa" <?= $row['role'] === 'siswa' ? 'selected' : ''; ?>>SISWA</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
-                <button type="submit" class="btn-primary-custom">Simpan Perubahan</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- 2. Modal Reset Password -->
-<div class="modal-overlay" id="modalReset<?= $row['id']; ?>">
-    <div class="modal-box">
-        <form method="POST">
-            <div class="modal-header header-warning">
-                <h5>Reset Password - <?= htmlspecialchars($row['username']); ?></h5>
-                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" name="aksi" value="reset_password">
-                <input type="hidden" name="id_user" value="<?= $row['id']; ?>">
-                <div class="form-group">
-                    <label class="form-label">Password Baru</label>
-                    <input type="password" class="form-control" name="password_baru" required minlength="4" placeholder="Masukkan password baru...">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
-                <button type="submit" class="btn btn-warning" style="background: #d97706; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 700; cursor: pointer;">Simpan Password</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- 3. Modal Hapus User -->
-<?php if ($row['id'] !== $logged_in_user_id): ?>
-<div class="modal-overlay" id="modalHapus<?= $row['id']; ?>">
-    <div class="modal-box">
-        <form method="POST">
-            <div class="modal-header header-danger">
-                <h5>Konfirmasi Hapus Akun</h5>
-                <button type="button" class="modal-close-btn" data-modal-close>&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" name="aksi" value="hapus_user">
-                <input type="hidden" name="id_user" value="<?= $row['id']; ?>">
-                <p>Apakah Anda yakin ingin menghapus akun user <strong><?= htmlspecialchars($row['username']); ?></strong>?</p>
-                <p style="font-size: 0.78rem; color: #dc2626; margin-top: 0.5rem; margin-bottom: 0;">
-                    <i class="bi bi-exclamation-triangle-fill"></i> Peringatan: Menghapus akun ini juga dapat menghapus data profil yang terhubung.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-secondary" data-modal-close>Batal</button>
-                <button type="submit" class="btn btn-danger" style="background: #dc2626; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 700; cursor: pointer;">Ya, Hapus</button>
-            </div>
-        </form>
-    </div>
-</div>
-<?php endif; ?>
-
-<?php endforeach; ?>
-
+<script src="<?= BASE_URL; ?>assets/js/admin-table-search.js?v=admin-table-20261108" defer></script>
 <?php require_once __DIR__ . '/../includes/template_footer.php'; ?>

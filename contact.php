@@ -4,7 +4,7 @@ require_once __DIR__ . '/includes/helper_fungsi.php';
 require_once __DIR__ . '/includes/template_header.php';
 ?>
 
-<div class="page-container narrow">
+<div class="page-container narrow sipn-utility-page sipn-utility-page--contact">
     <div class="contact-wrapper">
         <div class="contact-header">
             <div class="contact-header-icon">

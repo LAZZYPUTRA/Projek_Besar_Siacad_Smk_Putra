@@ -23,9 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         mysqli_commit($conn);
         set_flash_message('success', 'Registrasi berhasil! Silakan login.');
-        header('Location: form_login.php');
+        header('Location: ' . BASE_URL . 'auth/form_login.php');
         exit();
-    } catch (Exception $e) {
+    } catch (Throwable $e) {
         mysqli_rollback($conn);
         set_flash_message('danger', 'Gagal registrasi! NIS atau Username mungkin sudah terdaftar.');
     }
@@ -38,9 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrasi Siswa - SIPN SMK Sangkuriang 1</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css?v=flash-dashboard-1">
 </head>
-<body>
+<body class="auth-page">
 
 <div class="auth-enterprise-wrapper" style="justify-content: center; align-items: center; padding: 2rem 1rem;">
     <div style="width: 100%; max-width: 580px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.06); overflow: hidden;">
@@ -51,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div style="padding: 2rem;">
+            <?php display_flash_message(); ?>
+
             <form method="POST">
                 <div class="auth-input-group">
                     <label>Nomor Induk Siswa (NIS)</label>

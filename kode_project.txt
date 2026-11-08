@@ -5,9 +5,9 @@ require_once __DIR__ . '/includes/helper_fungsi.php';
 require_once __DIR__ . '/includes/template_header.php';
 ?>
 
-<div class="page-container" style="max-width: 900px; margin: 2rem auto; padding: 0 1rem;">
-    <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
-        <div style="text-align: center; margin-bottom: 2rem;">
+<div class="page-container sipn-utility-page sipn-utility-page--about" style="max-width: 900px; margin: 2rem auto; padding: 0 1rem;">
+    <div class="sipn-utility-panel sipn-utility-panel--about" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+        <div class="sipn-utility-page-header" style="text-align: center; margin-bottom: 2rem;">
             <div style="width: 70px; height: 70px; background: rgba(30, 58, 138, 0.1); color: var(--primary-dark); border-radius: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 1rem;">
                 <i class="bi bi-info-circle-fill"></i>
             </div>
@@ -15,10 +15,10 @@ require_once __DIR__ . '/includes/template_header.php';
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem;">Sistem Informasi Pengelolaan Nilai Terpadu • SMK Sangkuriang 1 Cimahi</p>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 1.25rem; color: var(--text-dark); line-height: 1.6; font-size: 0.92rem;">
+        <div class="sipn-utility-page-content" style="display: flex; flex-direction: column; gap: 1.25rem; color: var(--text-dark); line-height: 1.6; font-size: 0.92rem;">
             <p><strong>SIPN</strong> adalah platform digital resmi yang dikembangkan untuk mendukung proses evaluasi akademik, rekapitulasi nilai capaian kompetensi peserta didik, serta transparansi transkrip rapor berbasis Kurikulum Merdeka di lingkungan SMK Sangkuriang 1 Cimahi.</p>
             
-            <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: 12px; margin: 1rem 0;">
+            <div class="sipn-utility-feature-panel" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: 12px; margin: 1rem 0;">
                 <h4 style="font-weight: 700; margin-bottom: 0.5rem; color: var(--primary-dark);">Fitur Utama Sistem:</h4>
                 <ul style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; color: var(--text-muted);">
                     <li>Manajemen data induk peserta didik dan pendidik yang terintegrasi.</li>
@@ -28,7 +28,7 @@ require_once __DIR__ . '/includes/template_header.php';
                 </ul>
             </div>
 
-            <p style="text-align: center; font-size: 0.82rem; color: var(--text-muted); margin-top: 1rem;">
+            <p class="sipn-utility-page-footnote" style="text-align: center; font-size: 0.82rem; color: var(--text-muted); margin-top: 1rem;">
                 &copy; 2026 Tim IT & Pengembangan Akademik SMK Sangkuriang 1 Cimahi. Hak Cipta Dilindungi.
             </p>
         </div>
@@ -45,7 +45,7 @@ require_once __DIR__ . '/includes/helper_fungsi.php';
 require_once __DIR__ . '/includes/template_header.php';
 ?>
 
-<div class="page-container narrow">
+<div class="page-container narrow sipn-utility-page sipn-utility-page--contact">
     <div class="contact-wrapper">
         <div class="contact-header">
             <div class="contact-header-icon">
@@ -91,25 +91,10 @@ require_once __DIR__ . '/includes/template_header.php';
     function initializeSIPNUI() {
         const body = document.body;
 
-        initializeLegacyUserMenu();
         initializeThemeToggle();
         initializeProfileDropdown();
         initializeModalController();
         initializeResponsiveSidebar();
-
-        function initializeLegacyUserMenu() {
-            const userMenu = document.querySelector('.user-menu');
-            if (!userMenu) return;
-
-            userMenu.addEventListener('click', (event) => {
-                event.stopPropagation();
-                userMenu.classList.toggle('is-open');
-            });
-
-            document.addEventListener('click', () => {
-                userMenu.classList.remove('is-open');
-            });
-        }
 
         function initializeThemeToggle() {
             const themeToggle = document.getElementById('themeToggleSidebar');
@@ -3874,6 +3859,1159 @@ body[data-theme="dark"] .admin-dashboard__notice {
         transition: none !important;
     }
 }
+
+
+/* =========================================================
+   AUTHENTICATION PAGES — SUBTLE HOVER INTERACTIONS
+   Tidak ada animasi otomatis saat halaman dibuka.
+   Efek hanya berjalan ketika elemen di-hover atau difokuskan.
+   ========================================================= */
+
+/* Tombol utama: sedikit terangkat dengan transisi halus */
+.auth-page .auth-btn-submit {
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+  will-change: transform;
+}
+
+.auth-page .auth-btn-submit:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 7px 16px rgba(30, 58, 138, 0.18);
+}
+
+.auth-page .auth-btn-submit:hover i {
+  transform: translateX(3px);
+}
+
+.auth-page .auth-btn-submit i {
+  transition: transform 180ms ease;
+}
+
+.auth-page .auth-btn-submit:active {
+  background: var(--primary-dark);
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Link: perubahan warna dan garis bawah tidak mendadak */
+.auth-page a {
+  transition: color 160ms ease, text-decoration-color 160ms ease;
+}
+
+.auth-page a:hover {
+  color: var(--primary-hover) !important;
+  text-decoration: underline !important;
+}
+
+/* Input: fokus lebih jelas, tanpa gerakan berlebihan */
+.auth-page .auth-input-wrapper input,
+.auth-page .auth-input-wrapper select {
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.auth-page .auth-input-wrapper input:focus,
+.auth-page .auth-input-wrapper select:focus {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.10);
+}
+
+/* Fokus keyboard tetap terlihat */
+.auth-page button:focus-visible,
+.auth-page a:focus-visible,
+.auth-page input:focus-visible,
+.auth-page select:focus-visible {
+  outline: 2px solid var(--primary-hover);
+  outline-offset: 2px;
+}
+
+/* Hormati pengaturan pengurangan gerakan perangkat */
+@media (prefers-reduced-motion: reduce) {
+  .auth-page .auth-btn-submit,
+  .auth-page .auth-btn-submit i,
+  .auth-page a,
+  .auth-page .auth-input-wrapper input,
+  .auth-page .auth-input-wrapper select {
+    transition: none !important;
+  }
+
+  .auth-page .auth-btn-submit:hover,
+  .auth-page .auth-btn-submit:active,
+  .auth-page .auth-btn-submit:hover i {
+    transform: none !important;
+  }
+}
+
+
+/* =========================================================
+   LOGIN SIPN — LAYOUT SIMETRIS DAN FORM TERPUSAT
+   Override khusus halaman login; tidak mengubah layout dashboard.
+   ========================================================= */
+.auth-login-page {
+  min-height: 100vh;
+  min-height: 100svh;
+  background: #f3f6fb;
+}
+
+.auth-login-page .auth-split-container {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.auth-login-page .auth-brand-side {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2rem, 5vw, 4.5rem);
+  background:
+    radial-gradient(circle at 12% 15%, rgba(96, 165, 250, 0.22), transparent 34%),
+    linear-gradient(145deg, #1e3a8a 0%, #172554 58%, #0f172a 100%);
+}
+
+.auth-login-page .auth-brand-side::after {
+  content: "";
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  right: -150px;
+  bottom: -170px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  box-shadow: 0 0 0 34px rgba(255, 255, 255, 0.025),
+              0 0 0 70px rgba(255, 255, 255, 0.02);
+  pointer-events: none;
+}
+
+.auth-login-page .auth-brand-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 560px;
+  min-height: calc(100vh - clamp(4rem, 10vw, 9rem));
+  min-height: calc(100svh - clamp(4rem, 10vw, 9rem));
+  margin: 0 auto;
+}
+
+.auth-login-page .brand-hero-top {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.auth-login-page .auth-brand-symbol {
+  display: grid;
+  place-items: center;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  color: #1e3a8a;
+  background: #ffffff;
+  border-radius: 15px;
+  font-size: 1.45rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+}
+
+.auth-login-page .hero-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  padding: 0.56rem 0.85rem;
+  color: #dbeafe;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  border-radius: 999px;
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 0.075em;
+}
+
+.auth-login-page .brand-hero-content {
+  max-width: 500px;
+  margin: auto 0;
+  padding: 3.5rem 0;
+}
+
+.auth-login-page .auth-brand-eyebrow,
+.auth-login-page .auth-form-eyebrow {
+  display: inline-block;
+  color: #93c5fd;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.auth-login-page .auth-brand-side h1 {
+  margin: 1rem 0 1.15rem;
+  font-size: clamp(2.2rem, 3.1vw, 3.35rem);
+  line-height: 1.13;
+  letter-spacing: -0.045em;
+}
+
+.auth-login-page .brand-hero-content p {
+  max-width: 440px;
+  color: #dbeafe;
+  font-size: 0.98rem;
+  line-height: 1.85;
+}
+
+.auth-login-page .auth-brand-divider {
+  width: 58px;
+  height: 3px;
+  margin: 2rem 0 1.2rem;
+  background: #60a5fa;
+  border-radius: 99px;
+}
+
+.auth-login-page .auth-brand-caption {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.auth-login-page .auth-brand-caption i {
+  color: #93c5fd;
+}
+
+.auth-login-page .brand-hero-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: #bfdbfe;
+  font-size: 0.72rem;
+}
+
+.auth-login-page .auth-secure-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #dbeafe;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+
+.auth-login-page .auth-form-side {
+  justify-content: center;
+  align-items: center;
+  padding: clamp(1.5rem, 4vw, 3.75rem);
+  background:
+    radial-gradient(circle at 90% 8%, rgba(191, 219, 254, 0.42), transparent 28%),
+    #f3f6fb;
+}
+
+.auth-login-page .auth-form-container {
+  width: 100%;
+  max-width: 470px;
+  margin: 0 auto;
+}
+
+.auth-login-page .auth-login-card {
+  width: 100%;
+  padding: clamp(1.65rem, 3vw, 2.55rem);
+  background: #ffffff;
+  border: 1px solid #e7edf5;
+  border-radius: 22px;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.08),
+              0 3px 10px rgba(15, 23, 42, 0.025);
+}
+
+.auth-login-page .form-side-header {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.auth-login-page .auth-form-eyebrow {
+  margin-bottom: 0.7rem;
+  color: #2563eb;
+}
+
+.auth-login-page .form-side-header h2 {
+  margin: 0 0 0.6rem;
+  color: #0f172a;
+  font-size: clamp(1.65rem, 2.2vw, 2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.auth-login-page .form-side-header p {
+  max-width: 360px;
+  color: #64748b;
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+.auth-login-page .auth-login-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 0.95rem;
+  color: #991b1b;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.auth-login-page .auth-login-error i {
+  margin-top: 0.1rem;
+  font-size: 1rem;
+}
+
+.auth-login-page .auth-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.auth-login-page .auth-input-group {
+  margin: 0;
+}
+
+.auth-login-page .auth-input-group > label {
+  display: block;
+  margin-bottom: 0.55rem;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.auth-login-page .auth-input-wrapper input {
+  height: 52px;
+  padding: 0.8rem 0.95rem 0.8rem 2.8rem;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 1px solid #dbe3ee;
+  border-radius: 12px;
+  font-size: 0.88rem;
+}
+
+.auth-login-page .auth-input-wrapper input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+.auth-login-page .auth-input-wrapper i.field-icon {
+  left: 1rem;
+  color: #64748b;
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.auth-login-page .auth-input-wrapper input:focus {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.11);
+}
+
+.auth-login-page .auth-btn-submit {
+  min-height: 52px;
+  margin-top: 0.45rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  box-shadow: 0 7px 16px rgba(30, 58, 138, 0.13);
+}
+
+.auth-login-page .auth-btn-submit:hover {
+  box-shadow: 0 10px 20px rgba(30, 58, 138, 0.19);
+}
+
+.auth-login-page .auth-register-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem 0.45rem;
+  margin-top: 1.65rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid #edf1f6;
+  color: #64748b;
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+.auth-login-page .auth-register-note a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #1e40af;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.auth-login-page .auth-form-footnote {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 1.25rem 0 0;
+  color: #718096;
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.auth-login-page .auth-form-footnote i {
+  color: #64748b;
+}
+
+.auth-login-page .auth-mobile-brand {
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .auth-login-page .auth-split-container {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .auth-login-page .auth-brand-side {
+    display: none !important;
+  }
+
+  .auth-login-page .auth-form-side {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 2.5rem 1.5rem;
+  }
+
+  .auth-login-page .auth-form-container {
+    max-width: 470px;
+  }
+
+  .auth-login-page .auth-mobile-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 0 auto 1.5rem;
+    color: #0f172a;
+  }
+
+  .auth-login-page .auth-mobile-brand-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    color: #ffffff;
+    background: #1e3a8a;
+    border-radius: 13px;
+    font-size: 1.25rem;
+  }
+
+  .auth-login-page .auth-mobile-brand strong,
+  .auth-login-page .auth-mobile-brand small {
+    display: block;
+  }
+
+  .auth-login-page .auth-mobile-brand strong {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+  }
+
+  .auth-login-page .auth-mobile-brand small {
+    margin-top: 0.1rem;
+    color: #64748b;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .auth-login-page .auth-form-side {
+    padding: 1.5rem 1rem;
+  }
+
+  .auth-login-page .auth-login-card {
+    padding: 1.5rem 1.2rem;
+    border-radius: 18px;
+  }
+
+  .auth-login-page .form-side-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .auth-login-page .auth-login-form {
+    gap: 1.05rem;
+  }
+
+  .auth-login-page .auth-form-footnote {
+    padding: 0 0.5rem;
+    line-height: 1.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-login-page .auth-btn-submit,
+  .auth-login-page .auth-btn-submit i,
+  .auth-login-page a,
+  .auth-login-page .auth-input-wrapper input {
+    transition: none !important;
+  }
+
+  .auth-login-page .auth-btn-submit:hover,
+  .auth-login-page .auth-btn-submit:active,
+  .auth-login-page .auth-btn-submit:hover i {
+    transform: none !important;
+  }
+}
+
+
+/* =========================================================
+   SIPN — FLASH MESSAGE & STAGGERED DASHBOARD ENTRANCE
+   Berlaku untuk admin, guru, dan siswa setiap kali dashboard dibuka.
+   ========================================================= */
+.sipn-flash-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: 0.9rem 1rem;
+  margin: 0 0 1.2rem;
+  border-radius: 12px;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  animation: sipnFlashIn 220ms ease-out both;
+}
+
+.sipn-flash-alert__content {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.sipn-flash-alert__content > i {
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+  font-size: 1rem;
+}
+
+.sipn-flash-alert .btn-close {
+  flex: 0 0 auto;
+  padding: 0.1rem 0.35rem;
+  border: 0;
+  color: currentColor;
+  background: transparent;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.65;
+}
+
+.sipn-flash-alert .btn-close:hover {
+  opacity: 1;
+}
+
+@keyframes sipnFlashIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/*
+ * Staggered entrance: elemen dashboard tampil berurutan.
+ * Class dipasang oleh template_header.php pada semua halaman dashboard.
+ */
+@keyframes sipnStaggerEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(13px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ADMIN: hero, ringkasan, navigasi cepat, lalu catatan. */
+body.sipn-dashboard-stagger .page-container > .admin-dashboard > .admin-dashboard__hero {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 40ms both;
+}
+body.sipn-dashboard-stagger .page-container > .admin-dashboard > .admin-dashboard__notice {
+  animation: sipnStaggerEntrance 400ms cubic-bezier(0.2, 0.7, 0.2, 1) 100ms both;
+}
+body.sipn-dashboard-stagger .page-container > .admin-dashboard > .admin-dashboard__stats {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 150ms both;
+}
+body.sipn-dashboard-stagger .page-container > .admin-dashboard > .admin-dashboard__quick-section {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 240ms both;
+}
+body.sipn-dashboard-stagger .page-container > .admin-dashboard > .admin-dashboard__footnote {
+  animation: sipnStaggerEntrance 380ms ease-out 330ms both;
+}
+
+/* Kartu statistik admin ikut masuk satu per satu. */
+body.sipn-dashboard-stagger .admin-dashboard__stats > .admin-stat-card:nth-child(1) {
+  animation: sipnStaggerEntrance 380ms ease-out 220ms both;
+}
+body.sipn-dashboard-stagger .admin-dashboard__stats > .admin-stat-card:nth-child(2) {
+  animation: sipnStaggerEntrance 380ms ease-out 290ms both;
+}
+body.sipn-dashboard-stagger .admin-dashboard__stats > .admin-stat-card:nth-child(3) {
+  animation: sipnStaggerEntrance 380ms ease-out 360ms both;
+}
+body.sipn-dashboard-stagger .admin-dashboard__quick-grid > .admin-quick-link:nth-child(1) {
+  animation: sipnStaggerEntrance 360ms ease-out 310ms both;
+}
+body.sipn-dashboard-stagger .admin-dashboard__quick-grid > .admin-quick-link:nth-child(2) {
+  animation: sipnStaggerEntrance 360ms ease-out 370ms both;
+}
+body.sipn-dashboard-stagger .admin-dashboard__quick-grid > .admin-quick-link:nth-child(3) {
+  animation: sipnStaggerEntrance 360ms ease-out 430ms both;
+}
+body.sipn-dashboard-stagger .admin-dashboard__quick-grid > .admin-quick-link:nth-child(4) {
+  animation: sipnStaggerEntrance 360ms ease-out 490ms both;
+}
+
+/* GURU & SISWA: hero, notifikasi (jika ada), statistik, pintasan, tabel. */
+body.sipn-dashboard-stagger .page-container > .sipn-role-dashboard > .sipn-role-hero {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 40ms both;
+}
+body.sipn-dashboard-stagger .page-container > .sipn-role-dashboard > .sipn-role-notice {
+  animation: sipnStaggerEntrance 400ms ease-out 100ms both;
+}
+body.sipn-dashboard-stagger .page-container > .sipn-role-dashboard > .sipn-role-stats {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 150ms both;
+}
+body.sipn-dashboard-stagger .page-container > .sipn-role-dashboard > .sipn-role-shortcuts {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 240ms both;
+}
+body.sipn-dashboard-stagger .page-container > .sipn-role-dashboard > .sipn-role-data-panel {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 330ms both;
+}
+body.sipn-dashboard-stagger .page-container > .sipn-role-dashboard > .sipn-role-footnote {
+  animation: sipnStaggerEntrance 380ms ease-out 420ms both;
+}
+
+/* Kartu statistik guru/siswa dan tautan pintasan masuk bergantian. */
+body.sipn-dashboard-stagger .sipn-role-stats > .sipn-role-stat:nth-child(1) {
+  animation: sipnStaggerEntrance 380ms ease-out 220ms both;
+}
+body.sipn-dashboard-stagger .sipn-role-stats > .sipn-role-stat:nth-child(2) {
+  animation: sipnStaggerEntrance 380ms ease-out 290ms both;
+}
+body.sipn-dashboard-stagger .sipn-role-stats > .sipn-role-stat:nth-child(3) {
+  animation: sipnStaggerEntrance 380ms ease-out 360ms both;
+}
+body.sipn-dashboard-stagger .sipn-role-quick-grid > .sipn-role-quick-link:nth-child(1) {
+  animation: sipnStaggerEntrance 360ms ease-out 310ms both;
+}
+body.sipn-dashboard-stagger .sipn-role-quick-grid > .sipn-role-quick-link:nth-child(2) {
+  animation: sipnStaggerEntrance 360ms ease-out 380ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sipn-flash-alert,
+  body.sipn-dashboard-stagger .admin-dashboard > *,
+  body.sipn-dashboard-stagger .admin-dashboard__stats > .admin-stat-card,
+  body.sipn-dashboard-stagger .admin-dashboard__quick-grid > .admin-quick-link,
+  body.sipn-dashboard-stagger .sipn-role-dashboard > *,
+  body.sipn-dashboard-stagger .sipn-role-stats > .sipn-role-stat,
+  body.sipn-dashboard-stagger .sipn-role-quick-grid > .sipn-role-quick-link {
+    animation: none !important;
+  }
+}
+
+
+/* =========================================================
+   SIPN — TRANSISI MASUK HALAMAN UTILITAS
+   Aktif hanya pada about.php dan contact.php.
+   ========================================================= */
+.sipn-utility-page {
+  animation: sipnUtilityPageEnter 380ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes sipnUtilityPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sipnUtilityChildEnter {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sipnUtilityIconEnter {
+  from {
+    opacity: 0;
+    transform: translateY(5px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Kontak: judul, ikon, kartu kontak, lalu lokasi tampil berurutan. */
+.sipn-utility-page--contact .contact-header {
+  animation: sipnUtilityChildEnter 360ms ease-out 60ms both;
+}
+
+.sipn-utility-page--contact .contact-header-icon {
+  animation: sipnUtilityIconEnter 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 100ms both;
+}
+
+.sipn-utility-page--contact .contact-card:nth-child(1) {
+  animation: sipnUtilityChildEnter 360ms ease-out 130ms both;
+}
+
+.sipn-utility-page--contact .contact-card:nth-child(2) {
+  animation: sipnUtilityChildEnter 360ms ease-out 200ms both;
+}
+
+.sipn-utility-page--contact .contact-location {
+  animation: sipnUtilityChildEnter 360ms ease-out 260ms both;
+}
+
+/* Tentang SIPN: bagian pengenalan dan fitur masuk dengan jeda halus. */
+.sipn-utility-page--about .sipn-utility-page-header {
+  animation: sipnUtilityChildEnter 360ms ease-out 70ms both;
+}
+
+.sipn-utility-page--about .sipn-utility-page-content > p:first-child {
+  animation: sipnUtilityChildEnter 360ms ease-out 140ms both;
+}
+
+.sipn-utility-page--about .sipn-utility-feature-panel {
+  animation: sipnUtilityChildEnter 380ms ease-out 210ms both;
+}
+
+.sipn-utility-page--about .sipn-utility-page-footnote {
+  animation: sipnUtilityChildEnter 360ms ease-out 280ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sipn-utility-page,
+  .sipn-utility-page--contact .contact-header,
+  .sipn-utility-page--contact .contact-header-icon,
+  .sipn-utility-page--contact .contact-card,
+  .sipn-utility-page--contact .contact-location,
+  .sipn-utility-page--about .sipn-utility-page-header,
+  .sipn-utility-page--about .sipn-utility-page-content > p:first-child,
+  .sipn-utility-page--about .sipn-utility-feature-panel,
+  .sipn-utility-page--about .sipn-utility-page-footnote {
+    animation: none !important;
+  }
+}
+
+/* =========================================================
+   SIPN — HALAMAN LIHAT NILAI RAPOR + ROW RIPPLE ENTRANCE
+   ========================================================= */
+.sipn-rapor-page {
+    display: grid;
+    gap: 1.15rem;
+    width: 100%;
+    color: var(--text-dark, #172033);
+}
+
+.sipn-rapor-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 20px;
+    color: #fff;
+    background: linear-gradient(118deg, #172554 0%, #1e40af 58%, #2563eb 100%);
+    box-shadow: 0 14px 32px rgba(30, 64, 175, 0.14);
+}
+
+.sipn-rapor-hero__copy { min-width: 0; }
+
+.sipn-rapor-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 0.55rem;
+    color: rgba(219, 234, 254, 0.9);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+}
+
+.sipn-rapor-hero h1 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(1.55rem, 3vw, 2.05rem);
+    font-weight: 850;
+    letter-spacing: -0.035em;
+    line-height: 1.12;
+}
+
+.sipn-rapor-hero p {
+    max-width: 560px;
+    margin: 0.55rem 0 0;
+    color: rgba(239, 246, 255, 0.82);
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+.sipn-rapor-hero__actions {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.6rem;
+}
+
+.sipn-rapor-button {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 750;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.sipn-rapor-button:hover { transform: translateY(-2px); }
+.sipn-rapor-button--secondary {
+    border-color: rgba(255, 255, 255, 0.24);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+.sipn-rapor-button--secondary:hover { color: #fff; background: rgba(255, 255, 255, 0.18); }
+.sipn-rapor-button--primary {
+    color: #1e3a8a;
+    background: #fff;
+    box-shadow: 0 5px 14px rgba(15, 23, 42, 0.12);
+}
+.sipn-rapor-button--primary:hover { color: #172554; background: #eff6ff; }
+
+.sipn-rapor-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.95rem 1rem;
+    border: 1px solid #fed7aa;
+    border-radius: 12px;
+    color: #9a3412;
+    background: #fff7ed;
+}
+.sipn-rapor-alert > i { margin-top: 0.1rem; font-size: 1.15rem; }
+.sipn-rapor-alert strong, .sipn-rapor-alert span { display: block; }
+.sipn-rapor-alert strong { font-size: 0.82rem; }
+.sipn-rapor-alert span { margin-top: 0.15rem; font-size: 0.75rem; line-height: 1.5; }
+
+.sipn-rapor-identity,
+.sipn-rapor-card {
+    overflow: hidden;
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 17px;
+    background: var(--card-bg, #fff);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.045);
+}
+
+.sipn-rapor-identity { padding: 1.2rem 1.3rem; }
+.sipn-rapor-identity__intro {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 1.05rem;
+}
+.sipn-rapor-identity__icon {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    place-items: center;
+    border-radius: 13px;
+    color: #1d4ed8;
+    background: #eff6ff;
+    font-size: 1.2rem;
+}
+.sipn-rapor-section-kicker {
+    display: block;
+    margin-bottom: 0.18rem;
+    color: var(--text-muted, #64748b);
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+.sipn-rapor-identity__intro h2 {
+    margin: 0;
+    color: var(--text-dark, #172033);
+    font-size: 1rem;
+    font-weight: 800;
+}
+.sipn-rapor-identity__intro p {
+    margin: 0.2rem 0 0;
+    color: var(--text-muted, #64748b);
+    font-size: 0.74rem;
+}
+.sipn-rapor-identity__details {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.7rem;
+}
+.sipn-rapor-identity__item {
+    min-width: 0;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 11px;
+    background: var(--bg-surface, #f8fafc);
+}
+.sipn-rapor-identity__item > span {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--text-muted, #64748b);
+    font-size: 0.67rem;
+    font-weight: 650;
+}
+.sipn-rapor-identity__item strong {
+    display: block;
+    overflow-wrap: anywhere;
+    color: var(--text-dark, #172033);
+    font-size: 0.88rem;
+    font-weight: 800;
+}
+.sipn-rapor-identity__item--count strong { color: #1d4ed8; }
+.sipn-rapor-identity__item strong small { font-size: 0.68rem; font-weight: 700; }
+
+.sipn-rapor-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.35rem;
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+}
+.sipn-rapor-card__header h2 {
+    margin: 0;
+    color: var(--text-dark, #172033);
+    font-size: 1.02rem;
+    font-weight: 850;
+    letter-spacing: -0.02em;
+}
+.sipn-rapor-card__header p {
+    margin: 0.25rem 0 0;
+    color: var(--text-muted, #64748b);
+    font-size: 0.74rem;
+}
+.sipn-rapor-total-pill {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.68rem;
+    border: 1px solid #bfdbfe;
+    border-radius: 999px;
+    color: #1d4ed8;
+    background: #eff6ff;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+.sipn-rapor-table-wrap { padding: 0.7rem 1rem 1rem; }
+.sipn-rapor-table {
+    width: 100%;
+    min-width: 820px;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--text-dark, #172033);
+    font-size: 0.78rem;
+}
+.sipn-rapor-table thead th {
+    padding: 0.85rem 0.8rem;
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    color: var(--text-muted, #64748b);
+    background: var(--bg-surface, #f8fafc);
+    font-size: 0.66rem;
+    font-weight: 850;
+    letter-spacing: 0.055em;
+    text-align: left;
+    text-transform: uppercase;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.sipn-rapor-table thead tr:first-child th:first-child { border-top-left-radius: 9px; }
+.sipn-rapor-table thead tr:first-child th:last-child { border-top-right-radius: 9px; }
+.sipn-rapor-table thead tr + tr th { padding-top: 0.6rem; padding-bottom: 0.65rem; }
+.sipn-rapor-table tbody td {
+    position: relative;
+    overflow: hidden;
+    padding: 0.85rem 0.8rem;
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    background-color: var(--card-bg, #fff);
+    vertical-align: middle;
+}
+.sipn-rapor-table tbody tr:last-child td { border-bottom: 0; }
+.sipn-rapor-table tbody tr:hover td { background-color: var(--bg-surface, #f8fafc); }
+.sipn-rapor-table__number { width: 54px; color: var(--text-muted, #64748b) !important; text-align: center !important; }
+.sipn-rapor-table__subject { min-width: 190px; }
+.sipn-rapor-table__teacher { min-width: 160px; }
+.sipn-rapor-table__center { text-align: center !important; }
+.sipn-rapor-table__group { text-align: center !important; }
+.sipn-rapor-subject-cell strong,
+.sipn-rapor-subject-cell span { display: block; }
+.sipn-rapor-subject-cell strong { color: var(--text-dark, #172033); font-size: 0.79rem; font-weight: 800; }
+.sipn-rapor-subject-cell span { margin-top: 0.18rem; color: var(--text-muted, #64748b); font-family: monospace; font-size: 0.67rem; }
+.sipn-rapor-teacher-cell { color: var(--text-dark, #334155); }
+.sipn-rapor-score {
+    display: inline-flex;
+    min-width: 42px;
+    justify-content: center;
+    padding: 0.38rem 0.52rem;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    color: #1e40af;
+    background: #eff6ff;
+    font-size: 0.78rem;
+    font-weight: 850;
+    font-variant-numeric: tabular-nums;
+}
+.sipn-rapor-score--target {
+    border-color: var(--border-color, #e2e8f0);
+    color: var(--text-muted, #64748b);
+    background: var(--bg-surface, #f8fafc);
+}
+.sipn-rapor-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.32rem;
+    padding: 0.38rem 0.62rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 0.67rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+.sipn-rapor-status--success { border-color: #bbf7d0; color: #166534; background: #f0fdf4; }
+.sipn-rapor-status--other { border-color: #fed7aa; color: #9a3412; background: #fff7ed; }
+
+/* Each table row fades in, followed by a subtle light sweep across its cells. */
+.sipn-rapor-table tbody tr.sipn-rapor-row > td {
+    animation: sipnRaporRowEnter 480ms cubic-bezier(0.2, 0.7, 0.25, 1) both;
+    animation-delay: var(--row-delay, 0ms);
+}
+.sipn-rapor-table tbody tr.sipn-rapor-row > td::after {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(105deg, transparent 0%, rgba(59, 130, 246, 0.02) 25%, rgba(96, 165, 250, 0.2) 50%, rgba(59, 130, 246, 0.035) 72%, transparent 100%);
+    content: "";
+    pointer-events: none;
+    transform: translateX(-110%);
+    animation: sipnRaporRowRipple 780ms ease-out both;
+    animation-delay: calc(var(--row-delay, 0ms) + 80ms);
+}
+@keyframes sipnRaporRowEnter {
+    from { opacity: 0; transform: translateY(7px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes sipnRaporRowRipple {
+    0% { opacity: 0; transform: translateX(-110%); }
+    18% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(110%); }
+}
+
+.sipn-rapor-empty {
+    display: grid;
+    justify-items: center;
+    padding: 3rem 1.25rem;
+    text-align: center;
+}
+.sipn-rapor-empty__icon {
+    display: grid;
+    width: 58px;
+    height: 58px;
+    margin-bottom: 0.8rem;
+    place-items: center;
+    border-radius: 17px;
+    color: #64748b;
+    background: var(--bg-surface, #f8fafc);
+    font-size: 1.6rem;
+}
+.sipn-rapor-empty strong { color: var(--text-dark, #172033); font-size: 0.9rem; }
+.sipn-rapor-empty p { max-width: 420px; margin: 0.35rem 0 0; color: var(--text-muted, #64748b); font-size: 0.76rem; line-height: 1.6; }
+.sipn-rapor-footnote { display: flex; align-items: center; gap: 0.4rem; margin: -0.25rem 0 0; color: var(--text-muted, #64748b); font-size: 0.7rem; }
+.sipn-rapor-footnote i { color: #16a34a; }
+.sipn-rapor-print-heading, .sipn-rapor-signature { display: none; }
+
+@media (max-width: 900px) {
+    .sipn-rapor-hero { align-items: flex-start; flex-direction: column; }
+    .sipn-rapor-hero__actions { justify-content: flex-start; }
+}
+@media (max-width: 620px) {
+    .sipn-rapor-hero { padding: 1.2rem; border-radius: 15px; }
+    .sipn-rapor-hero__actions { width: 100%; }
+    .sipn-rapor-button { flex: 1 1 auto; }
+    .sipn-rapor-identity { padding: 1rem; }
+    .sipn-rapor-identity__details { grid-template-columns: 1fr; }
+    .sipn-rapor-card__header { align-items: flex-start; flex-direction: column; padding: 1rem; }
+    .sipn-rapor-table-wrap { padding: 0.5rem 0.6rem 0.75rem; }
+}
+
+@media print {
+    .sipn-rapor-page { display: block; color: #000 !important; }
+    .sipn-rapor-hero, .sipn-rapor-footnote, .no-print, .app-sidebar, .app-footer { display: none !important; }
+    .sipn-rapor-identity, .sipn-rapor-card { margin-bottom: 14px; border: 1px solid #aaa !important; border-radius: 0 !important; box-shadow: none !important; background: #fff !important; }
+    .sipn-rapor-identity__icon { display: none !important; }
+    .sipn-rapor-identity__intro { margin-bottom: 8px; }
+    .sipn-rapor-identity__item { border: 0 !important; background: #fff !important; }
+    .sipn-rapor-identity__item strong, .sipn-rapor-identity__intro h2, .sipn-rapor-card__header h2 { color: #000 !important; }
+    .sipn-rapor-card__header { display: none !important; }
+    .sipn-rapor-print-heading { display: block !important; padding: 0 0 10px; border-bottom: 2px solid #000; margin: 0 0 12px; text-align: center; }
+    .sipn-rapor-print-heading h2 { margin: 0; color: #000; font-size: 15pt; }
+    .sipn-rapor-print-heading h3 { margin: 8px 0 0; color: #000; font-size: 11pt; }
+    .sipn-rapor-print-heading p { margin: 3px 0 0; color: #000; font-size: 9pt; }
+    .sipn-rapor-table-wrap { padding: 0 !important; }
+    .sipn-rapor-table { min-width: 0 !important; width: 100% !important; font-size: 8pt !important; }
+    .sipn-rapor-table thead th, .sipn-rapor-table tbody td { padding: 6px 5px !important; border: 1px solid #999 !important; color: #000 !important; background: #fff !important; }
+    .sipn-rapor-table tbody tr.sipn-rapor-row > td { animation: none !important; opacity: 1 !important; transform: none !important; }
+    .sipn-rapor-table tbody tr.sipn-rapor-row > td::after { display: none !important; }
+    .sipn-rapor-score, .sipn-rapor-status { border: 0 !important; padding: 0 !important; color: #000 !important; background: #fff !important; }
+    .sipn-rapor-signature { display: block !important; width: 250px; margin: 36px 0 0 auto; color: #000 !important; text-align: center; }
+    .sipn-rapor-signature p { margin: 0; font-size: 9pt; line-height: 1.5; }
+    .sipn-rapor-signature span { display: block; margin-top: 48px; font-size: 9pt; font-weight: 700; text-decoration: underline; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sipn-rapor-button,
+    .sipn-rapor-table tbody tr.sipn-rapor-row > td,
+    .sipn-rapor-table tbody tr.sipn-rapor-row > td::after {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+    }
+}
 </file>
 
 <file path="index.php">
@@ -3919,8 +5057,8 @@ if (isset($_SESSION['user_id'])) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
+    $username = trim($_POST['username'] ?? '');
+    $password = trim($_POST['password'] ?? '');
 
     if (empty($username) || empty($password)) {
         $error = 'Username dan Password wajib diisi!';
@@ -3932,11 +5070,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($user = mysqli_fetch_assoc($result)) {
             if (password_verify($password, $user['password'])) {
+                // Regenerasi ID session setelah autentikasi berhasil.
+                session_regenerate_id(true);
+
                 $_SESSION['user_id']  = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role']     = $user['role'];
+                $_SESSION['sipn_dashboard_entry'] = true;
 
-                set_flash_message('success', 'Selamat datang kembali, ' . htmlspecialchars($user['username']) . '!');
+                set_flash_message('success', 'Selamat datang kembali, ' . $user['username'] . '!');
 
                 header("Location: " . BASE_URL . $user['role'] . "/dashboard_" . $user['role'] . ".php");
                 exit();
@@ -3957,79 +5099,120 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login SIPN - SMK Sangkuriang 1 Cimahi</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css?v=flash-dashboard-1">
 </head>
-<body>
+<body class="auth-page">
 
-<div class="auth-enterprise-wrapper">
-    <div class="auth-split-container">
-        <!-- Sisi Kiri: Branding & Informasi -->
-        <div class="auth-brand-side">
-            <div class="brand-hero-top">
-                <div class="hero-badge-pill">
-                    <i class="bi bi-shield-shaded"></i> PORTAL AKADEMIK TERPADU
+<div class="auth-enterprise-wrapper auth-login-page">
+    <main class="auth-split-container">
+        <!-- Panel identitas SIPN -->
+        <section class="auth-brand-side" aria-label="Informasi SIPN">
+            <div class="auth-brand-inner">
+                <div class="brand-hero-top">
+                    <div class="auth-brand-symbol" aria-hidden="true">
+                        <i class="bi bi-mortarboard-fill"></i>
+                    </div>
+                    <div class="hero-badge-pill">
+                        <i class="bi bi-shield-check" aria-hidden="true"></i>
+                        PORTAL AKADEMIK TERPADU
+                    </div>
                 </div>
-            </div>
-            <div class="brand-hero-content">
-                <h1>Sistem Informasi Pengelolaan Nilai</h1>
-                <p>Platform manajemen rekapitulasi capaian kompetensi peserta didik berbasis Kurikulum Merdeka SMK Sangkuriang 1 Cimahi.</p>
-            </div>
-            <div class="brand-hero-footer">
-                &copy; 2026 SMK Sangkuriang 1 Cimahi. Secured Enterprise System.
-            </div>
-        </div>
 
-        <!-- Sisi Kanan: Form Login -->
-        <div class="auth-form-side">
+                <div class="brand-hero-content">
+                    <span class="auth-brand-eyebrow">SMK SANGKURIANG 1 CIMAHI</span>
+                    <h1>Sistem Informasi<br>Pengelolaan Nilai</h1>
+                    <p>Platform pengelolaan nilai dan capaian kompetensi peserta didik dalam satu sistem akademik yang terintegrasi.</p>
+                    <div class="auth-brand-divider" aria-hidden="true"></div>
+                    <div class="auth-brand-caption">
+                        <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                        Akses resmi untuk admin, guru, dan siswa
+                    </div>
+                </div>
+
+                <footer class="brand-hero-footer">
+                    <span>&copy; 2026 SMK Sangkuriang 1 Cimahi</span>
+                    <span class="auth-secure-label"><i class="bi bi-lock-fill" aria-hidden="true"></i> SISTEM TERLINDUNGI</span>
+                </footer>
+            </div>
+        </section>
+
+        <!-- Panel form login -->
+        <section class="auth-form-side" aria-label="Form masuk SIPN">
             <div class="auth-form-container">
-                <div class="form-side-header">
-                    <h3>Masuk ke Akun</h3>
-                    <p>Silakan masukkan kredensial resmi Anda untuk melanjutkan.</p>
+                <div class="auth-mobile-brand" aria-hidden="true">
+                    <span class="auth-mobile-brand-icon"><i class="bi bi-mortarboard-fill"></i></span>
+                    <span><strong>SIPN</strong><small>SMK Sangkuriang 1 Cimahi</small></span>
                 </div>
 
-                <?php if (!empty($error)): ?>
-                    <div class="alert alert-danger mb-4" role="alert" style="padding: 0.75rem; background: #fee2e2; color: #991b1b; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem;">
-                        <i class="bi bi-exclamation-triangle-fill"></i> <?= $error; ?>
+                <div class="auth-login-card">
+                    <div class="form-side-header">
+                        <span class="auth-form-eyebrow">AKSES PENGGUNA</span>
+                        <h2>Selamat Datang</h2>
+                        <p>Masuk menggunakan akun resmi sekolah Anda untuk melanjutkan.</p>
                     </div>
-                <?php endif; ?>
 
-                <form action="" method="POST">
-                    <div class="auth-input-group">
-                        <label for="username">Username / NIP / NIS</label>
-                        <div class="auth-input-wrapper">
-                            <i class="bi bi-person-fill field-icon"></i>
-                            <input type="text" id="username" name="username" placeholder="Masukkan username..." required autofocus>
+                    <?php display_flash_message(); ?>
+
+                    <?php if (!empty($error)): ?>
+                        <div class="auth-login-error" id="login-error" role="alert">
+                            <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+                            <span><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></span>
                         </div>
-                    </div>
+                    <?php endif; ?>
 
-                    <div class="auth-input-group">
-                        <label for="password">Kata Sandi</label>
-                        <div class="auth-input-wrapper">
-                            <i class="bi bi-lock-fill field-icon"></i>
-                            <input type="password" id="password" name="password" placeholder="••••••••••••" required>
+                    <form action="" method="POST" class="auth-login-form">
+                        <div class="auth-input-group">
+                            <label for="username">Username / NIP / NIS</label>
+                            <div class="auth-input-wrapper">
+                                <i class="bi bi-person field-icon" aria-hidden="true"></i>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    placeholder="Masukkan username Anda"
+                                    autocomplete="username"
+                                    value="<?= htmlspecialchars($_POST['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                    <?php if (!empty($error)): ?>aria-describedby="login-error"<?php endif; ?>
+                                    required
+                                >
+                            </div>
                         </div>
+
+                        <div class="auth-input-group">
+                            <label for="password">Kata Sandi</label>
+                            <div class="auth-input-wrapper">
+                                <i class="bi bi-lock field-icon" aria-hidden="true"></i>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Masukkan kata sandi"
+                                    autocomplete="current-password"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <button type="submit" class="auth-btn-submit">
+                            <span>Masuk ke Dashboard</span>
+                            <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </form>
+
+                    <div class="auth-register-note">
+                        <span>Belum memiliki akun siswa?</span>
+                        <a href="form_register_siswa.php">Registrasi Siswa Baru <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
                     </div>
-
-                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; margin-bottom: 1.5rem;">
-                        <label style="display: flex; align-items: center; gap: 0.4rem; color: var(--text-muted); cursor: pointer;">
-                            <input type="checkbox" name="remember" style="accent-color: var(--primary-dark);"> Ingat saya
-                        </label>
-                        <a href="#" style="color: var(--primary-dark); font-weight: 700; text-decoration: none;">Lupa sandi?</a>
-                    </div>
-
-                    <button type="submit" class="auth-btn-submit">
-                        Masuk ke Dashboard <i class="bi bi-arrow-right"></i>
-                    </button>
-                </form>
-
-                <div style="margin-top: 2rem; text-align: center; font-size: 0.82rem; color: var(--text-muted);">
-                    Belum memiliki akun siswa? <a href="form_register_siswa.php" style="color: var(--primary-dark); font-weight: 700; text-decoration: none;">Registrasi Siswa Baru</a>
                 </div>
+
+                <p class="auth-form-footnote">
+                    <i class="bi bi-shield-lock" aria-hidden="true"></i>
+                    Gunakan akun yang telah diberikan oleh pihak sekolah.
+                </p>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 </div>
-
 </body>
 </html>
 </file>
@@ -4098,9 +5281,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         mysqli_commit($conn);
         set_flash_message('success', 'Registrasi berhasil! Silakan login.');
-        header('Location: form_login.php');
+        header('Location: ' . BASE_URL . 'auth/form_login.php');
         exit();
-    } catch (Exception $e) {
+    } catch (Throwable $e) {
         mysqli_rollback($conn);
         set_flash_message('danger', 'Gagal registrasi! NIS atau Username mungkin sudah terdaftar.');
     }
@@ -4113,9 +5296,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrasi Siswa - SIPN SMK Sangkuriang 1</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css?v=flash-dashboard-1">
 </head>
-<body>
+<body class="auth-page">
 
 <div class="auth-enterprise-wrapper" style="justify-content: center; align-items: center; padding: 2rem 1rem;">
     <div style="width: 100%; max-width: 580px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.06); overflow: hidden;">
@@ -4126,6 +5309,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div style="padding: 2rem;">
+            <?php display_flash_message(); ?>
+
             <form method="POST">
                 <div class="auth-input-group">
                     <label>Nomor Induk Siswa (NIS)</label>
@@ -4692,21 +5877,25 @@ require_once __DIR__ . '/../includes/helper_cek_login.php';
 
 check_role(['siswa']);
 
-$user_id = $_SESSION['user_id'];
+$user_id = (int) ($_SESSION['user_id'] ?? 0);
 
-$query_siswa = mysqli_query($conn, "SELECT id, nama, nis, kelas FROM siswa WHERE user_id = '$user_id'");
-$siswa = mysqli_fetch_assoc($query_siswa);
-$id_siswa = $siswa['id'] ?? 0;
+// Ambil identitas siswa dari akun yang sedang aktif.
+$query_siswa = mysqli_query(
+    $conn,
+    "SELECT id, nama, nis, kelas FROM siswa WHERE user_id = '$user_id' LIMIT 1"
+);
+$siswa = $query_siswa ? mysqli_fetch_assoc($query_siswa) : null;
+$id_siswa = (int) ($siswa['id'] ?? 0);
 
-// Ambil data nilai rapor lengkap dari database[cite: 6]
+// Ambil nilai rapor beserta mata pelajaran dan guru pengampu.
 $query_nilai = mysqli_query($conn, "
-    SELECT 
-        nr.nilai_kkm, 
-        nr.nilai_pengetahuan, 
-        nr.nilai_keterampilan, 
-        nr.Keterangan, 
-        m.kode_mapel, 
-        m.nama_mapel, 
+    SELECT
+        nr.nilai_kkm,
+        nr.nilai_pengetahuan,
+        nr.nilai_keterampilan,
+        nr.Keterangan,
+        m.kode_mapel,
+        m.nama_mapel,
         g.nama AS nama_guru
     FROM nilai_rapor nr
     JOIN mapel m ON nr.mapel_id = m.id
@@ -4715,135 +5904,166 @@ $query_nilai = mysqli_query($conn, "
     ORDER BY m.nama_mapel ASC
 ");
 
+$total_mapel = $query_nilai ? mysqli_num_rows($query_nilai) : 0;
+
 require_once __DIR__ . '/../includes/template_header.php';
 ?>
 
-<div class="card-panel-clean print-area" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.02); margin-bottom: 2rem;">
-    <!-- Header Rapor -->
-    <div class="card-header-clean flex-between no-print" style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-        <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem;">
-            <i class="bi bi-file-earmark-text text-primary"></i> Transkrip Laporan Hasil Belajar (Nilai Rapor)
-        </h3>
-        <button onclick="window.print()" class="btn btn-secondary btn-sm" style="background: var(--bg-surface); color: var(--text-dark); border: 1px solid var(--border-color); font-weight: 600; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
-            <i class="bi bi-printer"></i> Cetak Dokumen Rapor
-        </button>
-    </div>
-    
-    <div class="card-body-clean" style="padding: 1.5rem;">
-        
-        <!-- Kop Informasi Resmi Sekolah (Hanya tampil saat cetak atau sebagai identitas halaman) -->
-        <div class="print-only text-center mb-4" style="display: none; border-bottom: 2px solid #000; padding-bottom: 1rem; margin-bottom: 1.5rem;">
-            <h4 style="font-weight: 800; font-size: 1.2rem; text-transform: uppercase;">SMK SANGKURIANG 1 CIMAHI</h4>
-            <p style="font-size: 0.85rem; margin-top: 2px;">Sistem Informasi Pengelolaan Nilai Terpadu (SIPN) T.A 2026/2027</p>
+<div class="sipn-rapor-page">
+    <section class="sipn-rapor-hero no-print" aria-labelledby="raporPageTitle">
+        <div class="sipn-rapor-hero__copy">
+            <span class="sipn-rapor-eyebrow">
+                <i class="bi bi-mortarboard-fill" aria-hidden="true"></i>
+                Portal Akademik Peserta Didik
+            </span>
+            <h1 id="raporPageTitle">Nilai Rapor</h1>
+            <p>Pantau hasil belajar dan capaian kompetensi dari seluruh mata pelajaran.</p>
         </div>
-
-        <!-- Informasi Identitas Siswa Card -->
-        <div class="student-identity-box mb-4" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
-            <table class="info-table" style="width: 100%; border-collapse: collapse;">
-                <tr>
-                    <td style="width: 150px; color: var(--text-muted); font-size: 0.85rem; padding: 0.3rem 0;">Nama Peserta Didik</td>
-                    <td style="width: 15px; color: var(--text-muted);">:</td>
-                    <td style="font-weight: 700; color: var(--text-dark); font-size: 0.9rem;"><?= htmlspecialchars($siswa['nama']); ?></td>
-                </tr>
-                <tr>
-                    <td style="color: var(--text-muted); font-size: 0.85rem; padding: 0.3rem 0;">Nomor Induk Siswa (NIS)</td>
-                    <td>:</td>
-                    <td style="font-weight: 600; color: var(--text-dark); font-size: 0.9rem;"><?= htmlspecialchars($siswa['nis']); ?></td>
-                </tr>
-                <tr>
-                    <td style="color: var(--text-muted); font-size: 0.85rem; padding: 0.3rem 0;">Rombongan Belajar</td>
-                    <td>:</td>
-                    <td style="font-weight: 600; color: var(--text-dark); font-size: 0.9rem;"><?= htmlspecialchars($siswa['kelas']); ?></td>
-                </tr>
-            </table>
+        <div class="sipn-rapor-hero__actions">
+            <a class="sipn-rapor-button sipn-rapor-button--secondary" href="<?= BASE_URL; ?>siswa/dashboard_siswa.php">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                <span>Kembali ke Beranda</span>
+            </a>
+            <button type="button" onclick="window.print()" class="sipn-rapor-button sipn-rapor-button--primary">
+                <i class="bi bi-printer" aria-hidden="true"></i>
+                <span>Cetak Rapor</span>
+            </button>
         </div>
+    </section>
 
-        <!-- Tabel Transkrip Nilai Rapor -->
-        <div class="table-responsive">
-            <table class="data-table bordered" style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background: var(--bg-surface); border-bottom: 2px solid var(--border-color);">
-                        <th rowspan="2" class="text-center" style="width: 50px; padding: 0.75rem; font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); vertical-align: middle;">No</th>
-                        <th rowspan="2" style="padding: 0.75rem; font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); vertical-align: middle;">Mata Pelajaran</th>
-                        <th rowspan="2" style="padding: 0.75rem; font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); vertical-align: middle;">Guru Pengampu</th>
-                        <th rowspan="2" class="text-center" style="padding: 0.75rem; font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); vertical-align: middle;">KKM</th>
-                        <th colspan="2" class="text-center" style="padding: 0.75rem; font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted);">Nilai Capaian Kompetensi</th>
-                        <th rowspan="2" class="text-center" style="padding: 0.75rem; font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); vertical-align: middle;">Keterangan</th>
-                    </tr>
-                    <tr style="background: var(--bg-surface); border-bottom: 2px solid var(--border-color);">
-                        <th class="text-center" style="padding: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">Pengetahuan</th>
-                        <th class="text-center" style="padding: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">Keterampilan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (mysqli_num_rows($query_nilai) > 0): ?>
-                        <?php $no = 1; while ($row = mysqli_fetch_assoc($query_nilai)): ?>
-                            <tr style="border-bottom: 1px solid var(--border-color);">
-                                <td class="text-center" style="padding: 0.85rem; font-weight: 600; color: var(--text-muted);"><?= $no++; ?></td>
-                                <td style="padding: 0.85rem;">
-                                    <strong style="color: var(--text-dark);"><?= htmlspecialchars($row['nama_mapel']); ?></strong><br>
-                                    <small style="color: var(--text-muted); font-family: monospace; font-size: 0.75rem;"><?= htmlspecialchars($row['kode_mapel']); ?></small>
-                                </td>
-                                <td style="padding: 0.85rem; color: var(--text-dark);"><?= htmlspecialchars($row['nama_guru']); ?></td>
-                                <td class="text-center" style="padding: 0.85rem; font-weight: 600; color: var(--text-dark);"><?= $row['nilai_kkm']; ?></td>
-                                <td class="text-center" style="padding: 0.85rem; font-weight: 700; color: var(--text-dark);"><?= $row['nilai_pengetahuan']; ?></td>
-                                <td class="text-center" style="padding: 0.85rem; font-weight: 700; color: var(--text-dark);"><?= $row['nilai_keterampilan']; ?></td>
-                                <td class="text-center" style="padding: 0.85rem;">
-                                    <span class="badge badge-<?= strtolower($row['Keterangan']) === 'tuntas' ? 'success' : 'danger'; ?>" style="padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.72rem; font-weight: 700;">
-                                        <?= htmlspecialchars($row['Keterangan']); ?>
-                                    </span>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="7" class="text-center text-muted py-4" style="padding: 2.5rem; text-align: center; color: var(--text-muted);">
-                                <i class="bi bi-journal-x" style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>
-                                Belum ada data nilai rapor yang diinput oleh Guru[cite: 6].
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Tanda Tangan Cetak Khusus Mode Print -->
-        <div class="print-signature print-only mt-5" style="margin-top: 3rem;">
-            <div style="float: right; text-align: center; width: 250px;">
-                <p style="font-size: 0.85rem; color: #000;">Cimahi, <?= date('d F Y'); ?><br>Mengetahui,<br>Wali Kelas / Guru Pengampu</p>
-                <br><br><br>
-                <p style="font-weight: bold; text-decoration: underline; color: #000;">( ........................................................... )</p>
+    <?php if (!$query_siswa || !$query_nilai): ?>
+        <div class="sipn-rapor-alert" role="alert">
+            <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+            <div>
+                <strong>Data rapor belum dapat dimuat.</strong>
+                <span>Terjadi kendala saat mengambil data. Silakan muat ulang halaman atau hubungi administrator.</span>
             </div>
-            <div style="clear: both;"></div>
         </div>
-    </div>
-</div>
+    <?php elseif (!$siswa): ?>
+        <div class="sipn-rapor-alert" role="alert">
+            <i class="bi bi-person-exclamation" aria-hidden="true"></i>
+            <div>
+                <strong>Identitas peserta didik tidak ditemukan.</strong>
+                <span>Hubungi administrator untuk memeriksa keterhubungan akun dengan data siswa.</span>
+            </div>
+        </div>
+    <?php endif; ?>
 
-<style>
-    @media print {
-        .no-print, header, footer, .app-header, .app-footer {
-            display: none !important;
-        }
-        .print-only {
-            display: block !important;
-        }
-        .card-panel-clean {
-            border: none !important;
-            box-shadow: none !important;
-            background: white !important;
-        }
-        body {
-            background-color: white !important;
-            color: black !important;
-        }
-        table {
-            color: black !important;
-        }
-    }
-    .print-only {
-        display: none;
-    }
-</style>
+    <section class="sipn-rapor-identity" aria-label="Identitas peserta didik">
+        <div class="sipn-rapor-identity__intro">
+            <span class="sipn-rapor-identity__icon" aria-hidden="true"><i class="bi bi-person-vcard-fill"></i></span>
+            <div>
+                <span class="sipn-rapor-section-kicker">Identitas Peserta Didik</span>
+                <h2><?= htmlspecialchars((string) ($siswa['nama'] ?? 'Data siswa tidak tersedia'), ENT_QUOTES, 'UTF-8'); ?></h2>
+                <p>Informasi akun yang terhubung dengan laporan hasil belajar.</p>
+            </div>
+        </div>
+        <div class="sipn-rapor-identity__details">
+            <div class="sipn-rapor-identity__item">
+                <span>Nomor Induk Siswa</span>
+                <strong><?= htmlspecialchars((string) ($siswa['nis'] ?? '-'), ENT_QUOTES, 'UTF-8'); ?></strong>
+            </div>
+            <div class="sipn-rapor-identity__item">
+                <span>Rombongan Belajar</span>
+                <strong><?= htmlspecialchars((string) ($siswa['kelas'] ?? '-'), ENT_QUOTES, 'UTF-8'); ?></strong>
+            </div>
+            <div class="sipn-rapor-identity__item sipn-rapor-identity__item--count">
+                <span>Mata Pelajaran</span>
+                <strong><?= number_format($total_mapel, 0, ',', '.'); ?> <small>mapel</small></strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="sipn-rapor-card" aria-labelledby="raporTableTitle">
+        <div class="sipn-rapor-card__header">
+            <div>
+                <span class="sipn-rapor-section-kicker">Rekapitulasi Akademik</span>
+                <h2 id="raporTableTitle">Transkrip Nilai Rapor</h2>
+                <p>Rincian nilai pengetahuan, keterampilan, dan status ketuntasan.</p>
+            </div>
+            <span class="sipn-rapor-total-pill">
+                <i class="bi bi-journal-check" aria-hidden="true"></i>
+                <?= number_format($total_mapel, 0, ',', '.'); ?> data nilai
+            </span>
+        </div>
+
+        <div class="sipn-rapor-print-heading print-only">
+            <h2>SMK SANGKURIANG 1 CIMAHI</h2>
+            <p>Sistem Informasi Pengelolaan Nilai Terpadu (SIPN) — T.A. 2026/2027</p>
+            <h3>TRANSKRIP LAPORAN HASIL BELAJAR</h3>
+        </div>
+
+        <?php if ($query_nilai && $total_mapel > 0): ?>
+            <div class="sipn-rapor-table-wrap">
+                <div class="table-responsive">
+                    <table class="sipn-rapor-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" class="sipn-rapor-table__number">No.</th>
+                                <th rowspan="2" class="sipn-rapor-table__subject">Mata Pelajaran</th>
+                                <th rowspan="2" class="sipn-rapor-table__teacher">Guru Pengampu</th>
+                                <th rowspan="2" class="sipn-rapor-table__center">KKM</th>
+                                <th colspan="2" class="sipn-rapor-table__group">Capaian Kompetensi</th>
+                                <th rowspan="2" class="sipn-rapor-table__center">Keterangan</th>
+                            </tr>
+                            <tr>
+                                <th class="sipn-rapor-table__center">Pengetahuan</th>
+                                <th class="sipn-rapor-table__center">Keterampilan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $nomor = 1;
+                            $urutan_baris = 0;
+                            while ($row = mysqli_fetch_assoc($query_nilai)):
+                                $keterangan = trim((string) ($row['Keterangan'] ?? '-'));
+                                $is_tuntas = strtolower($keterangan) === 'tuntas';
+                                $delay_baris = min($urutan_baris * 65, 780);
+                            ?>
+                                <tr class="sipn-rapor-row" style="--row-delay: <?= $delay_baris; ?>ms;">
+                                    <td class="sipn-rapor-table__number"><?= $nomor++; ?></td>
+                                    <td class="sipn-rapor-subject-cell">
+                                        <strong><?= htmlspecialchars((string) $row['nama_mapel'], ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        <span><?= htmlspecialchars((string) $row['kode_mapel'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                    </td>
+                                    <td class="sipn-rapor-teacher-cell"><?= htmlspecialchars((string) $row['nama_guru'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                    <td class="sipn-rapor-table__center"><span class="sipn-rapor-score sipn-rapor-score--target"><?= htmlspecialchars((string) $row['nilai_kkm'], ENT_QUOTES, 'UTF-8'); ?></span></td>
+                                    <td class="sipn-rapor-table__center"><span class="sipn-rapor-score"><?= htmlspecialchars((string) $row['nilai_pengetahuan'], ENT_QUOTES, 'UTF-8'); ?></span></td>
+                                    <td class="sipn-rapor-table__center"><span class="sipn-rapor-score"><?= htmlspecialchars((string) $row['nilai_keterampilan'], ENT_QUOTES, 'UTF-8'); ?></span></td>
+                                    <td class="sipn-rapor-table__center">
+                                        <span class="sipn-rapor-status <?= $is_tuntas ? 'sipn-rapor-status--success' : 'sipn-rapor-status--other'; ?>">
+                                            <i class="bi <?= $is_tuntas ? 'bi-check-circle-fill' : 'bi-info-circle-fill'; ?>" aria-hidden="true"></i>
+                                            <?= htmlspecialchars($keterangan, ENT_QUOTES, 'UTF-8'); ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php
+                                $urutan_baris++;
+                            endwhile;
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <?php elseif ($query_nilai): ?>
+            <div class="sipn-rapor-empty">
+                <span class="sipn-rapor-empty__icon" aria-hidden="true"><i class="bi bi-journal-x"></i></span>
+                <strong>Belum ada nilai rapor</strong>
+                <p>Nilai akan ditampilkan di halaman ini setelah guru pengampu memasukkannya ke SIPN.</p>
+            </div>
+        <?php endif; ?>
+
+        <div class="sipn-rapor-signature print-only">
+            <p>Cimahi, <?= date('d F Y'); ?><br>Mengetahui,<br>Wali Kelas / Guru Pengampu</p>
+            <span>( ........................................................... )</span>
+        </div>
+    </section>
+
+    <p class="sipn-rapor-footnote no-print">
+        <i class="bi bi-shield-check" aria-hidden="true"></i>
+        Data nilai ditampilkan sesuai catatan yang tersimpan di sistem SIPN.
+    </p>
+</div>
 
 <?php require_once __DIR__ . '/../includes/template_footer.php'; ?>
 </file>
@@ -7091,17 +8311,33 @@ function set_flash_message($tipe, $pesan) {
  * Menampilkan pesan notifikasi dalam bentuk Alert Bootstrap 5
  */
 function display_flash_message() {
-    if (isset($_SESSION['flash_message'])) {
-        $tipe = $_SESSION['flash_message']['tipe'];
-        $pesan = $_SESSION['flash_message']['pesan'];
-        
-        echo '<div class="alert alert-' . $tipe . ' alert-dismissible fade show shadow-sm" role="alert">';
-        echo '<i class="bi bi-info-circle-fill me-2"></i>' . $pesan;
-        echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
-        echo '</div>';
-        
-        unset($_SESSION['flash_message']);
+    if (!isset($_SESSION['flash_message']) || !is_array($_SESSION['flash_message'])) {
+        return;
     }
+
+    $flash = $_SESSION['flash_message'];
+    unset($_SESSION['flash_message']); // Flash message hanya ditampilkan satu kali.
+
+    $allowed_types = ['success', 'danger', 'warning', 'info'];
+    $type = in_array($flash['tipe'] ?? '', $allowed_types, true)
+        ? $flash['tipe']
+        : 'info';
+    $message = htmlspecialchars((string) ($flash['pesan'] ?? ''), ENT_QUOTES, 'UTF-8');
+
+    $icons = [
+        'success' => 'bi-check-circle-fill',
+        'danger'  => 'bi-exclamation-triangle-fill',
+        'warning' => 'bi-exclamation-circle-fill',
+        'info'    => 'bi-info-circle-fill',
+    ];
+
+    echo '<div class="alert alert-' . $type . ' sipn-flash-alert" role="status" aria-live="polite">';
+    echo '<span class="sipn-flash-alert__content">';
+    echo '<i class="bi ' . $icons[$type] . '" aria-hidden="true"></i>';
+    echo '<span>' . $message . '</span>';
+    echo '</span>';
+    echo '<button type="button" class="btn-close" aria-label="Tutup notifikasi" onclick="this.parentNode.remove()">&times;</button>';
+    echo '</div>';
 }
 ?>
 </file>
@@ -7175,6 +8411,18 @@ $current_role     = $_SESSION['role'] ?? 'guest';
 $current_username = $_SESSION['username'] ?? 'Pengguna';
 $current_page     = basename($_SERVER['PHP_SELF'] ?? '');
 
+$is_dashboard_page = in_array($current_page, [
+    'dashboard_admin.php',
+    'dashboard_guru.php',
+    'dashboard_siswa.php',
+], true);
+// Dashboard menggunakan staggered entrance setiap kali halaman beranda dibuka.
+// Flag lama dari proses login tetap dikonsumsi agar tidak tertinggal di session.
+$animate_dashboard_entry = $is_dashboard_page;
+if ($is_dashboard_page && isset($_SESSION['sipn_dashboard_entry'])) {
+    unset($_SESSION['sipn_dashboard_entry']);
+}
+
 // Ambil foto profil pengguna yang sedang login.
 $current_foto = null;
 if (isset($_SESSION['user_id'], $conn)) {
@@ -7205,9 +8453,23 @@ $has_profile_image = !empty($current_foto) && is_file($profile_image_path);
     <meta name="theme-color" content="#1e3a8a">
     <title>SIPN - Sistem Informasi Pengelolaan Nilai | SMK Sangkuriang 1 Cimahi</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css?v=dashboard-stagger-2">
+    <script>
+    // Saat dashboard dipulihkan melalui tombol Back/Forward browser,
+    // toggle class agar rangkaian staggered entrance berjalan kembali.
+    window.addEventListener('pageshow', function (event) {
+        if (!event.persisted) return;
+
+        var pageBody = document.body;
+        if (!pageBody || !pageBody.classList.contains('sipn-dashboard-stagger')) return;
+
+        pageBody.classList.remove('sipn-dashboard-stagger');
+        void pageBody.offsetWidth;
+        pageBody.classList.add('sipn-dashboard-stagger');
+    });
+    </script>
 </head>
-<body data-theme="light">
+<body data-theme="light" class="<?= $animate_dashboard_entry ? 'sipn-dashboard-stagger' : ''; ?>">
 
 <div class="app-layout-wrapper">
     <!-- Navigasi utama -->

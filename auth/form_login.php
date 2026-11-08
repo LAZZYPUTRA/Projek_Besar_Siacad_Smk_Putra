@@ -12,8 +12,8 @@ if (isset($_SESSION['user_id'])) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
+    $username = trim($_POST['username'] ?? '');
+    $password = trim($_POST['password'] ?? '');
 
     if (empty($username) || empty($password)) {
         $error = 'Username dan Password wajib diisi!';
@@ -25,11 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($user = mysqli_fetch_assoc($result)) {
             if (password_verify($password, $user['password'])) {
+                // Regenerasi ID session setelah autentikasi berhasil.
+                session_regenerate_id(true);
+
                 $_SESSION['user_id']  = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role']     = $user['role'];
+                $_SESSION['sipn_dashboard_entry'] = true;
 
-                set_flash_message('success', 'Selamat datang kembali, ' . htmlspecialchars($user['username']) . '!');
+                set_flash_message('success', 'Selamat datang kembali, ' . $user['username'] . '!');
 
                 header("Location: " . BASE_URL . $user['role'] . "/dashboard_" . $user['role'] . ".php");
                 exit();
@@ -50,78 +54,119 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login SIPN - SMK Sangkuriang 1 Cimahi</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css?v=admin-logout-20261108">
 </head>
-<body>
+<body class="auth-page">
 
-<div class="auth-enterprise-wrapper">
-    <div class="auth-split-container">
-        <!-- Sisi Kiri: Branding & Informasi -->
-        <div class="auth-brand-side">
-            <div class="brand-hero-top">
-                <div class="hero-badge-pill">
-                    <i class="bi bi-shield-shaded"></i> PORTAL AKADEMIK TERPADU
+<div class="auth-enterprise-wrapper auth-login-page">
+    <main class="auth-split-container">
+        <!-- Panel identitas SIPN -->
+        <section class="auth-brand-side" aria-label="Informasi SIPN">
+            <div class="auth-brand-inner">
+                <div class="brand-hero-top">
+                    <div class="auth-brand-symbol" aria-hidden="true">
+                        <i class="bi bi-mortarboard-fill"></i>
+                    </div>
+                    <div class="hero-badge-pill">
+                        <i class="bi bi-shield-check" aria-hidden="true"></i>
+                        PORTAL AKADEMIK TERPADU
+                    </div>
                 </div>
-            </div>
-            <div class="brand-hero-content">
-                <h1>Sistem Informasi Pengelolaan Nilai</h1>
-                <p>Platform manajemen rekapitulasi capaian kompetensi peserta didik berbasis Kurikulum Merdeka SMK Sangkuriang 1 Cimahi.</p>
-            </div>
-            <div class="brand-hero-footer">
-                &copy; 2026 SMK Sangkuriang 1 Cimahi. Secured Enterprise System.
-            </div>
-        </div>
 
-        <!-- Sisi Kanan: Form Login -->
-        <div class="auth-form-side">
+                <div class="brand-hero-content">
+                    <span class="auth-brand-eyebrow">SMK SANGKURIANG 1 CIMAHI</span>
+                    <h1>Sistem Informasi<br>Pengelolaan Nilai</h1>
+                    <p>Platform pengelolaan nilai dan capaian kompetensi peserta didik dalam satu sistem akademik yang terintegrasi.</p>
+                    <div class="auth-brand-divider" aria-hidden="true"></div>
+                    <div class="auth-brand-caption">
+                        <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                        Akses resmi untuk admin, guru, dan siswa
+                    </div>
+                </div>
+
+                <footer class="brand-hero-footer">
+                    <span>&copy; 2026 SMK Sangkuriang 1 Cimahi</span>
+                    <span class="auth-secure-label"><i class="bi bi-lock-fill" aria-hidden="true"></i> SISTEM TERLINDUNGI</span>
+                </footer>
+            </div>
+        </section>
+
+        <!-- Panel form login -->
+        <section class="auth-form-side" aria-label="Form masuk SIPN">
             <div class="auth-form-container">
-                <div class="form-side-header">
-                    <h3>Masuk ke Akun</h3>
-                    <p>Silakan masukkan kredensial resmi Anda untuk melanjutkan.</p>
+                <div class="auth-mobile-brand" aria-hidden="true">
+                    <span class="auth-mobile-brand-icon"><i class="bi bi-mortarboard-fill"></i></span>
+                    <span><strong>SIPN</strong><small>SMK Sangkuriang 1 Cimahi</small></span>
                 </div>
 
-                <?php if (!empty($error)): ?>
-                    <div class="alert alert-danger mb-4" role="alert" style="padding: 0.75rem; background: #fee2e2; color: #991b1b; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem;">
-                        <i class="bi bi-exclamation-triangle-fill"></i> <?= $error; ?>
+                <div class="auth-login-card">
+                    <div class="form-side-header">
+                        <span class="auth-form-eyebrow">AKSES PENGGUNA</span>
+                        <h2>Selamat Datang</h2>
+                        <p>Masuk menggunakan akun resmi sekolah Anda untuk melanjutkan.</p>
                     </div>
-                <?php endif; ?>
 
-                <form action="" method="POST">
-                    <div class="auth-input-group">
-                        <label for="username">Username / NIP / NIS</label>
-                        <div class="auth-input-wrapper">
-                            <i class="bi bi-person-fill field-icon"></i>
-                            <input type="text" id="username" name="username" placeholder="Masukkan username..." required autofocus>
+                    <?php display_flash_message(); ?>
+
+                    <?php if (!empty($error)): ?>
+                        <div class="auth-login-error" id="login-error" role="alert">
+                            <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+                            <span><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></span>
                         </div>
-                    </div>
+                    <?php endif; ?>
 
-                    <div class="auth-input-group">
-                        <label for="password">Kata Sandi</label>
-                        <div class="auth-input-wrapper">
-                            <i class="bi bi-lock-fill field-icon"></i>
-                            <input type="password" id="password" name="password" placeholder="••••••••••••" required>
+                    <form action="" method="POST" class="auth-login-form">
+                        <div class="auth-input-group">
+                            <label for="username">Username / NIP / NIS</label>
+                            <div class="auth-input-wrapper">
+                                <i class="bi bi-person field-icon" aria-hidden="true"></i>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    placeholder="Masukkan username Anda"
+                                    autocomplete="username"
+                                    value="<?= htmlspecialchars($_POST['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                    <?php if (!empty($error)): ?>aria-describedby="login-error"<?php endif; ?>
+                                    required
+                                >
+                            </div>
                         </div>
+
+                        <div class="auth-input-group">
+                            <label for="password">Kata Sandi</label>
+                            <div class="auth-input-wrapper">
+                                <i class="bi bi-lock field-icon" aria-hidden="true"></i>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Masukkan kata sandi"
+                                    autocomplete="current-password"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <button type="submit" class="auth-btn-submit">
+                            <span>Masuk ke Dashboard</span>
+                            <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </form>
+
+                    <div class="auth-register-note">
+                        <span>Belum memiliki akun siswa?</span>
+                        <a href="form_register_siswa.php">Registrasi Siswa Baru <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
                     </div>
-
-                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; margin-bottom: 1.5rem;">
-                        <label style="display: flex; align-items: center; gap: 0.4rem; color: var(--text-muted); cursor: pointer;">
-                            <input type="checkbox" name="remember" style="accent-color: var(--primary-dark);"> Ingat saya
-                        </label>
-                        <a href="#" style="color: var(--primary-dark); font-weight: 700; text-decoration: none;">Lupa sandi?</a>
-                    </div>
-
-                    <button type="submit" class="auth-btn-submit">
-                        Masuk ke Dashboard <i class="bi bi-arrow-right"></i>
-                    </button>
-                </form>
-
-                <div style="margin-top: 2rem; text-align: center; font-size: 0.82rem; color: var(--text-muted);">
-                    Belum memiliki akun siswa? <a href="form_register_siswa.php" style="color: var(--primary-dark); font-weight: 700; text-decoration: none;">Registrasi Siswa Baru</a>
                 </div>
+
+                <p class="auth-form-footnote">
+                    <i class="bi bi-shield-lock" aria-hidden="true"></i>
+                    Gunakan akun yang telah diberikan oleh pihak sekolah.
+                </p>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 </div>
-
 </body>
 </html>

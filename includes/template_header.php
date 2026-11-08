@@ -8,6 +8,18 @@ $current_role     = $_SESSION['role'] ?? 'guest';
 $current_username = $_SESSION['username'] ?? 'Pengguna';
 $current_page     = basename($_SERVER['PHP_SELF'] ?? '');
 
+$is_dashboard_page = in_array($current_page, [
+    'dashboard_admin.php',
+    'dashboard_guru.php',
+    'dashboard_siswa.php',
+], true);
+// Dashboard menggunakan staggered entrance setiap kali halaman beranda dibuka.
+// Flag lama dari proses login tetap dikonsumsi agar tidak tertinggal di session.
+$animate_dashboard_entry = $is_dashboard_page;
+if ($is_dashboard_page && isset($_SESSION['sipn_dashboard_entry'])) {
+    unset($_SESSION['sipn_dashboard_entry']);
+}
+
 // Ambil foto profil pengguna yang sedang login.
 $current_foto = null;
 if (isset($_SESSION['user_id'], $conn)) {
@@ -38,9 +50,23 @@ $has_profile_image = !empty($current_foto) && is_file($profile_image_path);
     <meta name="theme-color" content="#1e3a8a">
     <title>SIPN - Sistem Informasi Pengelolaan Nilai | SMK Sangkuriang 1 Cimahi</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css?v=admin-history-20261108">
+    <script>
+    // Saat dashboard dipulihkan melalui tombol Back/Forward browser,
+    // toggle class agar rangkaian staggered entrance berjalan kembali.
+    window.addEventListener('pageshow', function (event) {
+        if (!event.persisted) return;
+
+        var pageBody = document.body;
+        if (!pageBody || !pageBody.classList.contains('sipn-dashboard-stagger')) return;
+
+        pageBody.classList.remove('sipn-dashboard-stagger');
+        void pageBody.offsetWidth;
+        pageBody.classList.add('sipn-dashboard-stagger');
+    });
+    </script>
 </head>
-<body data-theme="light">
+<body data-theme="light" class="<?= $animate_dashboard_entry ? 'sipn-dashboard-stagger' : ''; ?>">
 
 <div class="app-layout-wrapper">
     <!-- Navigasi utama -->
