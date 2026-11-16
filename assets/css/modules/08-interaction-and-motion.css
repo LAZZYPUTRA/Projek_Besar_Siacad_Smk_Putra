@@ -1,0 +1,759 @@
+/* SIPN CSS MODULE: Interaksi, aksesibilitas, dan animasi antarmuka. Keep import order in style.css. */
+
+/* =========================================================
+   AUTHENTICATION PAGES — SUBTLE HOVER INTERACTIONS
+   Tidak ada animasi otomatis saat halaman dibuka.
+   Efek hanya berjalan ketika elemen di-hover atau difokuskan.
+   ========================================================= */
+
+/* Tombol utama: sedikit terangkat dengan transisi halus */
+.auth-page .auth-btn-submit {
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+  will-change: transform;
+}
+
+.auth-page .auth-btn-submit:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 7px 16px rgba(30, 58, 138, 0.18);
+}
+
+.auth-page .auth-btn-submit:hover i {
+  transform: translateX(3px);
+}
+
+.auth-page .auth-btn-submit i {
+  transition: transform 180ms ease;
+}
+
+.auth-page .auth-btn-submit:active {
+  background: var(--primary-dark);
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Link: perubahan warna dan garis bawah tidak mendadak */
+.auth-page a {
+  transition: color 160ms ease, text-decoration-color 160ms ease;
+}
+
+.auth-page a:hover {
+  color: var(--primary-hover) !important;
+  text-decoration: underline !important;
+}
+
+/* Input: fokus lebih jelas, tanpa gerakan berlebihan */
+.auth-page .auth-input-wrapper input,
+.auth-page .auth-input-wrapper select {
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.auth-page .auth-input-wrapper input:focus,
+.auth-page .auth-input-wrapper select:focus {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.10);
+}
+
+/* Fokus keyboard tetap terlihat */
+.auth-page button:focus-visible,
+.auth-page a:focus-visible,
+.auth-page input:focus-visible,
+.auth-page select:focus-visible {
+  outline: 2px solid var(--primary-hover);
+  outline-offset: 2px;
+}
+
+/* Hormati pengaturan pengurangan gerakan perangkat */
+@media (prefers-reduced-motion: reduce) {
+  .auth-page .auth-btn-submit,
+  .auth-page .auth-btn-submit i,
+  .auth-page a,
+  .auth-page .auth-input-wrapper input,
+  .auth-page .auth-input-wrapper select {
+    transition: none !important;
+  }
+
+  .auth-page .auth-btn-submit:hover,
+  .auth-page .auth-btn-submit:active,
+  .auth-page .auth-btn-submit:hover i {
+    transform: none !important;
+  }
+}
+
+
+/* =========================================================
+   LOGIN SIPN — LAYOUT SIMETRIS DAN FORM TERPUSAT
+   Override khusus halaman login; tidak mengubah layout dashboard.
+   ========================================================= */
+.auth-login-page {
+  min-height: 100vh;
+  min-height: 100svh;
+  background: #f3f6fb;
+}
+
+.auth-login-page .auth-split-container {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.auth-login-page .auth-brand-side {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2rem, 5vw, 4.5rem);
+  background:
+    radial-gradient(circle at 12% 15%, rgba(96, 165, 250, 0.22), transparent 34%),
+    linear-gradient(145deg, #1e3a8a 0%, #172554 58%, #0f172a 100%);
+}
+
+.auth-login-page .auth-brand-side::after {
+  content: "";
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  right: -150px;
+  bottom: -170px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  box-shadow: 0 0 0 34px rgba(255, 255, 255, 0.025),
+              0 0 0 70px rgba(255, 255, 255, 0.02);
+  pointer-events: none;
+}
+
+.auth-login-page .auth-brand-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 560px;
+  min-height: calc(100vh - clamp(4rem, 10vw, 9rem));
+  min-height: calc(100svh - clamp(4rem, 10vw, 9rem));
+  margin: 0 auto;
+}
+
+.auth-login-page .brand-hero-top {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.auth-login-page .auth-brand-symbol {
+  display: grid;
+  place-items: center;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  color: #1e3a8a;
+  background: #ffffff;
+  border-radius: 15px;
+  font-size: 1.45rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+}
+
+.auth-login-page .hero-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  padding: 0.56rem 0.85rem;
+  color: #dbeafe;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  border-radius: 999px;
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 0.075em;
+}
+
+.auth-login-page .brand-hero-content {
+  max-width: 500px;
+  margin: auto 0;
+  padding: 3.5rem 0;
+}
+
+.auth-login-page .auth-brand-eyebrow,
+.auth-login-page .auth-form-eyebrow {
+  display: inline-block;
+  color: #93c5fd;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.auth-login-page .auth-brand-side h1 {
+  margin: 1rem 0 1.15rem;
+  font-size: clamp(2.2rem, 3.1vw, 3.35rem);
+  line-height: 1.13;
+  letter-spacing: -0.045em;
+}
+
+.auth-login-page .brand-hero-content p {
+  max-width: 440px;
+  color: #dbeafe;
+  font-size: 0.98rem;
+  line-height: 1.85;
+}
+
+.auth-login-page .auth-brand-divider {
+  width: 58px;
+  height: 3px;
+  margin: 2rem 0 1.2rem;
+  background: #60a5fa;
+  border-radius: 99px;
+}
+
+.auth-login-page .auth-brand-caption {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.auth-login-page .auth-brand-caption i {
+  color: #93c5fd;
+}
+
+.auth-login-page .brand-hero-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: #bfdbfe;
+  font-size: 0.72rem;
+}
+
+.auth-login-page .auth-secure-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #dbeafe;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+
+.auth-login-page .auth-form-side {
+  justify-content: center;
+  align-items: center;
+  padding: clamp(1.5rem, 4vw, 3.75rem);
+  background:
+    radial-gradient(circle at 90% 8%, rgba(191, 219, 254, 0.42), transparent 28%),
+    #f3f6fb;
+}
+
+.auth-login-page .auth-form-container {
+  width: 100%;
+  max-width: 470px;
+  margin: 0 auto;
+}
+
+.auth-login-page .auth-login-card {
+  width: 100%;
+  padding: clamp(1.65rem, 3vw, 2.55rem);
+  background: #ffffff;
+  border: 1px solid #e7edf5;
+  border-radius: 22px;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.08),
+              0 3px 10px rgba(15, 23, 42, 0.025);
+}
+
+.auth-login-page .form-side-header {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.auth-login-page .auth-form-eyebrow {
+  margin-bottom: 0.7rem;
+  color: #2563eb;
+}
+
+.auth-login-page .form-side-header h2 {
+  margin: 0 0 0.6rem;
+  color: #0f172a;
+  font-size: clamp(1.65rem, 2.2vw, 2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.auth-login-page .form-side-header p {
+  max-width: 360px;
+  color: #64748b;
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+.auth-login-page .auth-login-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 0.95rem;
+  color: #991b1b;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.auth-login-page .auth-login-error i {
+  margin-top: 0.1rem;
+  font-size: 1rem;
+}
+
+.auth-login-page .auth-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.auth-login-page .auth-input-group {
+  margin: 0;
+}
+
+.auth-login-page .auth-input-group > label {
+  display: block;
+  margin-bottom: 0.55rem;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.auth-login-page .auth-input-wrapper input {
+  height: 52px;
+  padding: 0.8rem 0.95rem 0.8rem 2.8rem;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 1px solid #dbe3ee;
+  border-radius: 12px;
+  font-size: 0.88rem;
+}
+
+.auth-login-page .auth-input-wrapper input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+.auth-login-page .auth-input-wrapper i.field-icon {
+  left: 1rem;
+  color: #64748b;
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.auth-login-page .auth-input-wrapper input:focus {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.11);
+}
+
+.auth-login-page .auth-btn-submit {
+  min-height: 52px;
+  margin-top: 0.45rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  box-shadow: 0 7px 16px rgba(30, 58, 138, 0.13);
+}
+
+.auth-login-page .auth-btn-submit:hover {
+  box-shadow: 0 10px 20px rgba(30, 58, 138, 0.19);
+}
+
+.auth-login-page .auth-register-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem 0.45rem;
+  margin-top: 1.65rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid #edf1f6;
+  color: #64748b;
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+.auth-login-page .auth-register-note a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #1e40af;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.auth-login-page .auth-form-footnote {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 1.25rem 0 0;
+  color: #718096;
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.auth-login-page .auth-form-footnote i {
+  color: #64748b;
+}
+
+.auth-login-page .auth-mobile-brand {
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .auth-login-page .auth-split-container {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .auth-login-page .auth-brand-side {
+    display: none !important;
+  }
+
+  .auth-login-page .auth-form-side {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 2.5rem 1.5rem;
+  }
+
+  .auth-login-page .auth-form-container {
+    max-width: 470px;
+  }
+
+  .auth-login-page .auth-mobile-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 0 auto 1.5rem;
+    color: #0f172a;
+  }
+
+  .auth-login-page .auth-mobile-brand-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    color: #ffffff;
+    background: #1e3a8a;
+    border-radius: 13px;
+    font-size: 1.25rem;
+  }
+
+  .auth-login-page .auth-mobile-brand strong,
+  .auth-login-page .auth-mobile-brand small {
+    display: block;
+  }
+
+  .auth-login-page .auth-mobile-brand strong {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+  }
+
+  .auth-login-page .auth-mobile-brand small {
+    margin-top: 0.1rem;
+    color: #64748b;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .auth-login-page .auth-form-side {
+    padding: 1.5rem 1rem;
+  }
+
+  .auth-login-page .auth-login-card {
+    padding: 1.5rem 1.2rem;
+    border-radius: 18px;
+  }
+
+  .auth-login-page .form-side-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .auth-login-page .auth-login-form {
+    gap: 1.05rem;
+  }
+
+  .auth-login-page .auth-form-footnote {
+    padding: 0 0.5rem;
+    line-height: 1.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-login-page .auth-btn-submit,
+  .auth-login-page .auth-btn-submit i,
+  .auth-login-page a,
+  .auth-login-page .auth-input-wrapper input {
+    transition: none !important;
+  }
+
+  .auth-login-page .auth-btn-submit:hover,
+  .auth-login-page .auth-btn-submit:active,
+  .auth-login-page .auth-btn-submit:hover i {
+    transform: none !important;
+  }
+}
+
+
+/* =========================================================
+   SIPN — FLASH MESSAGE & STAGGERED DASHBOARD ENTRANCE
+   Berlaku untuk admin, guru, dan siswa setiap kali dashboard dibuka.
+   ========================================================= */
+.sipn-flash-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: 0.9rem 1rem;
+  margin: 0 0 1.2rem;
+  border-radius: 12px;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  animation: sipnFlashIn 220ms ease-out both;
+}
+
+.sipn-flash-alert__content {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.sipn-flash-alert__content > i {
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+  font-size: 1rem;
+}
+
+.sipn-flash-alert .btn-close {
+  flex: 0 0 auto;
+  padding: 0.1rem 0.35rem;
+  border: 0;
+  color: currentColor;
+  background: transparent;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.65;
+}
+
+.sipn-flash-alert .btn-close:hover {
+  opacity: 1;
+}
+
+@keyframes sipnFlashIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/*
+ * Staggered entrance: elemen dashboard tampil berurutan.
+ * Class dipasang oleh template_header.php pada semua halaman dashboard.
+ */
+@keyframes sipnStaggerEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(13px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ADMIN: hero, ringkasan, navigasi cepat, lalu catatan. */
+body.sipn-dashboard-stagger .page-container > .admin-dashboard > .admin-dashboard__hero {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 40ms both;
+}
+body.sipn-dashboard-stagger .page-container > .admin-dashboard > .admin-dashboard__notice {
+  animation: sipnStaggerEntrance 400ms cubic-bezier(0.2, 0.7, 0.2, 1) 100ms both;
+}
+body.sipn-dashboard-stagger .page-container > .admin-dashboard > .admin-dashboard__stats {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 150ms both;
+}
+body.sipn-dashboard-stagger .page-container > .admin-dashboard > .admin-dashboard__quick-section {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 240ms both;
+}
+body.sipn-dashboard-stagger .page-container > .admin-dashboard > .admin-dashboard__footnote {
+  animation: sipnStaggerEntrance 380ms ease-out 330ms both;
+}
+
+/* Kartu statistik admin ikut masuk satu per satu. */
+body.sipn-dashboard-stagger .admin-dashboard__stats > .admin-stat-card:nth-child(1) {
+  animation: sipnStaggerEntrance 380ms ease-out 220ms both;
+}
+body.sipn-dashboard-stagger .admin-dashboard__stats > .admin-stat-card:nth-child(2) {
+  animation: sipnStaggerEntrance 380ms ease-out 290ms both;
+}
+body.sipn-dashboard-stagger .admin-dashboard__stats > .admin-stat-card:nth-child(3) {
+  animation: sipnStaggerEntrance 380ms ease-out 360ms both;
+}
+body.sipn-dashboard-stagger .admin-dashboard__quick-grid > .admin-quick-link:nth-child(1) {
+  animation: sipnStaggerEntrance 360ms ease-out 310ms both;
+}
+body.sipn-dashboard-stagger .admin-dashboard__quick-grid > .admin-quick-link:nth-child(2) {
+  animation: sipnStaggerEntrance 360ms ease-out 370ms both;
+}
+body.sipn-dashboard-stagger .admin-dashboard__quick-grid > .admin-quick-link:nth-child(3) {
+  animation: sipnStaggerEntrance 360ms ease-out 430ms both;
+}
+body.sipn-dashboard-stagger .admin-dashboard__quick-grid > .admin-quick-link:nth-child(4) {
+  animation: sipnStaggerEntrance 360ms ease-out 490ms both;
+}
+
+/* GURU & SISWA: hero, notifikasi (jika ada), statistik, pintasan, tabel. */
+body.sipn-dashboard-stagger .page-container > .sipn-role-dashboard > .sipn-role-hero {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 40ms both;
+}
+body.sipn-dashboard-stagger .page-container > .sipn-role-dashboard > .sipn-role-notice {
+  animation: sipnStaggerEntrance 400ms ease-out 100ms both;
+}
+body.sipn-dashboard-stagger .page-container > .sipn-role-dashboard > .sipn-role-stats {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 150ms both;
+}
+body.sipn-dashboard-stagger .page-container > .sipn-role-dashboard > .sipn-role-shortcuts {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 240ms both;
+}
+body.sipn-dashboard-stagger .page-container > .sipn-role-dashboard > .sipn-role-data-panel {
+  animation: sipnStaggerEntrance 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 330ms both;
+}
+body.sipn-dashboard-stagger .page-container > .sipn-role-dashboard > .sipn-role-footnote {
+  animation: sipnStaggerEntrance 380ms ease-out 420ms both;
+}
+
+/* Kartu statistik guru/siswa dan tautan pintasan masuk bergantian. */
+body.sipn-dashboard-stagger .sipn-role-stats > .sipn-role-stat:nth-child(1) {
+  animation: sipnStaggerEntrance 380ms ease-out 220ms both;
+}
+body.sipn-dashboard-stagger .sipn-role-stats > .sipn-role-stat:nth-child(2) {
+  animation: sipnStaggerEntrance 380ms ease-out 290ms both;
+}
+body.sipn-dashboard-stagger .sipn-role-stats > .sipn-role-stat:nth-child(3) {
+  animation: sipnStaggerEntrance 380ms ease-out 360ms both;
+}
+body.sipn-dashboard-stagger .sipn-role-quick-grid > .sipn-role-quick-link:nth-child(1) {
+  animation: sipnStaggerEntrance 360ms ease-out 310ms both;
+}
+body.sipn-dashboard-stagger .sipn-role-quick-grid > .sipn-role-quick-link:nth-child(2) {
+  animation: sipnStaggerEntrance 360ms ease-out 380ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sipn-flash-alert,
+  body.sipn-dashboard-stagger .admin-dashboard > *,
+  body.sipn-dashboard-stagger .admin-dashboard__stats > .admin-stat-card,
+  body.sipn-dashboard-stagger .admin-dashboard__quick-grid > .admin-quick-link,
+  body.sipn-dashboard-stagger .sipn-role-dashboard > *,
+  body.sipn-dashboard-stagger .sipn-role-stats > .sipn-role-stat,
+  body.sipn-dashboard-stagger .sipn-role-quick-grid > .sipn-role-quick-link {
+    animation: none !important;
+  }
+}
+
+
+/* =========================================================
+   SIPN — TRANSISI MASUK HALAMAN UTILITAS
+   Aktif hanya pada about.php dan contact.php.
+   ========================================================= */
+.sipn-utility-page {
+  animation: sipnUtilityPageEnter 380ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes sipnUtilityPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sipnUtilityChildEnter {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sipnUtilityIconEnter {
+  from {
+    opacity: 0;
+    transform: translateY(5px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Kontak: judul, ikon, kartu kontak, lalu lokasi tampil berurutan. */
+.sipn-utility-page--contact .contact-header {
+  animation: sipnUtilityChildEnter 360ms ease-out 60ms both;
+}
+
+.sipn-utility-page--contact .contact-header-icon {
+  animation: sipnUtilityIconEnter 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 100ms both;
+}
+
+.sipn-utility-page--contact .contact-card:nth-child(1) {
+  animation: sipnUtilityChildEnter 360ms ease-out 130ms both;
+}
+
+.sipn-utility-page--contact .contact-card:nth-child(2) {
+  animation: sipnUtilityChildEnter 360ms ease-out 200ms both;
+}
+
+.sipn-utility-page--contact .contact-location {
+  animation: sipnUtilityChildEnter 360ms ease-out 260ms both;
+}
+
+/* Tentang SIPN: bagian pengenalan dan fitur masuk dengan jeda halus. */
+.sipn-utility-page--about .sipn-utility-page-header {
+  animation: sipnUtilityChildEnter 360ms ease-out 70ms both;
+}
+
+.sipn-utility-page--about .sipn-utility-page-content > p:first-child {
+  animation: sipnUtilityChildEnter 360ms ease-out 140ms both;
+}
+
+.sipn-utility-page--about .sipn-utility-feature-panel {
+  animation: sipnUtilityChildEnter 380ms ease-out 210ms both;
+}
+
+.sipn-utility-page--about .sipn-utility-page-footnote {
+  animation: sipnUtilityChildEnter 360ms ease-out 280ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sipn-utility-page,
+  .sipn-utility-page--contact .contact-header,
+  .sipn-utility-page--contact .contact-header-icon,
+  .sipn-utility-page--contact .contact-card,
+  .sipn-utility-page--contact .contact-location,
+  .sipn-utility-page--about .sipn-utility-page-header,
+  .sipn-utility-page--about .sipn-utility-page-content > p:first-child,
+  .sipn-utility-page--about .sipn-utility-feature-panel,
+  .sipn-utility-page--about .sipn-utility-page-footnote {
+    animation: none !important;
+  }
+}
+

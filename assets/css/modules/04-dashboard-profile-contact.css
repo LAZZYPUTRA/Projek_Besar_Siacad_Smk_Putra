@@ -1,0 +1,530 @@
+/* SIPN CSS MODULE: Statistik dashboard, profil, upload foto, dan kontak. Keep import order in style.css. */
+
+/* =========================================================
+   MODUL TAMBAHAN: TOMBOL & ALERT NOTIFIKASI
+   ========================================================= */
+.full-width { width: 100%; justify-content: center; }
+.btn-primary { background: var(--primary-dark) !important; color: #fff !important; }
+.btn-primary:hover { opacity: 0.9 !important; }
+.btn-primary-outline { background: transparent; border: 1px solid var(--primary-dark); color: var(--primary-dark); }
+.btn-primary-outline:hover { background: var(--primary-dark); color: #fff; }
+
+.card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); font-weight: 700; background: var(--bg-surface); }
+.card-body { padding: 1.5rem; }
+.quick-links { display: flex; flex-direction: column; gap: 0.75rem; }
+.action-btn { justify-content: flex-start; padding: 0.85rem 1.2rem; }
+
+/* Alert Flash Messages */
+.alert { padding: 1rem 1.25rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center;}
+.alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.alert-danger { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+.alert-warning { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+.alert-info { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+.btn-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: inherit; opacity: 0.7; }
+.btn-close:hover { opacity: 1; }
+
+/* =========================================================
+   PERBAIKAN TATA LETAK GRID (LEBAR & PROPORSIONAL)
+   ========================================================= */
+.grid-layout-main {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin-top: 1.5rem;
+}
+
+.grid-layout-side {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 992px) {
+  .grid-layout-main, 
+  .grid-layout-side { grid-template-columns: 1fr; }
+}
+
+/* =========================================================
+   PERBAIKAN KARTU STATISTIK DASHBOARD (SIMETRIS & FLEKSIBEL)
+   ========================================================= */
+.stats-grid {
+  display: grid;
+  /* Menggunakan auto-fit agar kartu tidak gepeng/sempit di layar medium */
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.stat-content { display: flex; flex-direction: column; gap: 0.3rem; }
+.stat-title { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-value { font-size: 1.85rem; font-weight: 800; color: var(--text-dark); line-height: 1; }
+
+.stat-icon-box, .stat-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.stat-primary .stat-icon-box { background: rgba(37, 99, 235, 0.1); color: #2563eb; }
+.stat-success .stat-icon-box { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+.stat-info .stat-icon-box { background: rgba(14, 165, 233, 0.1); color: #0ea5e9; }
+
+/* =========================================================
+   PERBAIKAN HALAMAN PROFIL (DARK MODE & GRID PRESISI)
+   ========================================================= */
+.profile-layout { 
+    display: grid; 
+    grid-template-columns: 320px 1fr; /* Memastikan rasio 2 kolom konsisten */
+    gap: 1.5rem; 
+    align-items: start; 
+    margin-top: 1rem; 
+}
+
+@media (max-width: 992px) {
+    .profile-layout { grid-template-columns: 1fr; }
+}
+
+.card-profile-left { 
+    background: var(--card-bg); 
+    border-radius: 16px; 
+    border: 1px solid var(--border-color); 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+    padding: 3rem 2rem; 
+    text-align: center; 
+}
+
+.avatar-wrapper { display: flex; justify-content: center; margin-bottom: 1.5rem; }
+.avatar-circle { 
+    width: 140px; height: 140px; border-radius: 50%; 
+    background: linear-gradient(135deg, var(--primary-dark), #3b82f6); 
+    color: white; display: flex; align-items: center; justify-content: center; 
+    font-size: 4.5rem; box-shadow: 0 8px 25px rgba(37, 99, 235, 0.25); 
+    border: 5px solid var(--bg-surface); /* Menyesuaikan border avatar di dark mode */
+}
+
+.profile-name { font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem; }
+.profile-role-badge { 
+    display: inline-block; padding: 0.4rem 1.2rem; 
+    background: rgba(37, 99, 235, 0.1); color: var(--primary-dark); 
+    border-radius: 50px; font-size: 0.85rem; font-weight: 700; 
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2rem; 
+}
+
+.card-profile-right { 
+    background: var(--card-bg); border-radius: 16px; 
+    border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+    overflow: hidden; 
+}
+
+.profile-right-header { 
+    padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-color); 
+    background: var(--bg-surface); /* Perbaikan dari rgba yang bertabrakan dengan background gelap */
+}
+
+.profile-right-header h5 { margin: 0; font-size: 1.1rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; }
+.profile-right-body { padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: 1rem; }
+
+/* =========================================================
+   PROFILE PAGE - CENTERED LAYOUT (ATAS KE BAWAH)
+   ========================================================= */
+/* =========================================================
+   PROFILE PAGE - CENTERED LAYOUT & DARK MODE FIX
+   ========================================================= */
+.profile-container-centered {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.profile-card-centered {
+    background: var(--card-bg) !important;
+    border-radius: 16px;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    overflow: hidden;
+    position: relative;
+    margin-top: 1rem;
+}
+
+.profile-header-centered {
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color) !important;
+    position: relative;
+    background: var(--bg-surface) !important;
+}
+
+.btn-edit-profile-absolute {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 8px;
+}
+
+.avatar-circle-centered {
+    width: 130px; height: 130px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-dark), #3b82f6);
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 4.5rem; margin: 0 auto 1.25rem;
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.25);
+    border: 5px solid var(--card-bg) !important;
+}
+
+.profile-body-centered {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* =========================================================
+   INFO ROW — SATU SUMBER ATURAN (LIGHT/DARK MODE + RESPONSIVE)
+   ========================================================= */
+.info-row {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--bg-surface);
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.info-row:hover {
+    background: var(--card-bg);
+    border-color: var(--primary-dark);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transform: translateY(-2px);
+}
+
+.info-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.info-label i {
+    flex: 0 0 auto;
+    color: var(--primary-dark);
+    font-size: 1.2rem;
+    opacity: 0.7;
+}
+
+.info-value {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--text-dark);
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .info-row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+        padding: 1rem 1.25rem;
+    }
+}
+
+/* Kotak Pilihan Edit di Modal */
+.edit-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1rem; }
+.edit-option-card {
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px; padding: 2rem 1.5rem; text-align: center; cursor: pointer;
+    background: var(--bg-surface) !important;
+    color: var(--text-dark) !important;
+    transition: all 0.2s ease;
+}
+.edit-option-card:hover { border-color: var(--primary-dark) !important; box-shadow: 0 6px 16px rgba(30, 58, 138, 0.08); transform: translateY(-3px); }
+.edit-option-card i { font-size: 2.5rem; color: var(--primary-dark); margin-bottom: 0.75rem; display: block; }
+.edit-option-card h6 { font-size: 1rem; font-weight: 800; margin: 0 0 0.25rem 0; }
+.edit-option-card p { font-size: 0.75rem; color: var(--text-muted) !important; margin: 0; }
+
+@media (max-width: 576px) {
+    .edit-options-grid { grid-template-columns: 1fr; }
+    .btn-edit-profile-absolute { position: relative; top: 0; right: 0; margin-bottom: 1.5rem; width: 100%; }
+}
+
+/* =========================================================
+   PERBAIKAN MODAL UPLOAD FOTO PROFIL MODERN
+   ========================================================= */
+.upload-dropzone {
+    border: 2px dashed var(--border-color) !important;
+    border-radius: 16px;
+    padding: 2.25rem 1.5rem;
+    background: var(--bg-surface) !important;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.upload-dropzone:hover {
+    border-color: var(--primary-dark) !important;
+    background: rgba(37, 99, 235, 0.04) !important;
+}
+
+.dropzone-icon-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 0.85rem;
+    transition: all 0.25s ease;
+}
+
+.upload-dropzone:hover .dropzone-icon-box {
+    transform: scale(1.08);
+    background: var(--primary-dark);
+    color: #ffffff;
+}
+
+.dropzone-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 0.25rem;
+}
+
+.dropzone-subtitle {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.file-preview-badge {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.5rem 0.85rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    position: relative;
+    z-index: 3;
+}
+
+/* Penyelarasan Tombol Modal Modern & Adaptif */
+.modal-footer .btn {
+    padding: 0.65rem 1.25rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-footer .btn-secondary {
+    background: var(--bg-surface) !important;
+    color: var(--text-muted) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.modal-footer .btn-secondary:hover {
+    background: var(--border-color) !important;
+    color: var(--text-dark) !important;
+}
+
+.modal-footer .btn-primary-custom {
+    background: var(--primary-dark) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.modal-footer .btn-primary-custom:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   GAYA PRATINJAU FOTO PROFIL (LIVE PREVIEW)
+   ========================================================= */
+.preview-image-wrapper {
+    display: none; /* Disembunyikan secara default */
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 4px solid var(--bg-surface);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.25);
+    margin: 0 auto 1rem auto;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.preview-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: var(--card-bg);
+}
+
+/* =========================================================
+   CONTACT PAGE STYLES
+   ========================================================= */
+.page-container.narrow {
+  max-width: 800px;
+}
+
+.contact-wrapper {
+  background: var(--card-bg); 
+  border: 1px solid var(--border-color); 
+  border-radius: 20px; 
+  padding: 2.5rem; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+}
+
+.contact-header {
+  text-align: center; 
+  margin-bottom: 2rem;
+}
+
+.contact-header-icon {
+  width: 70px; 
+  height: 70px; 
+  background: rgba(37, 99, 235, 0.1); 
+  color: var(--accent-orange); 
+  border-radius: 18px; 
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: 2rem; 
+  margin-bottom: 1rem;
+}
+
+.contact-title {
+  font-size: 1.75rem; 
+  font-weight: 800; 
+  color: var(--text-dark);
+}
+
+.contact-subtitle {
+  color: var(--text-muted); 
+  font-size: 0.9rem; 
+  margin-top: 0.3rem;
+}
+
+.contact-grid {
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+  gap: 1.25rem; 
+  margin-bottom: 2rem;
+}
+
+.contact-card {
+  background: var(--bg-surface); 
+  border: 1px solid var(--border-color); 
+  padding: 1.25rem; 
+  border-radius: 14px; 
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* Efek interaktif saat card disorot */
+.contact-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+  border-color: var(--primary-dark);
+}
+
+.contact-icon {
+  font-size: 1.5rem; 
+  margin-bottom: 0.5rem; 
+  display: block;
+}
+
+.contact-icon.email { color: var(--primary-dark); }
+.contact-icon.whatsapp { color: #10b981; }
+
+.contact-card-title {
+  font-size: 0.95rem; 
+  font-weight: 700; 
+  color: var(--text-dark); 
+  margin-bottom: 0.25rem;
+}
+
+/* Styling untuk tautan interaktif */
+.contact-link {
+  font-size: 0.85rem; 
+  font-weight: 600; 
+  color: var(--primary-hover);
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 0.2rem;
+  transition: color 0.2s ease;
+}
+
+.contact-link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.contact-location {
+  background: var(--bg-surface); 
+  border: 1px solid var(--border-color); 
+  padding: 1.5rem; 
+  border-radius: 14px; 
+  text-align: center;
+}
+
+.contact-location-title {
+  font-size: 0.95rem; 
+  font-weight: 700; 
+  color: var(--text-dark); 
+  margin-bottom: 0.5rem;
+}
+
+.contact-location-text {
+  font-size: 0.85rem; 
+  color: var(--text-muted);
+}
+

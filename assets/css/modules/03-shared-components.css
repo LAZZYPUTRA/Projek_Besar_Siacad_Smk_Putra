@@ -1,0 +1,303 @@
+/* SIPN CSS MODULE: Komponen bersama: tabel, form, badge, tombol, modal. Keep import order in style.css. */
+
+/* Flex Utility */
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Card Panel */
+.card-panel {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  padding: 1.5rem;
+  width: 100%;
+}
+
+/* Tabel Data Modern */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.data-table th {
+  background-color: var(--bg-surface);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 0.95rem 1rem;
+  color: var(--text-dark);
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.data-table tbody tr:hover {
+  background-color: rgba(30, 58, 138, 0.02);
+}
+
+/* Form Select & Row Layout dalam Modal */
+.form-select {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 0.88rem;
+  outline: none;
+  background: var(--bg-surface);
+  color: var(--text-dark);
+  transition: border-color 0.2s ease;
+}
+
+.form-select:focus {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-subtitle {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.badge-info { background: #dbeafe; color: #1e40af; }
+.badge-secondary { background: #f1f5f9; color: #475569; }
+
+/* Tombol (Buttons) */
+.btn {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.78rem;
+  border-radius: 6px;
+}
+
+/* =========================================================
+   PERBAIKAN WARNA TOMBOL & HEADER MODAL
+   ========================================================= */
+
+/* Tombol Utama Kustom (Tambah & Simpan) */
+.btn-primary-custom {
+  background-color: var(--primary-dark) !important;
+  color: #ffffff !important;
+  border: none;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.btn-primary-custom:hover {
+  opacity: 0.9;
+}
+
+/* Tombol Sekunder / Batal */
+
+/* Warna Header Modal */
+.modal-header.header-primary {
+  background-color: var(--primary-dark) !important;
+  color: #ffffff !important;
+}
+
+.modal-header.header-warning {
+  background-color: #d97706 !important;
+  color: #ffffff !important;
+}
+
+.modal-header.header-danger {
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
+}
+
+.modal-header h5 {
+  color: #ffffff !important;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.btn-success { background: #16a34a; color: #ffffff; }
+.btn-warning { background: #d97706; color: #ffffff; }
+.btn-danger  { background: #dc2626; color: #ffffff; }
+.btn-secondary { background: #64748b; color: #ffffff; }
+
+/* Modal Overlay & Box */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1200;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+/* Ketika modal aktif (ditampilkan via JS) */
+.modal-overlay.is-active {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: modalScaleIn 0.2s ease;
+}
+
+.modal-box.modal-lg {
+  max-width: 750px;
+}
+
+@keyframes modalScaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  padding: 1.15rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+
+.header-success { background: #16a34a; }
+.header-warning { background: #d97706; }
+.header-danger  { background: #dc2626; }
+.header-primary { background: var(--primary-dark); }
+
+
+.modal-body {
+  padding: 1.5rem;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* =========================================================
+   DASHBOARD & KARTU STATISTIK (GURU & ADMIN)
+   ========================================================= */
+.dashboard-wrapper { display: flex; flex-direction: column; gap: 1.5rem; }
+.dashboard-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+
+.banner-card {
+  padding: 2rem;
+  border-radius: 12px;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.banner-card h2 { margin-bottom: 0.5rem; font-weight: 800; font-size: 1.5rem; }
+
+
+.stat-icon {
+  font-size: 2.2rem;
+  opacity: 0.2;
+}
+
+.stat-primary .stat-icon { color: var(--primary-dark); }
+.stat-success .stat-icon { color: #10b981; }
+.stat-info .stat-icon { color: #3b82f6; }
+
