@@ -130,7 +130,7 @@ $result = mysqli_query($conn, $query);
 $students = [];
 if ($result) {
     while ($row = mysqli_fetch_assoc($result)) {
-        $students[] = $rows;
+        $students[] = $row;
     }
 }
 
