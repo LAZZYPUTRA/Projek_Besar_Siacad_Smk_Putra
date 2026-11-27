@@ -1,0 +1,450 @@
+/* SIPN CSS MODULE: Responsivitas sidebar dan navigasi lintas perangkat. Keep import order in style.css. */
+
+/* =========================================================
+   TAHAP 1 — RESPONSIVE NAVIGATION
+   Breakpoints: desktop, tablet, mobile.
+   ========================================================= */
+.sidebar-toggle {
+    display: none;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--card-bg);
+    color: var(--text-dark);
+    font-size: 1.35rem;
+    cursor: pointer;
+    transition: background 160ms ease, color 160ms ease;
+}
+
+.sidebar-toggle:hover {
+    background: var(--bg-surface);
+    color: var(--primary-dark);
+}
+
+.sidebar-toggle:focus-visible,
+.app-sidebar .nav-link:focus-visible,
+.profile-trigger-card:focus-visible {
+    outline: 3px solid var(--primary-hover);
+    outline-offset: 3px;
+}
+
+.sidebar-backdrop {
+    display: none;
+}
+
+/* Tablet: 769px–1199px */
+@media (min-width: 769px) and (max-width: 1199px) {
+    .app-sidebar {
+        width: var(--app-sidebar-rail-width);
+    }
+
+    .app-main-content {
+        margin-left: var(--app-sidebar-rail-width);
+    }
+
+    .sidebar-toggle {
+        display: inline-flex;
+    }
+
+    .topbar-navigation {
+        display: none;
+    }
+
+    .app-topbar-header {
+        padding-inline: 1rem;
+    }
+
+    /* Sidebar ciut: hanya tampilkan ikon. */
+    body:not(.sidebar-expanded) .app-sidebar .sidebar-brand-box {
+        justify-content: center;
+        padding: 1rem 0.5rem;
+    }
+
+    body:not(.sidebar-expanded) .app-sidebar .sidebar-brand-text,
+    body:not(.sidebar-expanded) .app-sidebar .sidebar-section-title {
+        display: none;
+    }
+
+    body:not(.sidebar-expanded) .app-sidebar .sidebar-menu-container {
+        padding: 1rem 0.45rem;
+    }
+
+    body:not(.sidebar-expanded) .app-sidebar .nav-link {
+        justify-content: center;
+        padding: 0.75rem 0.5rem;
+    }
+
+    body:not(.sidebar-expanded) .app-sidebar .nav-link > span {
+        display: none;
+    }
+
+    body:not(.sidebar-expanded) .app-sidebar .nav-link > i {
+        font-size: 1.15rem;
+    }
+
+    body:not(.sidebar-expanded) .app-sidebar .sidebar-profile-section {
+        padding: 0.75rem 0.45rem;
+    }
+
+    body:not(.sidebar-expanded) .app-sidebar .profile-trigger-card {
+        justify-content: center;
+    }
+
+    body:not(.sidebar-expanded) .app-sidebar .profile-meta,
+    body:not(.sidebar-expanded) .app-sidebar .profile-arrow {
+        display: none;
+    }
+
+    /* Dropdown profil tidak terpotong oleh sidebar icon rail. */
+    body:not(.sidebar-expanded) .app-sidebar .profile-dropdown-menu {
+        position: fixed;
+        left: calc(var(--app-sidebar-rail-width) + 8px);
+        right: auto;
+        bottom: 12px;
+        width: 220px;
+        z-index: 1100;
+    }
+
+    body.sidebar-expanded .app-sidebar {
+        width: var(--app-sidebar-width);
+    }
+
+    body.sidebar-expanded .app-main-content {
+        margin-left: var(--app-sidebar-width);
+    }
+}
+
+/* Mobile: maksimal 768px */
+@media (max-width: 768px) {
+    body.sidebar-open {
+        overflow: hidden;
+    }
+
+    .app-sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 1000;
+        width: min(86vw, 320px);
+        max-width: 320px;
+        height: 100vh;
+        height: 100dvh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        transform: translateX(-100%);
+        box-shadow: none;
+    }
+
+    body.sidebar-open .app-sidebar {
+        transform: translateX(0);
+        box-shadow: 12px 0 35px rgba(15, 23, 42, 0.16);
+    }
+
+    .app-main-content {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .app-topbar-header {
+        min-height: 64px;
+        gap: 0.75rem;
+        padding: 0.7rem 0.85rem;
+    }
+
+    .sidebar-toggle {
+        display: inline-flex;
+    }
+
+    .topbar-navigation {
+        display: none;
+    }
+
+    .topbar-portal-title {
+        font-size: 0.9rem;
+    }
+
+    .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 900;
+        display: block;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        border: 0;
+        background: rgba(15, 23, 42, 0.48);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        cursor: pointer;
+        transition: opacity 220ms ease, visibility 220ms ease;
+    }
+
+    .sidebar-backdrop.is-visible {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .app-sidebar .sidebar-menu-container {
+        padding: 1.25rem 1rem;
+    }
+
+    .app-sidebar .sidebar-profile-section {
+        padding: 1rem;
+    }
+
+    .app-sidebar .profile-trigger-card {
+        justify-content: space-between;
+    }
+}
+
+/* Layar sangat kecil */
+@media (max-width: 380px) {
+    .app-sidebar {
+        width: 88vw;
+    }
+
+    .app-topbar-header {
+        padding-inline: 0.65rem;
+    }
+
+    .topbar-portal-title {
+        font-size: 0.82rem;
+    }
+
+    .sidebar-toggle {
+        width: 38px;
+        height: 38px;
+    }
+}
+
+/* Kurangi animasi bila diminta oleh preferensi sistem. */
+@media (prefers-reduced-motion: reduce) {
+    .app-sidebar,
+    .app-main-content,
+    .sidebar-backdrop,
+    .sidebar-toggle {
+        transition: none !important;
+    }
+}
+
+/* ---------- Penyempurnaan komponen navigasi ---------- */
+.app-sidebar .nav-link {
+    min-width: 0;
+}
+
+.app-sidebar .nav-link > span {
+    min-width: 0;
+}
+
+@media (max-width: 768px) {
+    .app-sidebar .profile-dropdown-menu {
+        left: 1rem;
+        right: 1rem;
+        width: auto;
+    }
+}
+/* =========================================================
+   SIPN — NAVBAR REFINEMENT
+   Tambahkan ke bagian paling bawah assets/css/style.css
+   Tidak mengubah warna dasar/theme global.
+   ========================================================= */
+
+.app-topbar-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(0.75rem, 1.5vw, 1.5rem);
+    min-height: 76px;
+    padding: 0.75rem clamp(1rem, 2vw, 2rem);
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.035);
+}
+
+.topbar-leading {
+    grid-column: 1;
+    display: flex;
+    align-items: center;
+    justify-self: start;
+    gap: 0.9rem;
+    min-width: 0;
+}
+
+.topbar-left-brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.22rem;
+    min-width: 0;
+}
+
+.topbar-portal-title {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--text-dark);
+    font-size: 0.96rem;
+    font-weight: 800;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.topbar-brand-caption {
+    color: var(--text-muted);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    line-height: 1.2;
+}
+
+.topbar-navigation {
+    grid-column: 2;
+    justify-self: center;
+    min-width: 0;
+    padding: 0.28rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+}
+
+.topbar-navigation ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.topbar-nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.52rem;
+    min-height: 40px;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.topbar-nav-link i {
+    font-size: 0.98rem;
+    line-height: 1;
+}
+
+.topbar-nav-link:hover {
+    color: var(--primary-dark);
+    background: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+.topbar-nav-link.active {
+    color: var(--primary-dark);
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    box-shadow: 0 2px 7px rgba(15, 23, 42, 0.055);
+}
+
+.topbar-nav-link:focus-visible {
+    outline: 3px solid var(--primary-hover);
+    outline-offset: 2px;
+}
+
+.topbar-role-indicator {
+    grid-column: 3;
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 36px;
+    padding: 0.45rem 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    background: var(--bg-surface);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.topbar-role-dot {
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+    border-radius: 50%;
+    background: var(--primary-dark);
+    box-shadow: 0 0 0 3px var(--bg-surface);
+}
+
+/* Tablet dan mobile menggunakan sidebar sebagai navigasi utama. */
+@media (max-width: 1199px) {
+    .app-topbar-header {
+        display: flex;
+        justify-content: flex-start;
+        min-height: 68px;
+        padding-inline: 1rem;
+    }
+
+    .topbar-leading {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .topbar-navigation,
+    .topbar-role-indicator {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-topbar-header {
+        min-height: 64px;
+        gap: 0.75rem;
+        padding: 0.65rem 0.85rem;
+    }
+
+    .topbar-leading {
+        gap: 0.7rem;
+    }
+
+    .topbar-portal-title {
+        font-size: 0.84rem;
+    }
+
+    .topbar-brand-caption {
+        font-size: 0.56rem;
+        letter-spacing: 0.09em;
+    }
+}
+
+@media (max-width: 380px) {
+    .topbar-brand-caption {
+        display: none;
+    }
+
+    .topbar-portal-title {
+        font-size: 0.8rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .topbar-nav-link {
+        transition: none;
+    }
+}

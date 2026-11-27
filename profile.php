@@ -182,7 +182,7 @@ require_once __DIR__ . '/includes/template_header.php';
 
             <?php if ($role === 'guru'): ?>
                 <div class="info-row">
-                    <div class="info-label"><i class="bi bi-hash"></i> NIP Pegawai</div>
+                    <div class="info-label"><i class="bi bi-hash"></i> NIP Guru</div>
                     <div class="info-value" style="font-family: monospace; font-size: 1.15rem;"><?= htmlspecialchars($identitas_id); ?></div>
                 </div>
                 <div class="info-row">

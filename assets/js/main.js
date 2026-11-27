@@ -1,46 +1,13 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Handling Dropdown User Nav
-    const userMenu = document.querySelector('.user-menu');
-    if (userMenu) {
-        userMenu.addEventListener('click', (e) => {
-            userMenu.classList.toggle('is-open');
-            e.stopPropagation();
-        });
-        document.addEventListener('click', () => userMenu.classList.remove('is-open'));
-    }
+/**
+ * Entry point kompatibilitas SIPN.
+ * File ini mempertahankan jalur assets/js/main.js bagi template lama.
+ * Implementasi aktual berada pada sipn-modules.js dan modules/.
+ */
+(() => {
+    if (window.__sipnMainJsBridgeLoaded) return;
+    window.__sipnMainJsBridgeLoaded = true;
 
-    // Handling Native Modal (Open)
-    document.querySelectorAll('[data-modal-target]').forEach(trigger => {
-        trigger.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = trigger.getAttribute('data-modal-target');
-            const modal = document.querySelector(targetId);
-            if (modal) {
-                modal.classList.add('is-active');
-                document.body.style.overflow = 'hidden';
-            }
-        });
+    import('./sipn-modules.js').catch((error) => {
+        console.error('SIPN: modul JavaScript gagal dimuat.', error);
     });
-
-    // Handling Native Modal (Close)
-    document.querySelectorAll('[data-modal-close]').forEach(closeBtn => {
-        closeBtn.addEventListener('click', () => {
-            const modal = closeBtn.closest('.modal-overlay');
-            if (modal) {
-                modal.classList.remove('is-active');
-                document.body.style.overflow = '';
-            }
-        });
-    });
-
-    // Close Modal when clicking outer backdrop
-    document.querySelectorAll('.modal-overlay').forEach(modal => {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('is-active');
-                document.body.style.overflow = '';
-            }
-        });
-    });
-});
-
+})();

@@ -1,0 +1,59 @@
+/* SIPN CSS MODULE: Fondasi, token warna, reset, dan tipografi. Keep import order in style.css. */
+
+
+:root {
+  /* Palet Enterprise Modern Academic */
+  --primary-dark: #1e3a8a;       /* Deep Royal Blue */
+  --primary-hover: #1d4ed8;      /* Hover Blue */
+  --accent-orange: #2563eb;      /* Electric Blue */
+  --accent-peach: #eff6ff;       
+  --accent-peach-border: #bfdbfe;
+  
+  --text-dark: #0f172a;          /* Slate 900 */
+  --text-muted: #64748b;         /* Slate 500 */
+  --border-color: #e2e8f0;       /* Slate 200 */
+  --bg-surface: #f8fafc;         /* Slate 50 */
+  --card-bg: #ffffff;
+  --app-sidebar-width: 260px;
+  --app-sidebar-rail-width: 76px;
+  --app-topbar-height: 68px;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+[data-theme="dark"] {
+  --primary-dark: #3b82f6;       
+  --primary-hover: #60a5fa;
+  --accent-orange: #38bdf8;
+  
+  --text-dark: #f8fafc;          
+  --text-muted: #94a3b8;         
+  --border-color: #1e293b;       
+  --bg-surface: #090d16;         
+  --card-bg: #111827;            
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+}
+
+html {
+  min-width: 320px;
+}
+
+body {
+  background-color: var(--bg-surface);
+  color: var(--text-dark);
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+.card-panel, .login-card, .register-card-container, .card-panel-clean {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-dark);
+}
+

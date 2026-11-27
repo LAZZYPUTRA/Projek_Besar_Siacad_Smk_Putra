@@ -1,0 +1,714 @@
+/* SIPN CSS MODULE: Dashboard admin dan modal tambah guru. Keep import order in style.css. */
+
+/* =========================================================
+   DASHBOARD ADMIN — SIPN
+   Tambahkan seluruh blok ini di bagian paling bawah style.css.
+   Semua selector dibatasi agar tidak mengubah halaman lain.
+   ========================================================= */
+
+.admin-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+}
+
+/* Hero / header dashboard */
+.admin-dashboard__hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    overflow: hidden;
+    padding: clamp(1.4rem, 3vw, 2.2rem);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    color: #fff;
+    background: linear-gradient(118deg, var(--primary-dark) 0%, var(--primary-hover) 100%);
+    box-shadow: 0 12px 28px rgba(30, 58, 138, 0.14);
+}
+
+.admin-dashboard__hero::after {
+    position: absolute;
+    z-index: -1;
+    top: -100px;
+    right: 8%;
+    width: 280px;
+    height: 280px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    box-shadow: 0 0 0 35px rgba(255, 255, 255, 0.035),
+                0 0 0 70px rgba(255, 255, 255, 0.025);
+    content: "";
+}
+
+.admin-dashboard__hero-content,
+.admin-dashboard__hero-meta {
+    position: relative;
+    z-index: 1;
+}
+
+.admin-dashboard__eyebrow,
+.admin-dashboard__hero-meta,
+.admin-dashboard__role-icon {
+    display: inline-flex;
+    align-items: center;
+}
+
+.admin-dashboard__eyebrow {
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.admin-dashboard__hero h1 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(1.45rem, 2.5vw, 2rem);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+}
+
+.admin-dashboard__hero p {
+    margin: 0.55rem 0 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.admin-dashboard__hero-meta {
+    flex-shrink: 0;
+    gap: 0.75rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+}
+
+.admin-dashboard__role-icon {
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.16);
+    font-size: 1.2rem;
+}
+
+.admin-dashboard__hero-meta strong,
+.admin-dashboard__hero-meta small {
+    display: block;
+}
+
+.admin-dashboard__hero-meta strong {
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.admin-dashboard__hero-meta small {
+    margin-top: 0.15rem;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.7rem;
+}
+
+/* Peringatan bila salah satu query statistik gagal */
+.admin-dashboard__notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid #f5d28b;
+    border-radius: 10px;
+    color: #8a5a08;
+    background: #fff8e8;
+    font-size: 0.84rem;
+    line-height: 1.5;
+}
+
+.admin-dashboard__notice i {
+    margin-top: 0.1rem;
+}
+
+/* Kartu statistik */
+.admin-dashboard__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.admin-stat-card {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1.25rem 1.3rem 1.05rem;
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    color: var(--text-dark);
+    background: var(--card-bg);
+    box-shadow: 0 5px 18px rgba(15, 23, 42, 0.035);
+    text-decoration: none;
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary-hover);
+    color: var(--text-dark);
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.075);
+}
+
+.admin-stat-card:focus-visible,
+.admin-quick-link:focus-visible {
+    outline: 3px solid var(--primary-hover);
+    outline-offset: 3px;
+}
+
+.admin-stat-card__label {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 750;
+    letter-spacing: 0.025em;
+}
+
+.admin-stat-card__main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+}
+
+.admin-stat-card__value {
+    overflow-wrap: anywhere;
+    color: var(--text-dark);
+    font-size: clamp(1.8rem, 3vw, 2.25rem);
+    font-weight: 850;
+    line-height: 1;
+    letter-spacing: -0.045em;
+    font-variant-numeric: tabular-nums;
+}
+
+.admin-stat-card__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    font-size: 1.45rem;
+}
+
+.admin-stat-card--students .admin-stat-card__icon {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.11);
+}
+
+.admin-stat-card--teachers .admin-stat-card__icon {
+    color: #059669;
+    background: rgba(16, 185, 129, 0.12);
+}
+
+.admin-stat-card--subjects .admin-stat-card__icon {
+    color: #0284c7;
+    background: rgba(14, 165, 233, 0.12);
+}
+
+.admin-stat-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 650;
+}
+
+.admin-stat-card__footer i {
+    color: var(--primary-hover);
+    font-size: 0.9rem;
+    transition: transform 180ms ease;
+}
+
+.admin-stat-card:hover .admin-stat-card__footer i {
+    transform: translate(2px, -2px);
+}
+
+/* Akses cepat */
+.admin-dashboard__quick-section {
+    padding: 1.35rem;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background: var(--card-bg);
+    box-shadow: 0 5px 18px rgba(15, 23, 42, 0.03);
+}
+
+.admin-dashboard__section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.15rem;
+}
+
+.admin-dashboard__section-kicker {
+    color: var(--primary-hover);
+    font-size: 0.68rem;
+    font-weight: 850;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.admin-dashboard__section-heading h2 {
+    margin: 0.25rem 0 0;
+    color: var(--text-dark);
+    font-size: 1.08rem;
+    font-weight: 800;
+}
+
+.admin-dashboard__section-heading p {
+    margin: 0.25rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.admin-dashboard__section-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 11px;
+    color: var(--primary-hover);
+    background: var(--accent-peach);
+    font-size: 1.1rem;
+}
+
+.admin-dashboard__quick-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.8rem;
+}
+
+.admin-quick-link {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-dark);
+    background: var(--bg-surface);
+    text-decoration: none;
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.admin-quick-link:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary-hover);
+    color: var(--text-dark);
+    background: var(--card-bg);
+}
+
+.admin-quick-link__icon {
+    display: inline-flex;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    font-size: 1.1rem;
+}
+
+.admin-quick-link__icon--blue {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.11);
+}
+
+.admin-quick-link__icon--green {
+    color: #059669;
+    background: rgba(16, 185, 129, 0.12);
+}
+
+.admin-quick-link__icon--violet {
+    color: #7c3aed;
+    background: rgba(124, 58, 237, 0.11);
+}
+
+.admin-quick-link__icon--orange {
+    color: #d97706;
+    background: rgba(217, 119, 6, 0.12);
+}
+
+.admin-quick-link__text {
+    display: block;
+    min-width: 0;
+    flex: 1;
+}
+
+.admin-quick-link__text strong,
+.admin-quick-link__text small {
+    display: block;
+}
+
+.admin-quick-link__text strong {
+    overflow: hidden;
+    color: var(--text-dark);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-quick-link__text small {
+    margin-top: 0.2rem;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    line-height: 1.45;
+}
+
+.admin-quick-link__arrow {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.admin-dashboard__footnote {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: -0.4rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.73rem;
+}
+
+/* Tablet */
+@media (max-width: 1100px) {
+    .admin-dashboard__quick-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .admin-dashboard__stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+    .admin-dashboard {
+        gap: 1rem;
+    }
+
+    .admin-dashboard__hero {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 1.1rem;
+        border-radius: 15px;
+    }
+
+    .admin-dashboard__hero-meta {
+        align-self: flex-start;
+    }
+
+    .admin-dashboard__stats,
+    .admin-dashboard__quick-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .admin-stat-card {
+        padding: 1.1rem;
+    }
+
+    .admin-dashboard__quick-section {
+        padding: 1rem;
+    }
+
+    .admin-quick-link {
+        padding: 0.8rem;
+    }
+}
+
+/* Hormati preferensi pengurangan animasi sistem */
+@media (prefers-reduced-motion: reduce) {
+    .admin-stat-card,
+    .admin-stat-card__footer i,
+    .admin-quick-link {
+        transition: none;
+    }
+
+    .admin-stat-card:hover,
+    .admin-quick-link:hover {
+        transform: none;
+    }
+}
+
+/* Penyesuaian peringatan pada tema gelap */
+body[data-theme="dark"] .admin-dashboard__notice {
+    border-color: rgba(245, 158, 11, 0.35);
+    color: #fcd34d;
+    background: rgba(120, 75, 8, 0.18);
+}
+
+/* =========================================================
+   MODAL TAMBAH GURU — FORM TERSTRUKTUR & RESPONSIF
+   Tempelkan di bagian paling bawah assets/css/style.css
+   ========================================================= */
+.teacher-modal-box {
+    width: min(100%, 700px);
+    max-width: 700px;
+    max-height: calc(100vh - 2rem);
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-form {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: calc(100vh - 2rem);
+}
+
+.teacher-modal-header {
+    flex: 0 0 auto;
+    padding: 1.25rem 1.5rem;
+    gap: 1rem;
+}
+
+.teacher-modal-heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.teacher-modal-icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    font-size: 1.35rem;
+}
+
+.teacher-modal-heading-copy { min-width: 0; }
+
+.teacher-modal-eyebrow {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+}
+
+.teacher-modal-header h5 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.08rem;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.teacher-modal-heading-copy p {
+    margin: 0.2rem 0 0;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.45;
+}
+
+.teacher-modal-close {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.12);
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+}
+
+.teacher-modal-close:hover { background: rgba(255, 255, 255, 0.22); }
+
+.teacher-modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+    overflow-y: auto;
+    padding: 1.4rem 1.5rem 1.25rem;
+}
+
+.teacher-form-section + .teacher-form-section {
+    margin-top: 1.35rem;
+    padding-top: 1.35rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.teacher-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.teacher-section-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: var(--accent-peach, rgba(37, 99, 235, 0.09));
+    color: var(--primary-dark);
+    font-size: 1rem;
+}
+
+.teacher-section-heading h6 {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 0.91rem;
+    font-weight: 800;
+}
+
+.teacher-section-heading p {
+    margin: 0.12rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    line-height: 1.45;
+}
+
+.teacher-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.teacher-field { min-width: 0; gap: 0.42rem; }
+
+.teacher-field .form-label {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 0.78rem;
+    font-weight: 750;
+}
+
+.teacher-required {
+    color: var(--primary-dark);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.teacher-modal-box .form-control,
+.teacher-modal-box .form-select {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 0.68rem 0.82rem;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    outline: none;
+    background-color: var(--bg-surface);
+    color: var(--text-dark);
+    font-family: inherit;
+    font-size: 0.83rem;
+    line-height: 1.4;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.teacher-modal-box .form-control::placeholder { color: var(--text-muted); opacity: 0.72; }
+
+.teacher-modal-box .form-control:focus,
+.teacher-modal-box .form-select:focus {
+    border-color: var(--primary-hover, var(--primary-dark));
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.teacher-field-help {
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    line-height: 1.4;
+}
+
+.teacher-name-field { margin-top: 1rem; }
+
+.teacher-form-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin: 1.25rem 0 0;
+    padding: 0.75rem 0.85rem;
+    border: 1px solid var(--accent-peach-border, var(--border-color));
+    border-radius: 10px;
+    background: var(--accent-peach, transparent);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    line-height: 1.5;
+}
+
+.teacher-form-note i {
+    margin-top: 0.05rem;
+    color: var(--primary-dark);
+}
+
+.teacher-modal-footer {
+    flex: 0 0 auto;
+    padding: 1rem 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .teacher-modal-box {
+        width: 100%;
+        max-height: calc(100dvh - 1rem);
+        border-radius: 13px;
+    }
+
+    .teacher-form { max-height: calc(100dvh - 1rem); }
+    .teacher-modal-header { padding: 1rem; }
+    .teacher-modal-icon { width: 42px; height: 42px; flex-basis: 42px; }
+    .teacher-modal-heading { gap: 0.7rem; }
+    .teacher-modal-header h5 { font-size: 0.98rem; }
+    .teacher-modal-heading-copy p { font-size: 0.7rem; }
+    .teacher-modal-body { padding: 1rem; }
+    .teacher-form-grid { grid-template-columns: minmax(0, 1fr); gap: 0.9rem; }
+    .teacher-name-field { margin-top: 0.9rem; }
+    .teacher-modal-footer { padding: 0.85rem 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .teacher-modal-close,
+    .teacher-modal-box .form-control,
+    .teacher-modal-box .form-select { transition: none; }
+}
+
+/* =========================================================
