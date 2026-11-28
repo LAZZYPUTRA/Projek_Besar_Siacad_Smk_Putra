@@ -6,8 +6,6 @@
 
 **Platform Pengelolaan Data Admin, Guru, dan Murid**
 
-Modern | Sederhana | Mudah Digunakan
-
 </div>
 
 ---
@@ -49,8 +47,7 @@ Modern | Sederhana | Mudah Digunakan
 ---
 
 ## Informasi
-
-README ini berisi informasi akun untuk mengakses aplikasi berdasarkan kategori pengguna.
+berisi informasi akun berdasarkan kategori pengguna.
 
 ---
 
